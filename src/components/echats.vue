@@ -1,6 +1,7 @@
 <template>
     <div id="app">
         <div id="brand-sales-rank" style="width: 600px; height: 400px;"></div>
+        <button @onclick="ChangeData">点击修改数据</button>
     </div>
 </template>
 
@@ -9,7 +10,7 @@ import echats from "echarts";
 export default {
     name: 'echarts-homework',
     mounted: function () {  // mounted() 在实例挂载之后自动调用 (元素内容改变之后不会重新调用)
-        var myChart = echarts.init(document.getElementById('brand-sales-rank'));
+        var myChart = echarts.init(document.getElementById('#brand-sales-rank'));
         option = {
             xAxis: {
                 type: 'category',
@@ -35,6 +36,11 @@ export default {
             ]
         };
         myChart.setOption(option);
+    },
+    methods: {
+        ChangeData() {
+            this.option.series[0].data = [10, 20, 30, 40];
+        }
     }
 }
 

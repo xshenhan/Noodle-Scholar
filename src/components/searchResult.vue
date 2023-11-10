@@ -1,19 +1,14 @@
 <template>
-    <h1>{{ component_title }}</h1>
     <div>
-        <input type="text" v-model="searchTerm" placeholder="输入要查询的文章 id">
-        <button @click="search">Search</button>
-        <p>hello, 6532290ad507ea15ca185e7f</p>
-        <br>
-        <p><strong>Paper ID:</strong> {{ paper_id }}</p>
-        <p><strong>Paper Name:</strong> {{ paper_name }}</p>
-    </div>
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-secondary">上一篇</button>
-        <button type="button" class="btn btn-secondary">下一篇</button>
+        <p>search</p>
+        <p>search {{ paper_id }} : <br>{{ paper_name }} <br> {{ paper_abstract }}</p>
     </div>
 
-    <!-- 仅在 already_searched = true 的时候显示如下表单 -->
+    <router-link to="../../index.html">
+        <button class="btn btn-default">jump to index.html</button>
+    </router-link>
+
+
     <div v-if="already_searched">
         <div class="card bg-dark overlay overlay-black text-white shadow-lg border-0">
             <img class="card-img" src="../assets/img/demo/7.jpg" alt="Card image">
@@ -35,40 +30,38 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            search_id: "6532290ad507ea15ca185e7f",
             component_title: "get Requset",
             already_searched: false,
-            paper_id: "NULL id",
-            paper_name: "NULL name",
+            paper_id: "",
+            paper_title: "",
+            paper_abstract: "",
+            paper_doc_type: "",
+
         }
     },
 
-    methods: {
+    mounted: {
         search() {
-            // 重定向到另一个 html 页面
             axios.get('http://10.80.135.205:8001/api/v1/paper/info', {
                 params: {
-                    id: this.searchTerm
+                    id: this.search_id,
                 }
             })
                 .then((response) => {
                     // 响应数据待处理
-                    // console.log(response);
+                    console.log(response);
                     this.already_searched = true;
                     this.paper_id = response.data.id;
                     this.paper_name = response.data.title;
+                    this.paper_abstract = response.data.abstract;
+                    this.paper_doc_type = response.data.doc_type;
                 })
                 .catch((error) => {
                     console.log(error);
                     this.already_searched = true;
+                    this.paper_id = "!! ERROR !!";
                 });
-        }
-    },
-    watch: {
-        paper_id: function (val) {
-            console.log("paper_id changed to " + val);
-        },
-        paper_name: function (val) {
-            console.log("paper_name changed to " + val);
         }
     }
 }
