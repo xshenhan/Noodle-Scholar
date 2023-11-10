@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import dev from './App.vue' // 开发分支
 import axios from 'axios'
+import hw from './homework.vue' // 作业分支
 Vue.prototype.$http = axios
 
-createApp(App).mount('#app')
+createApp(dev).mount('#app')
+createApp(hw).mount('#hw')
