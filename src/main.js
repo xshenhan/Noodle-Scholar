@@ -1,8 +1,12 @@
 import { createApp } from 'vue'
-import dev from './App.vue' // 开发分支
+import Vue from 'vue'
+import dev from './App.vue'
 import axios from 'axios'
-import hw from './homework.vue' // 作业分支
 // Vue.prototype.$http = axios
+import router from './router';
 
-createApp(dev).mount('#app')
-createApp(hw).mount('#hw')
+// createApp(dev).mount('#app')
+new Vue({
+    router,
+    render: h => h(dev)
+  }).$mount('#app');

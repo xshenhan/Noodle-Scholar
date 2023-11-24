@@ -18,10 +18,16 @@
 
 <script>
 import axios from 'axios';
+// 读取url中的id参数
+const urlParams = new URLSearchParams(window.location.search);
+const _ID = urlParams.get('id');
+console.log(_ID);
+
 export default {
     data() {
         return {
             search_id: "6532290ad507ea15ca185e7f",
+            // search_id: _ID,
             component_title: "get Requset",
             already_searched: false,
             paper_id: "NULL",
