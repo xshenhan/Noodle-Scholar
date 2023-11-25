@@ -15,13 +15,12 @@ const router = createRouter({
             path: '/searchresult',
             name: 'Searchresult',
             component: Searchresult
-        }
+        },
+        // {
+        //     path: '/paper/:id',
+        //     name: 'Paper'
+        // }
     ]
 });
-
-// const router = createRouter({
-//     history: createWebHistory(process.env.BASE_URL),
-//     routes
-// })
 
 export default router

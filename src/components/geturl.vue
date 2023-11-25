@@ -14,11 +14,9 @@
     </div>
 
     <br>
-    <button @click="goToAnotherPage">Go to "SearchResult"</button>
+    <button @click="goToAnotherPage">button "SearchResult"</button>
     <br>
-    <p>
-        <router-link to="/searchResult">Goooo to SearchResult</router-link>
-    </p>
+
 
     <!-- 仅在 already_searched = true 的时候显示如下表单 -->
     <div v-if="already_searched">
@@ -70,11 +68,11 @@ export default {
                     this.already_searched = true;
                 });
         },
-        methods: {
-            goToAnotherPage() {
-                this.$router.push({ name: 'AnotherPage' });
-            }
+
+        goToAnotherPage() {
+            this.$router.push("/searchResult");
         }
+
     },
     watch: {
         paper_id: function (val) {

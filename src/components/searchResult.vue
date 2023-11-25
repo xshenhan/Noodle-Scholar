@@ -26,7 +26,7 @@ console.log(_ID);
 export default {
     data() {
         return {
-            search_id: "6532290ad507ea15ca185e7f",
+            search_id: "",
             // search_id: _ID,
             component_title: "get Requset",
             already_searched: false,
@@ -39,7 +39,9 @@ export default {
         }
     },
 
-    mounted: function () {
+    mounted() {
+        this.search_id = this.$route.query.id;
+        console.log(this.search_id);
         this.search();
     },
 
