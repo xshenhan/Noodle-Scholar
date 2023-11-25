@@ -86,22 +86,19 @@
       </div>
     </div>
   </nav>
-  <div class="jumbotron jumbotron-lg jumbotron-fluid mb-3 bg-primary position-relative">
-    <div class="container text-white h-100 tofront">
-      <div class="row align-items-center justify-content-center text-center">
-        <div class="col-md-10">
-          <h1 class="display-3">This is a title</h1>
-        </div>
-      </div>
-    </div>
-  </div>
-  <a href="http://10.80.135.205:8001/api/v1/paper/download?id=185e7f" class="btn btn-outline-primary btn-round">Download
-    PDF</a>
 
-  <div id="app">dev branch</div>
+
+  <div id="app"></div>
   <script type="module" src="./src/main.js"></script>
-  <div id="hw">homework branch</div>
-  <script type="module" src="./src/main.js"></script>
+
+  
+  <button onclick="redirectToPaper()">jump to other1.html</button>
+  <script>
+    function redirectToPaper() {
+      window.location.href = "/other1.html";
+    }
+  </script>
+  
 
 </body>
 

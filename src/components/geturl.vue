@@ -13,6 +13,13 @@
         <button type="button" class="btn btn-secondary">下一篇</button>
     </div>
 
+    <br>
+    <button @click="goToAnotherPage">Go to "SearchResult"</button>
+    <br>
+    <p>
+        <router-link to="/searchResult">Goooo to SearchResult</router-link>
+    </p>
+
     <!-- 仅在 already_searched = true 的时候显示如下表单 -->
     <div v-if="already_searched">
         <div class="card bg-dark overlay overlay-black text-white shadow-lg border-0">
@@ -32,6 +39,8 @@
 
 <script>
 import axios from 'axios';
+import router from '../router';
+
 export default {
     data() {
         return {
@@ -39,9 +48,8 @@ export default {
             already_searched: false,
             paper_id: "NULL id",
             paper_name: "NULL name",
-        }
+        };
     },
-
     methods: {
         search() {
             // 重定向到另一个 html 页面
@@ -61,6 +69,11 @@ export default {
                     console.log(error);
                     this.already_searched = true;
                 });
+        },
+        methods: {
+            goToAnotherPage() {
+                this.$router.push({ name: 'AnotherPage' });
+            }
         }
     },
     watch: {
@@ -70,7 +83,8 @@ export default {
         paper_name: function (val) {
             console.log("paper_name changed to " + val);
         }
-    }
+    },
+    components: { router }
 }
 </script>
 
