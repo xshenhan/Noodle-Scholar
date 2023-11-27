@@ -1,13 +1,16 @@
 <template>
     <div>
-        <p>search result</p>
+        <p>Paper information</p>
         <button @click="changeVisible">Display / Hide</button>
         <div v-if="paper_display">
-            <p> <strong>searching</strong> {{ paper_id }} : <br>    </p>
-            <p>《<span v-html="paper_title"></span>》        <br>    </p> 
-            <p> <strong>Abstract :</strong> {{ paper_abstract }}    </p> 
+            <p>
+                <strong>searching</strong> {{ paper_id }} : <br>
+                <strong>《{{ paper_title }}》</strong> <br>
+                <strong>Abstract :</strong> {{ paper_abstract }}
+            </p>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -16,42 +19,39 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            search_field: "",
-            search_info: "",
-
+            search_id: "",
+            component_title: "get Requset",
             already_searched: false,
             paper_id: "NULL",
             paper_title: "NULL",
             paper_abstract: "NULL",
+            paper_doc_type: "NULL",
 
             paper_display: true,
         }
     },
 
     mounted() {
-        this.search_field = this.$route.query.field;
-        this.search_info = this.$route.query.info;
-        console.log("field = " + this.search_field);
-        console.log("info = " + this.search_info);
-        this.searchInfo();
+        this.search_id = this.$route.query.id;
+        console.log(this.search_id);
+        this.search();
     },
 
     methods: {
-        
-        searchInfo() {
-            axios.get('http://10.80.135.205:8001/api/v1/search', {
+        search() {
+            axios.get('http://10.80.135.205:8001/api/v1/paper/info', {
                 params: {
-                    field: this.search_field,
-                    query: this.search_info,
+                    id: this.search_id,
                 }
             })
                 .then((response) => {
                     // 响应数据待处理
                     console.log(response);
                     this.already_searched = true;
-                    this.paper_id = response.data[0]._id;
-                    this.paper_title = response.data[0].title[0];
-                    this.paper_abstract = response.data[0].abstract;
+                    this.paper_id = response.data.id;
+                    this.paper_title = response.data.title;
+                    this.paper_abstract = response.data.abstract;
+                    this.paper_doc_type = response.data.doc_type;
                     console.log("finish changing data");
                 })
                 .catch((error) => {
@@ -64,7 +64,7 @@ export default {
         changeVisible() {
             this.paper_display = !this.paper_display;
             console.log(this.paper_display);
-        }
+        },
     }
 }
 </script>
