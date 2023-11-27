@@ -1,7 +1,9 @@
 <template>
-    <div class="jumbotron jumbotron-lg jumbotron-fluid mb-3 bg-primary position-relative">
+    <div class="jumbotron jumbotron-lg jumbotron-fluid mb-0 bg-primary position-relative scratch_high">
         <div class="container text-white h-100 tofront">
-            <h1 class="middle_title">你的下一个搜索引擎<br><strong>何必是你的</strong></h1><br>
+            <img src="https://z1.ax1x.com/2023/11/02/piK4OA0.png" width="70%" height="70%">
+            <br>
+            <h1 class="middle_title">你的下一个搜索引擎<br><strong>何必是下一个</strong></h1><br>
 
             <div class="row align-items-center justify-content-center text-center">
                 <div class="col-md-10">
@@ -37,15 +39,14 @@
             </div>
         </div>
     </div>
-    <a href="http://10.80.135.205:8001/api/v1/paper/download?id=185e7f" class="btn btn-outline-primary btn-round">Download
+
+
+    <!-- <a href="http://10.80.135.205:8001/api/v1/paper/download?id=185e7f" class="btn btn-outline-primary btn-round">Download
         PDF</a>
-
-
     <h1>Home Page</h1>
     <input type="text" v-model="searchTerm" placeholder="paper id">
+    <button @click="SearchId" class="btn btn-outline-primary btn-round">button "SearchResult"</button> -->
 
-    <button @click="SearchId" class="btn btn-outline-primary btn-round">button "SearchResult"</button>
-    <br>
 </template>
 
 
@@ -92,13 +93,16 @@ export default {
 
 <!-- 额外样式 -->
 <style>
-
 .middle_title {
     text-align: center;
 }
 
 .under_border {
-    border-bottom: 10px solid #ff;
+    border-bottom: 10px solid #502c6c;
+}
+
+.scratch_high {
+    padding-bottom: 290px !important;
 }
 
 .btn-rounded {
@@ -106,7 +110,7 @@ export default {
 }
 
 .button_white_border {
-    border-color: #ffffff !important;
+    border-color: #ffffff;
 }
 
 .form-control-rounded {
@@ -114,7 +118,7 @@ export default {
 }
 
 .search_button_color {
-    background-color: #1b54f2 !important;
+    background-color: #1b54f2;
 }
 
 .btn-outline-secondary_rewrite {
