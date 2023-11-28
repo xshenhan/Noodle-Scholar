@@ -1,9 +1,7 @@
 <template>
     <div>
-        <p>search result</p>
         <button @click="changeVisible">Display / Hide</button>
         <div v-if="paper_display">
-            <p> <strong>searching</strong> {{ paper_id }} : <br>    </p>
             <p>《<span v-html="paper_title"></span>》        <br>    </p> 
             <p> <strong>Abstract :</strong> {{ paper_abstract }}    </p> 
         </div>

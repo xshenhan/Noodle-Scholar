@@ -1,9 +1,15 @@
 <template>
-    <div class="jumbotron jumbotron-lg jumbotron-fluid mb-0 bg-primary position-relative scratch_high">
+    <div class="jumbotron jumbotron-lg jumbotron-fluid mb-0 bg-primary position-relative scratch_high up_padding_small">
         <div class="container text-white h-100 tofront">
-            <img src="https://z1.ax1x.com/2023/11/02/piK4OA0.png" width="70%" height="70%">
-            <br>
-            <h1 class="middle_title">你的下一个搜索引擎<br><strong>何必是下一个</strong></h1><br>
+            <!-- <img src="https://z1.ax1x.com/2023/11/02/piK4OA0.png" :width="300"> -->
+            <h1 class="middle_title">
+                NOODLE SCHOLAR &nbsp;
+                <!-- <img src="../assets/noodle_yellow.png" :width="50"> -->
+                <img src="../assets/img/N标.png" :width="60">
+                &nbsp; 开搜未来
+            </h1>
+            <br><br>
+            <h1 class="display-4 middle_title">唯一的不同，<br><span class="font-weight-bold">是处处都不同。</span></h1><br>
 
             <div class="row align-items-center justify-content-center text-center">
                 <div class="col-md-10">
@@ -41,12 +47,64 @@
     </div>
 
 
+    <!-- <div class="container">
+        <div class="spinner-border text-primary"></div>
+    </div> -->
+
+
+
+    <div class="jumbotron jumbotron-fluid no_under_margin">
+        <div class="container">
+            <h1 class="display-4"><span class="font-weight-bold">搜</span>不搜在你，<br>准不<span
+                    class="font-weight-bold">准</span>在我。</h1>
+
+            <p class="lead text-right">
+                无论搜索词是否存在，<span class="font-weight-bold">都给你返回。</span>
+                <img src="../assets/noodle.svg" width="5%">
+            </p>
+        </div>
+    </div>
+
+
+    <div class="jumbotron jumbotron-fluid no_under_margin">
+        <div class="container">
+            <h1 class="display-4 text-right">你的下一个搜索引擎，<br><span class="font-weight-bold">何必是你的。</span></h1>
+            <p class="lead text-left">
+                用户信息完全泄漏，搜索记录数据库可见。<br><span class="font-weight-bold">你的隐私，我说了算。</span>
+            </p>
+        </div>
+    </div>
+
+
+    <div class="jumbotron jumbotron-fluid no_under_margin">
+        <div class="container">
+            <h1 class="display-4">
+                一身<span class="font-weight-light">轻</span>，<br>
+                更举<span class="font-weight-light">重</span>
+                若<span class="font-weight-light">轻</span>。
+                <br><br>
+                <picture>
+                    <img class="float-left" src="../assets/img/N标G标.png" width="30%">
+                </picture>
+            </h1>
+            <br>
+
+            <p class="lead text-right">
+                登陆账号管理，个人信息档案，<br>
+                并行加速数据，智能内容分析，<br>
+                ......&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                <span class="font-weight-bold">统统没有。</span>
+                <!-- <br><span class="font-weight-bold">轻的，未必更重。</span><br> -->
+            </p>
+        </div>
+    </div>
+
+
     <!-- <a href="http://10.80.135.205:8001/api/v1/paper/download?id=185e7f" class="btn btn-outline-primary btn-round">Download
         PDF</a>
     <h1>Home Page</h1>
     <input type="text" v-model="searchTerm" placeholder="paper id">
     <button @click="SearchId" class="btn btn-outline-primary btn-round">button "SearchResult"</button> -->
-
 </template>
 
 
@@ -93,6 +151,10 @@ export default {
 
 <!-- 额外样式 -->
 <style>
+.up_padding_small {
+    padding-top: 70px;
+}
+
 .middle_title {
     text-align: center;
 }
@@ -101,8 +163,17 @@ export default {
     border-bottom: 10px solid #502c6c;
 }
 
+.no_under_margin {
+    margin-bottom: 0;
+}
+
 .scratch_high {
-    padding-bottom: 290px !important;
+    padding-bottom: 500px !important;
+}
+
+.display_inline {
+    display: inline-block !important;
+    /* 或者 display: inline-block; */
 }
 
 .btn-rounded {
@@ -125,4 +196,5 @@ export default {
     color: #7832e2;
     background-image: none;
     font-weight: bold;
-}</style>
+}
+</style>
