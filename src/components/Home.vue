@@ -79,9 +79,8 @@
     <div class="jumbotron jumbotron-fluid no_under_margin">
         <div class="container">
             <h1 class="display-4">
-                一身<span class="font-weight-light">轻</span>，<br>
-                更举<span class="font-weight-light">重</span>
-                若<span class="font-weight-light">轻</span>。
+                一身<span class="font-weight-bold">轻</span>，<br>
+                更举重若轻。
                 <br><br>
                 <picture>
                     <img class="float-left" src="../assets/img/N标G标.png" width="30%">
@@ -99,12 +98,6 @@
         </div>
     </div>
 
-
-    <!-- <a href="http://10.80.135.205:8001/api/v1/paper/download?id=185e7f" class="btn btn-outline-primary btn-round">Download
-        PDF</a>
-    <h1>Home Page</h1>
-    <input type="text" v-model="searchTerm" placeholder="paper id">
-    <button @click="SearchId" class="btn btn-outline-primary btn-round">button "SearchResult"</button> -->
 </template>
 
 
