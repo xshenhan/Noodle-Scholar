@@ -1,27 +1,32 @@
 import sanic
 from sanic import Sanic, response
-from sanic.response import text, redirect, json, ResponseStream, file_stream, file
+from sanic_session import Session
+from sanic.response import text, redirect, json, ResponseStream, file_stream, file, html
 import motor
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 from sanic_cors import CORS
 from auth import protected
 from login import login
-from query import search_documents
-app = Sanic("ns")
-app.config.SECRET = "GhFANncWqTJhFXKGP7r/NYzvmMMpHnNH$kFYQBpkmgZna]deCBFjMu6thbnpgrAZh3NZ"
-app.blueprint(login)
+from query import PaperSearch
+from mycrypt import encrypt, decrypt, DATABASE_KEY
+from os.path import isfile, join
 
+app = Sanic("ns")
+Session(app)
 origins = [
     "*"
 ]
 
 app.config["CORS_RESOURCES"] = {r"/*": {"origins": origins}}
 CORS(app)
+
+app.static('/assets', './dist/assets')
+
 @app.get("/")
 async def root(request):
     # '''the root page will be redirect to test page(we will change in future)'''
-    return redirect("/test")
+    return await file("./dist/index.html")
     
 @app.get("/test")
 async def test(request):
@@ -182,25 +187,34 @@ async def _pic(requests):
 # @app.get("/api/v1/paper/lists")
 # async def get_lists(requests):
     
-@app.get("/search")
+@app.get("/api/v1/search")
 async def search(request):
-    query_type = request.args.get("type") if request.args.get("type") is not None else "title"
-    if query_type not in ["tag","ref_paper","conference","keywords","author","link","abstract","title","volume","journal","issn","publisher","doi"]:
+    query_field = request.args.get("field") if request.args.get("field") is not None else "all"
+    query_type = request.args.get("type") if request.args.get("type") is not None else "match"
+    searcher = PaperSearch()
+    search_fn = searcher.search_all_fields if query_field == "all" else searcher.search_specific_field
+    if query_field not in ["all", "tag","ref_paper","conference","keywords","author","link","abstract","title","volume","journal","issn","publisher","doi"]:
         return text("not imply", status=416, headers={"Access-Control-Allow-Origin": "*"})
     query_size = int(request.args.get("size")) if request.args.get("size") is not None else 20
     # if request.query == None:
     #     return text("must request with a query", status=416, headers={"Access-Control-Allow-Origin": "*"})
-    search_results = search_documents(request.args.get("query"), query_type, query_size)
+    search_results = search_fn(request.args.get("query"), query_field, query_size, query_type=query_type)
     # print(query_size)
     results = {}
     client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
     collection = client.papers["100pdfs"]
-    for i in search_results:
-        document = await collection.find_one({"paper_id": i})
-        results[i] = {
-            "_id": str(document["_id"]),
-            "title": document["title"],
-        }
+    i = 0
+    print(type(search_results))
+    for k, paper in search_results.items():
+        document = await collection.find_one({"paper_id": k})
+        tmp_results = {}
+        tmp_results["_id"] = str(document["_id"])
+        tmp_results["title"] = document["title"] if "title" not in paper else paper["title"]
+        tmp_results["abstract"] = document["abstract"] if "abstract" not in paper else paper["abstract"]
+        tmp_results["author"] = document["author"] if "author" not in paper else paper["author"]
+        tmp_results["tag"] = document["tag"] if "tags" not in paper else paper["tags"]
+        results[i] = tmp_results
+        i += 1
     return json(results, headers={"Access-Control-Allow-Origin": "*"})
 
 @app.get("/secret")
@@ -208,6 +222,40 @@ async def search(request):
 async def secert(request):
     return text("secret")
     
+
+@app.get("/signup")
+async def signup(request):
+    if request.args.get('username') is None:
+        return text('You should provide a username', headers={"Access-Control-Allow-Origin": "*"})
+    if request.args.get('password') is None:
+        return text('You should provide a password', headers={"Access-Control-Allow-Origin": "*"})
     
+    response = text('Welcome. Sign up Success!')
+    response.cookies['username'] = encrypt(request.args.get('username'))
+    response.cookies['password'] = encrypt(request.args.get('password'))
+    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    users = client['users']
+    users_collection = users['users']
+    
+    if await users_collection.find_one({'username': encrypt(request.args.get('username'), key=DATABASE_KEY)}) is not None:
+        return text("The user has been signed up!", status=416, headers={"Access-Control-Allow-Origin": "*"})
+    
+    group = "user" if request.args.get("group") is None else request.args.get("group")
+    user = {"username": request.args.get('username'), "password": encrypt(request.args.get('password'), key=DATABASE_KEY), "group": group}
+    await users_collection.insert_one(user)
+    return response
+
+
+# 处理前端路由
+@app.route('/<path:path>')
+async def catch_all(request, path):
+    file_path = join('./dist', path)
+    # 如果请求的是静态文件，则返回该文件
+    if isfile(file_path):
+        return await file(file_path)
+    # 否则，返回 Vue 应用的 index.html，让 Vue Router 处理路由
+    return await file('./dist/index.html')
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=11234, dev=True)
