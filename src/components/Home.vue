@@ -16,23 +16,24 @@
 
                     <!-- 下拉搜索框 (不带搜索按钮) -->
                     <div class="input-group under_border">
-                        <input type="text" class="form-control form-control-rounded" v-model="search_info"
+                        <input type="text" class="form-control form-control-rounded" v-model="search_info" @keyup.enter="SearchAndGoToResultPage"
                             aria-label="Text input with dropdown button" :placeholder="`Search by ${search_type}`">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
                                 data-toggle="dropdown" aria-expanded="false">{{ search_type }}</button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#" @click="selectSearchType('All')"><strong>All</strong></a>
+                                <a class="dropdown-item" @click="selectSearchType('All')"><strong>All</strong></a>
                                 <div role="separator" class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"
+                                <a class="dropdown-item"
                                     @click="selectSearchType('Title')"><strong>Title</strong></a>
-                                <a class="dropdown-item" href="#"
+                                <a class="dropdown-item" 
                                     @click="selectSearchType('Subject')"><strong>Subject</strong></a>
-                                <a class="dropdown-item" href="#"
+                                <a class="dropdown-item" 
                                     @click="selectSearchType('Author')"><strong>Author</strong></a>
-                                <a class="dropdown-item" href="#"
+                                <a class="dropdown-item" 
                                     @click="selectSearchType('Journal')"><strong>Journal</strong></a>
-                                <a class="dropdown-item" href="#" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
+                                <a class="dropdown-item" 
+                                        @click="selectSearchType('DOI')"><strong>DOI</strong></a>
                             </div>
                         </div>
                     </div>
@@ -97,6 +98,17 @@
             </p>
         </div>
     </div>
+
+
+    <div class="jumbotron jumbotron-fluid no_under_margin">
+        <div class="container">
+            <h1 class="display-4 text-right">全新用户登录协议，<br><span class="font-weight-bold">只许协，<br>不许议。</span></h1>
+            <p class="lead text-left">
+                
+            </p>
+        </div>
+    </div>
+    
 
 </template>
 
