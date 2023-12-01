@@ -1,43 +1,75 @@
 <template>
     <div>
-        <button @click="changeVisible" class="btn btn-dark">Display / Hide</button>
-        <div v-if="paper_display">
-            <br><br>
+        <br><br>
 
-            <!-- <div class="media">
-                <img src="../assets/img/N标.png" class="marigin_lr" alt="..." :width="30">
-                <div class="media-body">
-                    <h5 class=""><span v-html="paper_title"></span></h5>
-                    <p><strong>Abstract :</strong>&nbsp; <span v-html="paper_abstract"></span></p>
-                </div>
-            </div> -->
-
-            <div class="media" v-for="(paper, key) in response_data" :key='key'>
-                <img src="../assets/img/N标.png" class="marigin_lr" alt="..." :width="30">
+        <!-- <div class="media" v-for="(paper, key) in response_data" :key='key'>
+                <img src="../assets/img/N.png" class="marigin_lr" alt="..." :width="30">
                 <div class="media-body">
                     <h5 class=""><span v-html="paper.title[0]"></span></h5>
                     <p><strong>Abstract :</strong>&nbsp; <span v-html="paper.abstract"></span></p>
                 </div>
-            </div>
+            </div> -->
 
 
-            <!-- Call to action -->
-            <div class=" bg-light large_padding">
+        <div class="media" v-for="(paper, key) in response_data" :key='key'>
+            <div class=" bg-light reform_size_frame">
                 <div class="container h-100">
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
-                        <div class="col-lg-9">
-                            <h5 class="font-weight-light text-black">Free Bootstrap 4.1.3<strong> UI Kit</strong> with
-                                <strong><i class="fab fa-sass fa-2x"></i></strong> for rapid development</h5>
+                        <div class="col-lg-9 reform_size_content">
+                            <h5 class="font-weight-light text-black"><span class="font-weight-bold"
+                                    v-html="paper.title[0]"></span></h5>
+                            <p><span class="badge badge-pill badge-purple">Author</span>&nbsp; 
+                                <span v-for="(n, index) in paper.author.name" :key="index">
+                                    <span class="badge badge-success">{{ n }}</span>
+                                    <span v-if="index !== paper.author.name.length - 1"><strong>&nbsp;|&nbsp;</strong> </span>
+                                </span>
+                            </p>
+                            <p><span class="badge badge-pill badge-purple">Abstract</span>&nbsp; <span v-html="paper.abstract"></span></p>
                         </div>
-                        <div class="col-lg-3 text-md-center text-lg-right mt-4 mb-4">
-                            <a href="#" class="btn btn-lg btn-info">Call to action</a>
+
+                        <!-- 论文图片展示 -->
+                        <div class="col-lg-3 text-md-right text-lg-right mt-4 mb-4">
+
+                            <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel">
+                                <div class="carousel-inner">
+                                  <div class="carousel-item active">
+                                    <div class="card shadow-sm border-0">
+                                        <img src="../assets/img/论文1.png" class="img-fluid mx-auto d-block" alt="...">
+                                    </div>
+                                  </div>
+                                  <div class="carousel-item">
+                                    <div class="card shadow-sm border-0">
+                                        <img src="../assets/img/论文2.png" class="img-fluid mx-auto d-block" alt="...">
+                                    </div>
+                                  </div>
+                                  <div class="carousel-item">
+                                    <div class="card shadow-sm border-0">
+                                        <img src="../assets/img/论文3.png" class="img-fluid mx-auto d-block" alt="...">
+                                    </div>
+                                  </div>
+                                </div>
+                                <button class="btn btn-white btn-round shadow-lg reform_img_button button-left" type="button" data-target="#carouselExampleFade" data-slide="prev" placeholder="<">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                  <span class="sr-only">Previous</span>
+                                </button>
+                                <button class="btn btn-white btn-round shadow-lg reform_img_button button-right" type="button" data-target="#carouselExampleFade" data-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                  <span class="sr-only">Next</span>
+                                </button>
+                              </div>
+                        </div>
+
+                        <!-- 下载按钮 -->
+                        <div class="col-lg-4 text-md-center text-lg-left mt-4 mb-4">
+                            <a :href="getDownloadLink(paper._id)" class="btn btn-lg btn-outline-primary">PDF</a>
                         </div>
                     </div>
+                    
                 </div>
             </div>
-
-
         </div>
+
+
     </div>
 </template>
 
@@ -60,7 +92,6 @@ export default {
             responses: {},
             response_data: {},
 
-            paper_display: true,
         }
     },
 
@@ -119,16 +150,16 @@ export default {
 
         },
 
-        getLimitedPaperInfo() {
-            response_data = Object.fromEntries(Object.entries(this.responses.data).slice(0, this.paper_number));
-            // 打印response_data长度
-            console.log(Object.keys(response_data).length);
-        },
+        // getLimitedPaperInfo() {
+        //     response_data = Object.fromEntries(Object.entries(this.responses.data).slice(0, this.paper_number));
+        //     // 打印response_data长度
+        //     console.log(Object.keys(response_data).length);
+        // },
 
-        changeVisible() {
-            this.paper_display = !this.paper_display;
-            console.log(this.paper_display);
-        }
+        getDownloadLink(ID) {
+            const downloadURL = "http://10.80.135.205:8001/api/v1/paper/download?id=" + ID;
+            return downloadURL;
+        },
     }
 }
 </script>
@@ -140,12 +171,39 @@ export default {
     margin-right: 2rem;
 }
 
-.large_padding {
-    padding-left: 100px !important;
-    padding-right: 300px !important;
-    margin-bottom: 0px !important;
+.reform_size_frame {
+    padding-top: 20px !important;
+    padding-bottom: 10px !important;
+    padding-left: 20px !important;
+    padding-right: 100px !important;
+    margin-bottom: 10px !important;
     margin-left: 50px !important;
-    margin-right: 50px !important;
+    margin-right: 30px !important;
+}
+
+.reform_size_content {
+    width: 700px !important;
+    height: auto !important;
+}
+
+.reform_img_button {
+    position: absolute !important;
+    top: 30% !important;
+    height: 30px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5px !important;
+    text-align: center;
+    opacity: 0.5;
+}
+
+.button-right {
+    right: 0 !important;
+}
+
+.button-left {
+    left: 0 !important;
 }
 
 .paper_title {

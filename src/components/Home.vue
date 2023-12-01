@@ -5,7 +5,7 @@
             <h1 class="middle_title">
                 NOODLE SCHOLAR &nbsp;
                 <!-- <img src="../assets/noodle_yellow.png" :width="50"> -->
-                <img src="../assets/img/N标.png" :width="60">
+                <img src="../assets/img/N.png" :width="60">
                 &nbsp; 开搜未来
             </h1>
             <br><br>
