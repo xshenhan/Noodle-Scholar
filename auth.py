@@ -51,3 +51,11 @@ def protected(wrapped):
         return decorated_function
 
     return decorator(wrapped)
+
+def add_user_info_cookie(func):
+    async def wrapper(request, *args, **kwargs):
+        response = await func(request, *args, **kwargs)
+        response.cookies['username'] = encrypt(request.args.get('username'))
+        response.cookies['password'] = encrypt(request.args.get('password'))
+        return response
+    return wrapper

@@ -6,7 +6,7 @@ import motor
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 from sanic_cors import CORS
-from auth import protected
+from auth import protected, add_user_info_cookie
 from login import login
 from query import PaperSearch
 from mycrypt import encrypt, decrypt, DATABASE_KEY
@@ -223,22 +223,24 @@ async def secert(request):
     return text("secret")
     
 
-@app.get("/signup")
+@app.get("/api/v1/signup")
+@add_user_info_cookie
 async def signup(request):
     if request.args.get('username') is None:
         return text('You should provide a username', headers={"Access-Control-Allow-Origin": "*"})
     if request.args.get('password') is None:
         return text('You should provide a password', headers={"Access-Control-Allow-Origin": "*"})
     
-    response = text('Welcome. Sign up Success!')
-    response.cookies['username'] = encrypt(request.args.get('username'))
-    response.cookies['password'] = encrypt(request.args.get('password'))
+    username = request.args.get('username')
+    password = request.args.get('password')
+    response = json({"username": username, "password": password}, headers={"Access-Control-Allow-Origin": "*"})
+    
     client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
     users = client['users']
     users_collection = users['users']
     
-    if await users_collection.find_one({'username': encrypt(request.args.get('username'), key=DATABASE_KEY)}) is not None:
-        return text("The user has been signed up!", status=416, headers={"Access-Control-Allow-Origin": "*"})
+    if await users_collection.find_one({'username': request.args.get('username')}) is not None:
+        return text("The user has been signed up!", status=200, headers={"Access-Control-Allow-Origin": "*"})
     
     group = "user" if request.args.get("group") is None else request.args.get("group")
     user = {"username": request.args.get('username'), "password": encrypt(request.args.get('password'), key=DATABASE_KEY), "group": group}
