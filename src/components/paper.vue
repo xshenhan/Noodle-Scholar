@@ -14,7 +14,9 @@
             d="M7.646.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 1.707V10.5a.5.5 0 0 1-1 0V1.707L5.354 3.854a.5.5 0 1 1-.708-.708l3-3z" />
     </svg> -->
     <img src="../assets/svg/share.svg" alt="">
-    
+    <div class="col-lg-4 text-md-center text-lg-left mt-4 mb-4">
+        <a :href="getDownloadLink(this.paper_id)" class="btn btn-lg btn-outline-primary">PDF</a>
+    </div>
 </template>
   
 <script>
@@ -27,6 +29,12 @@ export default {
 
     mounted() {
         this.paper_id = this.$route.query.id;
+    },
+
+    methods: {
+        getDownloadLink(id) {
+            return "/api/v1/paper/download?id=" + id;
+        }
     }
 };
 </script>

@@ -3,7 +3,7 @@ import Home from '../components/Home.vue'
 import searchResult from '../components/searchResult.vue'
 import Paper from '../components/Paper.vue'
 import SignUp from '../components/signup.vue'
-// import LogIn from '../components/login.vue'
+import LogIn from '../components/login.vue'
 
 const history = createWebHistory();
 const router = createRouter({
@@ -24,11 +24,11 @@ const router = createRouter({
             name: 'Signup',
             component: SignUp
         },
-        // {
-        //     path: '/login',
-        //     name: 'LogIn',
-        //     component: LogIn
-        // },
+        {
+            path: '/login',
+            name: 'LogIn',
+            component: LogIn
+        },
         {
             path: '/paper',
             name: 'Paper',
