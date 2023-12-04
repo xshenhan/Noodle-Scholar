@@ -108,6 +108,18 @@
             </p>
         </div>
     </div>
+
+
+    <div class="jumbotron jumbotron-fluid no_under_margin">
+        <div class="container">
+            <h1 class="display-4"><span class="font-weight-bold">满</span>载动<span class="font-weight-bold">力</span>，<br>
+                <span class="font-weight-bold">满</span>足你的无<span class="font-weight-bold">理</span></h1>
+
+            <p class="lead text-right">
+                <img src="../assets/img/intel.png" width="10%">
+            </p>
+        </div>
+    </div>
     
 
 </template>

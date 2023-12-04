@@ -16,55 +16,63 @@
                 <div class="container h-100">
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
                         <div class="col-lg-9 reform_size_content">
-                            <h5 class="font-weight-light text-black"><span class="font-weight-bold"
-                                    v-html="paper.title[0]"></span></h5>
-                            <p><span class="badge badge-pill badge-purple">Author</span>&nbsp; 
+                            <h5 class=" text-black hoverable "><span class="font-weight-bold"
+                                    @click="GoToPaperPage(paper._id)" v-html="paper.title[0]"></span></h5>
+                            <p><span class="badge badge-pill badge-purple">Author</span>&nbsp;
                                 <span v-for="(n, index) in paper.author.name" :key="index">
                                     <span class="badge badge-success">{{ n }}</span>
-                                    <span v-if="index !== paper.author.name.length - 1"><strong>&nbsp;|&nbsp;</strong> </span>
+                                    <span v-if="index !== paper.author.name.length - 1"><strong>&nbsp;|&nbsp;</strong>
+                                    </span>
                                 </span>
                             </p>
-                            <p><span class="badge badge-pill badge-purple">Abstract</span>&nbsp; <span v-html="paper.abstract"></span></p>
+                            <p><span class="badge badge-pill badge-purple">Abstract</span>&nbsp; <span
+                                    v-html="paper.abstract"></span></p>
                         </div>
 
                         <!-- 论文图片展示 -->
                         <div class="col-lg-3 text-md-right text-lg-right mt-4 mb-4">
 
-                            <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel">
+                            <div id="paperPictureDisplay" class="carousel slide carousel-fade" data-ride="carousel">
                                 <div class="carousel-inner">
-                                  <div class="carousel-item active">
-                                    <div class="card shadow-sm border-0">
-                                        <img src="../assets/img/论文1.png" class="img-fluid mx-auto d-block" alt="...">
+                                    <div class="carousel-item active">
+                                        <div class="card shadow-sm border-0">
+                                            <img :src="'http://10.80.135.205:8001/api/v1/paper/_pic?id=' + (paper._id) + '&index=0'" class="img-fluid mx-auto d-block fill-image"
+                                                alt="...">
+                                        </div>
                                     </div>
-                                  </div>
-                                  <div class="carousel-item">
-                                    <div class="card shadow-sm border-0">
-                                        <img src="../assets/img/论文2.png" class="img-fluid mx-auto d-block" alt="...">
+                                    <div class="carousel-item">
+                                        <div class="card shadow-sm border-0">
+                                            <img :src="'http://10.80.135.205:8001/api/v1/paper/_pic?id=' + (paper._id) + '&index=1'" class="img-fluid mx-auto d-block fill-image"
+                                                alt="...">
+                                        </div>
                                     </div>
-                                  </div>
-                                  <div class="carousel-item">
-                                    <div class="card shadow-sm border-0">
-                                        <img src="../assets/img/论文3.png" class="img-fluid mx-auto d-block" alt="...">
+                                    <div class="carousel-item">
+                                        <div class="card shadow-sm border-0">
+                                            <img :src="'http://10.80.135.205:8001/api/v1/paper/_pic?id=' + (paper._id) + '&index=2'" class="img-fluid mx-auto d-block fill-image"
+                                                alt="...">
+                                        </div>
                                     </div>
-                                  </div>
+                                    
                                 </div>
-                                <button class="btn btn-white btn-round shadow-lg reform_img_button button-left" type="button" data-target="#carouselExampleFade" data-slide="prev" placeholder="<">
-                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                  <span class="sr-only">Previous</span>
+                                <!-- <button class="btn btn-white btn-round shadow-lg reform_img_button button-left"
+                                    type="button" data-target="#$(paper._id)" data-slide="prev" placeholder="<">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
                                 </button>
-                                <button class="btn btn-white btn-round shadow-lg reform_img_button button-right" type="button" data-target="#carouselExampleFade" data-slide="next">
-                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                  <span class="sr-only">Next</span>
-                                </button>
-                              </div>
+                                <button class="btn btn-white btn-round shadow-lg reform_img_button button-right"
+                                    type="button" :data-target="'paper' + paper._id" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </button> -->
+                            </div>
                         </div>
 
-                        <!-- 下载按钮 -->
-                        <div class="col-lg-4 text-md-center text-lg-left mt-4 mb-4">
+                        <!-- 下载按钮, 移到paper页面 -->
+                        <!-- <div class="col-lg-4 text-md-center text-lg-left mt-4 mb-4">
                             <a :href="getDownloadLink(paper._id)" class="btn btn-lg btn-outline-primary">PDF</a>
-                        </div>
+                        </div> -->
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -92,6 +100,7 @@ export default {
             responses: {},
             response_data: {},
 
+            pictures_urls: {},
         }
     },
 
@@ -156,9 +165,31 @@ export default {
         //     console.log(Object.keys(response_data).length);
         // },
 
+        getPicUrls(_ID) {
+            axios.get('http://10.80.135.205:8001/api/v1/paper/pics', {
+                params: {
+                    id: _ID,
+                }
+            })
+                .then((response) => {
+                    // 响应数据待处理
+                    this.picture_urls = response.data;
+                    return response.data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.already_searched = true;
+                    this.paper_id = "!! ERROR !!";
+                });
+        },
+
         getDownloadLink(ID) {
             const downloadURL = "http://10.80.135.205:8001/api/v1/paper/download?id=" + ID;
             return downloadURL;
+        },
+
+        GoToPaperPage(_ID) {
+            this.$router.push("/paper?id=" + _ID);
         },
     }
 }
@@ -209,5 +240,17 @@ export default {
 .paper_title {
     font-size: 20px;
 }
+
+.hoverable:hover {
+    text-decoration: underline;
+}
+
+.fill-image {
+    object-fit: cover;
+    width: 500px;
+    height: 200px;
+    padding: 10px;
+}
+
 </style>
 
