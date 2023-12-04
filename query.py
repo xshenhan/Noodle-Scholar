@@ -35,7 +35,6 @@ class PaperSearch:
                 "post_tags": ["</strong>"]
             },
             "size" : size
-            
         }
 
 
@@ -43,9 +42,12 @@ class PaperSearch:
 
         results = {}
         for hit in response['hits']['hits']:
-            paper_id = hit['_source'].get('paper_id')
+            if (self.index_name == "papers"):
+                id = hit['_source'].get('hash_id')
+            else:
+                id = hit['_source'].get('hash_id')
             highlights = hit.get('highlight', {})
-            results[paper_id] = highlights
+            results[id] = highlights
 
         return results
 
@@ -57,6 +59,10 @@ class PaperSearch:
 
 # 使用示例
 if __name__ == "__main__":
+    # paper_search = PaperSearch("papers")
+    # # 使用match查询
+    # match_results = paper_search._search('rock', "author", 1, query_type='match')
+    # print(match_results)
     paper_search = PaperSearch()
 
     prefix_results = paper_search.search_specific_field('rock', 'title', 10, query_type='match')

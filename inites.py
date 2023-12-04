@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch
 from pymongo import MongoClient
 client = MongoClient("mongodb://172.27.88.132:27017")
 db = client["papers"]
-collection = db["100pdfs"]
+collection = db["arxiv"]
 documents = collection.find()
 
 print("connected to mongodb")
@@ -11,7 +11,7 @@ es = Elasticsearch(hosts=host)
 
 print(es.ping())
 
-index_name = "papers"  # 替换为您希望使用的索引名称
+index_name = "arxiv"  # 替换为您希望使用的索引名称
 
 if  es.indices.exists(index=index_name):
     es.indices.delete(index=index_name)

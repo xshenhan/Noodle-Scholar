@@ -29,7 +29,7 @@ def protected(wrapped):
                 return response
             else:
                 # 设置延迟时间（以毫秒为单位）
-                delay_ms = 5000  # 例如，3秒
+                delay_ms = 500  # 例如，3秒
                 # 设置重定向的目标 URL
                 redirect_url = "/signup"
                 # 返回包含 JavaScript 的 HTML 响应
