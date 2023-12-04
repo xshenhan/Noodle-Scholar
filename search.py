@@ -50,3 +50,30 @@ async def searcher(request):
         results[i] = tmp_results
         i += 1     
     return json(results, headers={"Access-Control-Allow-Origin": "*"})
+
+@search.get("/autocomplete")
+async def autocomplete(request):
+    query_field = request.args.get("field") if request.args.get("field") is not None else "all"
+    query_type = request.args.get("type") if request.args.get("type") is not None else "match"
+    is_arxiv = request.args.get("arxiv") if request.args.get("arxiv") is not None else "false"
+    print(is_arxiv)
+    print(type(is_arxiv))
+    searcher = PaperSearch() if is_arxiv == "false" else PaperSearch("arxiv")
+    search_fn = searcher.search_all_fields if query_field == "all" else searcher.search_specific_field
+    if query_field not in ["all", "tag","ref_paper","conference","keywords","author","link","abstract","title","volume","journal","issn","publisher","doi"]:
+        return text("not imply", status=416, headers={"Access-Control-Allow-Origin": "*"})
+    query_size = 7
+    # if request.query == None:
+    #     return text("must request with a query", status=416, headers={"Access-Control-Allow-Origin": "*"})
+    search_results = search_fn(request.args.get("query"), query_field, query_size, query_type=query_type)
+    # print(query_size)
+    results = {}
+    tem_results = {}
+    i = 0
+    for k, paper in search_results.items():
+        tem_results["_id"] = k
+        for key, value in paper.items():
+            tem_results[key] = value
+        results[i] = tem_results
+        i += 1
+    return json(results, headers={"Access-Control-Allow-Origin": "*"})
