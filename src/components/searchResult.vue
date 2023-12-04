@@ -46,13 +46,6 @@
                                                 alt="...">
                                         </div>
                                     </div>
-                                    <div class="carousel-item">
-                                        <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8001/api/v1/paper/_pic?id=' + (paper._id) + '&index=2'" class="img-fluid mx-auto d-block fill-image"
-                                                alt="...">
-                                        </div>
-                                    </div>
-                                    
                                 </div>
                                 <!-- <button class="btn btn-white btn-round shadow-lg reform_img_button button-left"
                                     type="button" data-target="#$(paper._id)" data-slide="prev" placeholder="<">
