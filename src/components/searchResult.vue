@@ -16,11 +16,13 @@
                 <div class="container h-100">
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
                         <div class="col-lg-9 reform_size_content">
-                            <h5 class=" text-black hoverable "><span class="font-weight-bold"
-                                    @click="GoToPaperPage(paper._id)" v-html="paper.title[0]"></span></h5>
+                            <h5 class=" text-black hoverable "><strong><span
+                                    @click="GoToPaperPage(paper._id)" v-html="paper.title"></span></strong></h5>
+
                             <p><span class="badge badge-pill badge-purple">Author</span>&nbsp;
                                 <span v-for="(n, index) in paper.author.name" :key="index">
-                                    <span class="badge badge-success">{{ n }}</span>
+                                    <!-- <span class="badge badge-success">{{ n }}</span> -->
+                                    <span class="color_blue font-weight-bold">{{ n }}</span>
                                     <span v-if="index !== paper.author.name.length - 1"><strong>&nbsp;|&nbsp;</strong>
                                     </span>
                                 </span>
@@ -36,13 +38,13 @@
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8001/api/v1/paper/_pic?id=' + (paper._id) + '&index=0'" class="img-fluid mx-auto d-block fill-image"
+                                            <img :src="'http://10.80.135.205:8080/api/v1/paper/_pic?id=' + (paper._id) + '&index=0'" class="img-fluid mx-auto d-block fill-image"
                                                 alt="...">
                                         </div>
                                     </div>
                                     <div class="carousel-item">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8001/api/v1/paper/_pic?id=' + (paper._id) + '&index=1'" class="img-fluid mx-auto d-block fill-image"
+                                            <img :src="'http://10.80.135.205:8080/api/v1/paper/_pic?id=' + (paper._id) + '&index=1'" class="img-fluid mx-auto d-block fill-image"
                                                 alt="...">
                                         </div>
                                     </div>
@@ -83,7 +85,7 @@ export default {
             search_field: "",
             search_info: "",
 
-            paper_number: 10,
+            paper_number: 20,
 
             already_searched: false,
             paper_id: "NULL",
@@ -108,34 +110,36 @@ export default {
 
     methods: {
 
-        searchInfo() {
-            axios.get('http://10.80.135.205:8001/api/v1/search', {
-                params: {
-                    field: this.search_field,
-                    query: this.search_info,
-                }
-            })
-                .then((response) => {
-                    // 响应数据待处理
-                    console.log(response);
-                    this.already_searched = true;
-                    this.paper_id = response.data["0"]._id;
-                    this.paper_title = response.data["0"].title[0];
-                    this.paper_abstract = response.data["0"].abstract;
-                    console.log("finish changing data");
-                })
-                .catch((error) => {
-                    console.log(error);
-                    this.already_searched = true;
-                    this.paper_id = "!! ERROR !!";
-                });
-        },
+        // searchInfo() {
+        //     axios.get('http://10.80.135.205:8080/api/v1/search', {
+        //         params: {
+        //             field: this.search_field,
+        //             query: this.search_info,
+        //             source: "arxiv",
+        //         }
+        //     })
+        //         .then((response) => {
+        //             // 响应数据待处理
+        //             console.log(response);
+        //             this.already_searched = true;
+        //             this.paper_id = response.data["0"]._id;
+        //             this.paper_title = response.data["0"].title[0];
+        //             this.paper_abstract = response.data["0"].abstract;
+        //             console.log("finish changing data");
+        //         })
+        //         .catch((error) => {
+        //             console.log(error);
+        //             this.already_searched = true;
+        //             this.paper_id = "!! ERROR !!";
+        //         });
+        // },
 
         getAllPaperInfo() {
-            axios.get('http://10.80.135.205:8001/api/v1/search', {
+            axios.get('http://10.80.135.205:8080/api/v1/search', {
                 params: {
                     field: this.search_field,
                     query: this.search_info,
+                    // source: "arxiv",
                 }
             })
                 .then((response) => {
@@ -159,7 +163,7 @@ export default {
         // },
 
         getPicUrls(_ID) {
-            axios.get('http://10.80.135.205:8001/api/v1/paper/pics', {
+            axios.get('http://10.80.135.205:8080/api/v1/paper/pics', {
                 params: {
                     id: _ID,
                 }
@@ -177,7 +181,7 @@ export default {
         },
 
         getDownloadLink(ID) {
-            const downloadURL = "http://10.80.135.205:8001/api/v1/paper/download?id=" + ID;
+            const downloadURL = "http://10.80.135.205:8080/api/v1/paper/download?id=" + ID;
             return downloadURL;
         },
 
@@ -243,6 +247,14 @@ export default {
     width: 500px;
     height: 200px;
     padding: 10px;
+}
+
+.color_blue {
+    color: #2578b5;
+}
+
+.color_purple {
+    color: #8d4bbb;
 }
 
 </style>

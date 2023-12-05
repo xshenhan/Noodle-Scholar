@@ -62,7 +62,7 @@ export default {
 
     methods: {
         getDownloadLink(id) {
-            return "/api/v1/paper/download?id=" + id;
+            return "http://10.80.135.205:8001/api/v1/paper/download?id=" + id;
         },
 
         getPaperInfo() {
