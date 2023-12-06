@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
-import Searchresult from '../components/searchResult.vue'
+import searchResult from '../components/searchResult.vue'
+import Paper from '../components/Paper.vue'
+import SignUp from '../components/signup.vue'
+import LogIn from '../components/login.vue'
 
 const history = createWebHistory();
 const router = createRouter({
@@ -14,12 +17,23 @@ const router = createRouter({
         {
             path: '/searchresult',
             name: 'Searchresult',
-            component: Searchresult
+            component: searchResult
         },
-        // {
-        //     path: '/paper/:id',
-        //     name: 'Paper'
-        // }
+        {
+            path: '/signup',
+            name: 'Signup',
+            component: SignUp
+        },
+        {
+            path: '/login',
+            name: 'LogIn',
+            component: LogIn
+        },
+        {
+            path: '/paper',
+            name: 'Paper',
+            component: Paper
+        },
     ]
 });
 
