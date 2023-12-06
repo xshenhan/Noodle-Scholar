@@ -33,7 +33,7 @@ const router = createRouter({
             path: '/paper',
             name: 'Paper',
             component: Paper
-        }
+        },
     ]
 });
 

@@ -15,8 +15,17 @@
                 <div class="col-md-10">
 
                     <!-- 下拉搜索框 (不带搜索按钮) -->
-                    <div class="input-group under_border">
-                        <input type="text" class="form-control form-control-rounded" v-model="search_info"
+                    <div class="input-group under_border form-check-input">
+                        <!-- <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        </div> -->
+
+                        <button type="button" class="btn btn_circle" :class="{ btn_circle_active: this.agreed }"
+                            @click="changeAgreement"><strong>Arxiv</strong>
+                        </button>
+                        
+
+                        <input type="text" class="form-control form-control-rounded no_box_shadow" v-model="search_info"
                             @keyup.enter="SearchAndGoToResultPage" aria-label="Text input with dropdown button"
                             :placeholder="`Search by ${search_type}`">
                         <div class="input-group-append">
@@ -31,11 +40,11 @@
                                 <a class="dropdown-item" @click="selectSearchType('Journal')"><strong>Journal</strong></a>
                                 <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
                                 <a class="dropdown-item" @click="selectSearchType('Abstract')"><strong>Abstract</strong></a>
-                                <!-- <a class="dropdown-item" 
-                                        @click="selectSearchType('')"><strong>Abstract</strong></a> -->
                             </div>
                         </div>
                     </div>
+
+
 
                     <!-- 搜索按钮 -->
                     <button type="button" @click="SearchAndGoToResultPage"
@@ -102,9 +111,9 @@
     <div class="jumbotron jumbotron-fluid no_under_margin">
         <div class="container">
             <h1 class="display-4 text-right"><span class="font-weight-bold">满载动力</span>，<br>满足你的无理。</h1>
-                <p class="lead text-left">
-                    <img src="../assets/img/intel.png" width="10%">
-                </p>
+            <p class="lead text-left">
+                <img src="../assets/img/intel.png" width="10%">
+            </p>
         </div>
     </div>
 
@@ -135,15 +144,40 @@ export default {
             search_type: "All",
             search_type_print: "all",
             search_info: "",
+
+
+            agreed: false,
+            searchArxiv: false,
         };
     },
+
+    mounted() {
+        // $(document).ready(function () {
+        //     $('#defaultCheck1').change(function () {
+        //         if (this.checked) {
+        //             // 当复选框被选中时执行的操作
+        //         } else {
+        //             // 当复选框未被选中时执行的操作
+        //         }
+        //     });
+        // });
+    },
+
+
     methods: {
-        SearchId() {
-            this.$router.push("/searchResult" + "?id=" + this.searchTerm);
-        },
+        // SearchId() {
+        //     this.$router.push("/searchResult" + "?id=" + this.searchTerm);
+        // },
         SearchAndGoToResultPage() {
-            this.$router.push("/searchResult?field=" + this.search_type_print + "&info=" + this.search_info);
+            var url = "/searchResult?field=" + this.search_type_print + "&info=" + this.search_info;
+            if (this.searchArxiv) {
+                url += "&source=arxiv";
+            } else {
+                url += "&source=100pdfs";
+            }
+            this.$router.push(url);
         },
+
         selectSearchType(type) {
             this.search_type = type;
             if (type === "Subject") {
@@ -153,8 +187,18 @@ export default {
             }
             console.log("search_type changed to " + type);
             console.log("search_type_print: " + type);
-        }
+        },
+
+        changeAgreement() {
+            this.agreed = !this.agreed;
+            this.searchArxiv = !this.searchArxiv;
+            // console.log("agreed changed to " + this.agreed);
+            console.log("searchArxiv changed to " + this.searchArxiv);
+        },
+
     },
+
+
     watch: {
         paper_id: function (val) {
             console.log("paper_id changed to " + val);
@@ -214,4 +258,30 @@ export default {
     background-image: none;
     font-weight: bold;
 }
+
+.btn_circle {
+    width: 60px !important;
+    height: 38.797px !important;
+    border-radius: 20px 0 0 20px !important;
+    position: relative !important;
+    padding: 0 !important;
+    overflow: inherit !important;
+    border: none !important;
+    background-color:#ffffff;
+    color: #7832e2;
+}
+
+.btn_circle_active {
+    background-color: #7832e2 !important;
+    color: #ffffff !important;
+}
+
+.btn_circle:hover {
+    background-color: #7832e2 !important;
+
+}
+
+.no_box_shadow {
+    box-shadow: none !important;
+}   
 </style>

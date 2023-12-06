@@ -13,13 +13,20 @@
 
         <div class="media" v-for="(paper, key) in response_data" :key='key'>
             <div class=" bg-light reform_size_frame">
-                <div class="container h-100">
+                <div class="container reform_size_container">
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
-                        <div class="col-lg-9 reform_size_content">
-                            <h5 class=" text-black hoverable "><strong><span
-                                    @click="GoToPaperPage(paper._id)" v-html="paper.title"></span></strong></h5>
+                        <div class="reform_size_content" :class="{ 'col-lg-9': paper.pic_num!==0 }">
+                            <h5 class=" text-black hoverable "><strong><span @click="GoToPaperPage(paper._id)"
+                                        v-html="paper.title"></span></strong></h5>
 
-                            <p><span class="badge badge-pill badge-purple">Author</span>&nbsp;
+                            <p><span class="badge badge-primary">DOI</span>&nbsp;
+                                <span @click="copyLink(paper.doi, key)" :class="'copy-button copy-button-' + key"
+                                    data-container="body" data-toggle="popover" data-placement="top" data-content="已复制DOI">
+                                    <span class="badge badge-success" v-html="paper.doi"></span>
+                                </span>
+                            </p>
+
+                            <p><span class="badge badge-primary">Author</span>&nbsp;
                                 <span v-for="(n, index) in paper.author.name" :key="index">
                                     <!-- <span class="badge badge-success">{{ n }}</span> -->
                                     <span class="color_blue font-weight-bold">{{ n }}</span>
@@ -27,39 +34,46 @@
                                     </span>
                                 </span>
                             </p>
-                            <p><span class="badge badge-pill badge-purple">Abstract</span>&nbsp; <span
-                                    v-html="paper.abstract"></span></p>
+
+                            <p><span class="badge badge-primary">Abstract</span>&nbsp; <span v-html="paper.abstract"></span>
+                            </p>
+
                         </div>
 
                         <!-- 论文图片展示 -->
                         <div class="col-lg-3 text-md-right text-lg-right mt-4 mb-4">
 
-                            <div id="paperPictureDisplay" class="carousel slide carousel-fade" data-ride="carousel">
+                            <div :id="'paperPictureDisplay' + key" class="carousel slide" data-ride="carousel">
+
                                 <div class="carousel-inner">
-                                    <div class="carousel-item active">
+
+                                    <!-- <div class="carousel-item active">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8080/api/v1/paper/_pic?id=' + (paper._id) + '&index=0'" class="img-fluid mx-auto d-block fill-image"
-                                                alt="...">
+                                            <img :src="'http://10.80.135.205:8080' + paper.pics['0']"
+                                                class="img-fluid mx-auto d-block fill-image">
+                                        </div>
+                                    </div> -->
+
+                                    <div v-for="(url, index) in paper.pics" :key="index" class="carousel-item" :class="{ active: index==='0' }">
+                                        <div class="card shadow-sm border-0">
+                                            <img :src="'http://10.80.135.205:8080' + url"
+                                                class="img-fluid mx-auto d-block fill-image">
                                         </div>
                                     </div>
-                                    <div class="carousel-item">
-                                        <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8080/api/v1/paper/_pic?id=' + (paper._id) + '&index=1'" class="img-fluid mx-auto d-block fill-image"
-                                                alt="...">
-                                        </div>
-                                    </div>
+
+                                    <a class="carousel-control-prev" :href="'#paperPictureDisplay' + key" role="button"
+                                        data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" :href="'#paperPictureDisplay' + key" role="button"
+                                        data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
                                 </div>
-                                <!-- <button class="btn btn-white btn-round shadow-lg reform_img_button button-left"
-                                    type="button" data-target="#$(paper._id)" data-slide="prev" placeholder="<">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Previous</span>
-                                </button>
-                                <button class="btn btn-white btn-round shadow-lg reform_img_button button-right"
-                                    type="button" :data-target="'paper' + paper._id" data-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Next</span>
-                                </button> -->
                             </div>
+
                         </div>
 
                         <!-- 下载按钮, 移到paper页面 -->
@@ -78,12 +92,14 @@
 
 <script>
 import axios from 'axios';
+import ClipboardJS from 'clipboard';
 
 export default {
     data() {
         return {
             search_field: "",
             search_info: "",
+            search_source: "",
 
             paper_number: 20,
 
@@ -102,44 +118,24 @@ export default {
     mounted() {
         this.search_field = this.$route.query.field;
         this.search_info = this.$route.query.info;
+        this.search_source = this.$route.query.source;
         console.log("field = " + this.search_field);
         console.log("info = " + this.search_info);
+        console.log("source = " + this.search_source);
         this.getAllPaperInfo();
         // this.getLimitedPaperInfo();
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        });
     },
 
     methods: {
-
-        // searchInfo() {
-        //     axios.get('http://10.80.135.205:8080/api/v1/search', {
-        //         params: {
-        //             field: this.search_field,
-        //             query: this.search_info,
-        //             source: "arxiv",
-        //         }
-        //     })
-        //         .then((response) => {
-        //             // 响应数据待处理
-        //             console.log(response);
-        //             this.already_searched = true;
-        //             this.paper_id = response.data["0"]._id;
-        //             this.paper_title = response.data["0"].title[0];
-        //             this.paper_abstract = response.data["0"].abstract;
-        //             console.log("finish changing data");
-        //         })
-        //         .catch((error) => {
-        //             console.log(error);
-        //             this.already_searched = true;
-        //             this.paper_id = "!! ERROR !!";
-        //         });
-        // },
-
         getAllPaperInfo() {
             axios.get('http://10.80.135.205:8080/api/v1/search', {
                 params: {
                     field: this.search_field,
                     query: this.search_info,
-                    // source: "arxiv",
+                    source: this.search_source,
                 }
             })
                 .then((response) => {
@@ -180,16 +176,59 @@ export default {
                 });
         },
 
+        async fetchImagesForPaper(paper) {
+            console.log("enter");
+            try {
+                console.log("before axios");
+                const response = await axios.get(`http://10.80.135.205:8080/api/v1/paper/pics?id=${paper.id}`);
+                console.log("after axios");
+
+                if (response.data) {
+                    // 假设响应是一个对象，键是索引，值是URL
+                    Vue.set(paper, 'imageUrls', Object.values(response.data));
+                }
+            } catch (error) {
+                console.error('Error fetching images for paper:', error);
+            }
+        },
+
         getDownloadLink(ID) {
             const downloadURL = "http://10.80.135.205:8080/api/v1/paper/download?id=" + ID;
             return downloadURL;
         },
 
         GoToPaperPage(_ID) {
-            this.$router.push("/paper?id=" + _ID);
+            this.$router.push("/paper?id=" + _ID + "&source=" + this.search_source);
+        },
+
+        copyLink(_doi, key) {
+            const textToCopy = _doi;
+            const selector = '.copy-button-' + key;
+            const clipboard = new ClipboardJS(selector, {
+                text: () => textToCopy
+            });
+
+            clipboard.on('success', () => {
+
+                const temp = '[data-toggle="popover"]';
+                $(temp).popover();
+                const popoverElement = $(selector);
+
+                popoverElement.popover('show');
+
+                setTimeout(() => {
+                    popoverElement.popover('hide');
+                }, 1000); // 1秒后隐藏 popover
+            });
+
+            clipboard.onClick({
+                target: document.querySelector(selector)
+            });
         },
     }
 }
+
+
 </script>
 
 
@@ -200,17 +239,21 @@ export default {
 }
 
 .reform_size_frame {
-    padding-top: 20px !important;
-    padding-bottom: 10px !important;
-    padding-left: 20px !important;
-    padding-right: 100px !important;
+    width: 90% !important;
     margin-bottom: 10px !important;
-    margin-left: 50px !important;
-    margin-right: 30px !important;
+    margin: 0 auto !important;
+}
+
+.reform_size_container{
+    width: 100% !important;
+    margin-top: 15px !important;
+    margin-left: 2% !important;
+    margin-right: 1% !important;
+    margin: 0 auto !important;
 }
 
 .reform_size_content {
-    width: 700px !important;
+    width: 100% !important;
     height: auto !important;
 }
 
@@ -256,6 +299,5 @@ export default {
 .color_purple {
     color: #8d4bbb;
 }
-
 </style>
 
