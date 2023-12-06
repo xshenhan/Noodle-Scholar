@@ -15,6 +15,7 @@
 				<div class="cf-turnstile" data-sitekey="0x4AAAAAAAOBU1BK4T3OQONj" data-callback="javascriptCallback"></div>
 				<button type="submit" class="btn btn-primary">Submit</button>
 			</form>
+			<button type="button" class="btn btn-primary">Primary</button>
 			<div id="responseMessage" class="mt-3"></div>
 		</div>
 	</body>
