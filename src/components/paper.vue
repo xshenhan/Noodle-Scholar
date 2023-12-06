@@ -190,7 +190,7 @@ body {
 }
 
 
-.btn_circle {
+.btn_circle_paper {
     width: 36.781px;
     height: 36.781px;
     border-radius: 10%;
@@ -200,11 +200,11 @@ body {
     border: none;
 }
 
-.btn_circle :active {
+.btn_circle_paper :active {
     border: 10px solid white;
 }
 
-.btn_circle :active {
+.btn_circle_paper :active {
     position: absolute;
     top: 50%;
     left: 50%;

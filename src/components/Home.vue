@@ -20,7 +20,7 @@
                             <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
                         </div> -->
 
-                        <button type="button" class="btn btn_circle" :class="{ btn_circle_active: this.agreed }"
+                        <button type="button" class="btn btn_circle_home" :class="{ btn_circle_home_active: this.agreed }"
                             @click="changeAgreement"><strong>Arxiv</strong>
                         </button>
                         
@@ -259,7 +259,7 @@ export default {
     font-weight: bold;
 }
 
-.btn_circle {
+.btn_circle_home {
     width: 60px !important;
     height: 38.797px !important;
     border-radius: 20px 0 0 20px !important;
@@ -271,7 +271,7 @@ export default {
     color: #7832e2;
 }
 
-.btn_circle_active {
+.btn_circle_home_active {
     background-color: #7832e2 !important;
     color: #ffffff !important;
 }

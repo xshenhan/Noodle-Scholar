@@ -2,13 +2,15 @@
 	<body>
 
 		<!-- <div class="login-background"> -->
-		<div><br><br><br></div>
-			
+		<div><br></div>
+
 
 
 		<div class="container resize">
-			<div class="middle_title"><h2>Signup</h2></div>
-			<div><br><br></div>
+			<div class="middle_title">
+				<h2>Sign up</h2>
+			</div>
+			<div><br></div>
 			<form id="signupForm">
 				<div class="mb-3">
 					<label for="username" class="form-label">Username</label>
@@ -22,33 +24,41 @@
 
 
 				<!-- 是否同意协议 -->
-				<div class="button-with-text">
-					<button type="button" class="btn btn-outline-primary btn_circle" :class="{ btn_circle_active: this.agreed }"
-						@click="changeAgreement">
-						<svg v-if="agreed" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-							class="bi bi-check-square inner_btn_check" viewBox="0 0 16 16">
-							<path
-								d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-							<path
-								d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z" />
-						</svg>
-					</button>
-					&nbsp;&nbsp;&nbsp;
-					<span>请同意<a href="#" @click.prevent="togglePopover">用户协议</a></span>
+				<div class="container2">
+					<div class="button-with-text">
+						<button type="button" class="btn btn-outline-primary btn_circle_signup"
+							:class="{ btn_circle_signup_active: this.agreed }" @click="changeAgreement">
+							<svg v-if="agreed" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+								class="bi bi-check-square inner_btn_check" viewBox="0 0 30 30">
+								<path
+									d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+								<path
+									d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z" />
+							</svg>
+						</button>
+						&nbsp;&nbsp;&nbsp;
+						<span class="centered-text">请被迫接收<a href="#" @click.prevent="togglePopover">用户协议</a></span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+					</div>
 				</div>
-				<div><br><br></div>
+
+
+				<div><br></div>
 				<!-- 提交按钮 -->
 				<div class="submit_button">
-					<button type="submit" class="btn btn-primary" :disabled="!this.agreed">Submit</button>
+					<button type="submit" class="btn btn-primary submit_btn_longer" :disabled="!this.agreed">Submit</button>
 				</div>
+
+
 			</form>
 			<div id="responseMessage" class="mt-3"></div>
 		</div>
 
-		
+
 		<!-- </div> -->
 
-		
+
 		<!-- 全屏弹出框 -->
 		<div v-if="isPopoverVisible" class="fullscreen-popover">
 			<div class="popover-content">
@@ -119,7 +129,7 @@
 		</div>
 
 
-		
+
 
 		<!-- light footer -->
 		<!-- <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1440 126" style="enable-background:new 0 0 1440 126;" xml:space="preserve">
@@ -139,11 +149,11 @@
 			<div class="container">
 				<div class="row justify-content-center">
 					<div class="col-12">
-						<h1 class="middle_title">
+						<h3 class="middle_title">
 							NOODLE SCHOLAR &nbsp;
-							<img src="../assets/img/N.png" :width="80">
+							<img src="../assets/img/N.png" :width="40">
 							&nbsp; 开搜未来
-						</h1>
+						</h3>
 					</div>
 				</div>
 			</div>
@@ -273,9 +283,9 @@ body {
 }
 
 
-.btn_circle {
-	width: 36.781px;
-	height: 36.781px;
+.btn_circle_signup {
+	width: 20.781px;
+	height: 20.781px;
 	border-radius: 10%;
 	position: relative;
 	padding: 0;
@@ -284,15 +294,15 @@ body {
 	box-shadow: none !important;
 }
 
-.btn_circle_active {
+.btn_circle_signup_active {
 	border: 1px solid white;
 	box-shadow: none !important;
 }
 
 
 .inner_btn_check {
-	width: 34.781px;
-	height: 34.781px;
+	width: 20.781px;
+	height: 20.781px;
 	position: relative !important;
 }
 
@@ -415,13 +425,14 @@ footer {
 }
 
 .footer-container {
-    position: relative;
+	position: relative;
 }
 
 .footer-svg {
-    margin-top: -150px; /* 向上移动 SVG */
-    width: 100%;
-    height: auto;
+	margin-top: -150px;
+	/* 向上移动 SVG */
+	width: 100%;
+	height: auto;
 }
 
 
@@ -435,18 +446,36 @@ footer {
 }
 
 .login-background {
-    background-image: url('..\assets\img\pic.png');
-    background-size: contain;
+	background-image: url('..\assets\img\pic.png');
+	background-size: contain;
 	background-repeat: no-repeat;
-    background-position: center; 
-    /* height: 70vh;  */
-    /* width: 100vw;  */
-	max-width: 150%; /* 最大宽度为父元素的100% */
-    max-height: 50vh; /* 最大高度为视口高度的90% */
-    height: auto;     /* 高度自动调整以保持纵横比 */
+	background-position: center;
+	/* height: 70vh;  */
+	/* width: 100vw;  */
+	max-width: 150%;
+	/* 最大宽度为父元素的100% */
+	max-height: 50vh;
+	/* 最大高度为视口高度的90% */
+	height: auto;
+	/* 高度自动调整以保持纵横比 */
 }
 
+.submit_btn_longer {
+	width: 100%;
+}
 
+.container2 {
+	display: flex;
+	align-items: center;
+	/* 垂直居中 */
+	justify-content: center;
+	/* 水平居中 */
+	height: 30px;
+	/* 设置容器高度 */
+}
 
-
+.centered-text {
+	line-height: 30px; /* 设置行高为与父元素高度相等 */
+	height: 30px; /* 设置高度为与父元素相等 */
+  }
 </style>
