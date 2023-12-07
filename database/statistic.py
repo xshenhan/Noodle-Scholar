@@ -1,6 +1,8 @@
 import json
 
 num_papers_authors = {}
+num_papers_main_subject = {}
+num_papers_sub_subject = {}
 tot = 2370685
 
 
@@ -19,6 +21,24 @@ def count_author(data: dict) -> None:
         else:
             num_papers_authors[author] = 1
 
+def count_subject(data: dict) -> None:
+    """
+    Count the number of papers of each subject
+    :param data: metadata of the paper
+    :return: None
+    """
+    subjects = data['categories'].split(' ')
+    for subject in subjects:
+        if subject in num_papers_sub_subject:
+            num_papers_sub_subject[subject] += 1
+        else:
+            num_papers_sub_subject[subject] = 1
+        main_subject = subject.split('.')[0]
+        if main_subject in num_papers_main_subject:
+            num_papers_main_subject[main_subject] += 1
+        else:
+            num_papers_main_subject[main_subject] = 1
+
 
 def fetch_name(author: str) -> str:
     """
@@ -34,13 +54,13 @@ def fetch_name(author: str) -> str:
     return author
 
 
-def save_json(data: dict) -> None:
+def save_json(data: dict, file_name) -> None:
     """
     Save the result to json file
     :param data: dict
     :return: None
     """
-    with open('num_papers_authors.json', 'w') as f:
+    with open(file_name, 'w') as f:
         json.dump(data, f, indent=4)
     print("Successfully save the result to json file")
 
@@ -49,6 +69,10 @@ if __name__ == '__main__':
     with open('arxiv.json') as f:
         for index, line in enumerate(f):
             data = json.loads(line)
-            count_author(data)
+            # count_author(data)
+            count_subject(data)
             print(f'[{index+1}/{tot}] have been counted.')
-    save_json(num_papers_authors)
+    # save_json(num_papers_authors, 'num_papers_authors.json')
+    save_json(num_papers_main_subject, 'num_papers_main_subject.json')
+    save_json(num_papers_sub_subject, 'num_papers_sub_subject.json')
+    
