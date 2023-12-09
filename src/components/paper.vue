@@ -9,7 +9,7 @@
             </p>
 
 
-            <div class="col-lg-4 text-md-center text-lg-left mt-4 mb-4">
+            <div class="col-lg-12 text-md-center text-lg-left mt-4 mb-4">
                 <button @click="copyLink" class="copy-button btn btn-outline-primary" data-container="body"
                     data-toggle="popover" data-placement="top" data-content="已复制链接">Share
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -27,16 +27,99 @@
                     </svg>
                 </a>
                 &nbsp;
-                <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
+                <button @click.prevent="modelSummary" class="btn btn-outline-primary">
+                    GPT Summary
+                </button>
 
-                    <div v-if="display_summary_window" class="fullscrenn-popover">
-                        <div class="popover-content">
-                            <p>{{ this.model_message }}</p>
+                <!-- <div v-show="display_summary_window" class="fullscreen_popover">
+                    <div class="popover_content">
+                        <div class="popover_content">
+                            <h3>GPT_4</h3>
+                            <button @click.prevent="modelSummary" class="close-btn">关闭</button>
+                        </div>
+                        <div class="popover_content">
+                            <p>隐私政策
+
+生效日期：[填写日期]
+
+1. 引言
+
+欢迎您使用我们的服务。我们非常重视您的隐私，并致力于保护您的个人信息。本隐私政策旨在向您解释我们如何收集、使用、披露和保护您的个人信息。请在使用我们的服务之前仔细阅读本政策。
+
+2. 收集的信息
+
+在提供服务过程中，我们可能会收集以下类型的个人信息：
+
+- 姓名
+- 电子邮件地址
+- 联系信息
+- 设备信息（例如，IP地址、浏览器类型、操作系统）
+- 使用情况数据（例如，访问日期和时间、浏览页面、点击信息）
+- 其他根据法律和法规要求的信息
+
+3. 信息的使用
+
+我们可能会使用您的个人信息来：
+
+- 向您提供所请求的服务
+- 处理您的付款
+- 向您发送与服务相关的通知和更新
+- 改进我们的服务
+- 解决争议和解决问题
+- 遵守法律和法规的要求
+
+4. 信息的披露
+
+我们不会出售、租赁或以其他方式向第三方披露您的个人信息，除非获得您的明确同意或受法律要求。我们可能会与以下第三方分享您的信息：
+
+- 与我们合作提供服务的供应商和合作伙伴
+- 法律要求披露信息的情况下
+
+5. 信息的保护
+
+我们采取合理的安全措施来保护您的个人信息，以防止未经授权的访问、使用或披露。然而，互联网上的数据传输永远不是100%安全的，因此我们无法保证信息的绝对安全。
+
+6. 隐私权的选择
+
+您可以选择提供或不提供个人信息。如果您选择不提供某些信息，可能会影响我们提供的服务。
+
+7. 隐私政策的变更
+
+我们可能会不时更新本隐私政策，以反映我们的实践和法律要求的变化。我们将在生效日期前通知您有关更新。请定期查看本政策以了解最新信息。
+
+8. 联系我们
+
+如果您对本隐私政策有任何疑问或疑虑，或者希望行使与您的个人信息相关的权利，请通过以下联系方式与我们联系：
+
+[您的联系信息]
+
+感谢您阅读我们的隐私政策，我们将继续致力于保护您的隐私和个人信息。</p>
                         </div>
                     </div>
 
-                </button>
+                </div> -->
+
             </div>
+
+            <div v-show="display_summary_window" class="fullscreen_popover">
+                <div class="popover_content">
+                    <h3>GPT_4</h3>
+                    <button @click.prevent="modelSummary" class="close-btn">关闭</button>
+                    <div class="chat-container">
+                        <!-- 对话内容 -->
+                        <div class="chat-content">
+                            <!-- 这里放置对话消息 -->
+                            <!-- 更多消息 -->
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" v-on:keyup.enter="sendMessage" placeholder="输入消息...">
+                        <button @click="sendMessage" class="send_btn">发送</button>
+                    </div>
+                </div>
+            </div>
+
+
 
 
         </div>
@@ -65,6 +148,7 @@ export default {
             display_summary_window: false,
             model_model_type: "NULL",
             model_message: "NULL",
+            isPopoverVisible: false,
         }
     },
 
@@ -132,23 +216,66 @@ export default {
             });
         },
 
+        togglePopover() {
+            this.isPopoverVisible = !this.isPopoverVisible;
+        },
+
         modelSummary() {
             this.display_summary_window = !this.display_summary_window;
 
-            axios.get('http://10.80.135.205:8080/api/v1/model/summary', {
-                params: {
-                    id: this.paper_id,
-                    source: this.paper_source,
-                }
-            })
-                .then((response) => {
-                    this.model_message = response.data.message;
-                    this.model_model_type = response.data.model;
-                })
-                .catch((error) => {
-                    console.log(error);
-                    this.paper_id = "!! ERROR !!";
-                });
+
+
+
+            // axios.get('http://10.80.135.205:8080/api/v1/model/summary', {
+            //     params: {
+            //         id: this.paper_id,
+            //         source: this.paper_source,
+            //     }
+            // })
+            //     .then((response) => {
+            //         this.model_message = response.data.message;
+            //         this.model_model_type = response.data.model;
+            //     })
+            //     .catch((error) => {
+            //         console.log(error);
+            //         this.paper_id = "!! ERROR !!";
+            //     });
+        },
+
+
+        sendMessage() {
+            const input = document.getElementById("chatInput");
+            const message = input.value;
+            input.value = ""; // 清空输入框
+
+            // 将用户消息添加到聊天内容
+            this.addMessageToChat("user-message", message);
+
+            // 调用 GPT 接口获取回复（这里需要您自己实现API调用逻辑）
+            this.getGPTResponse(message).then(response => {
+                this.addMessageToChat("gpt-message", response);
+            });
+        },
+        addMessageToChat(type, text) {
+            const chatContent = document.querySelector(".chat-content");
+            const newMessage = document.createElement("p");
+            newMessage.classList.add("chat-message", type);
+            newMessage.textContent = text;
+            chatContent.appendChild(newMessage);
+
+            // 自动滚动到最新消息
+            this.scrollToBottom();
+        },
+
+        scrollToBottom() {
+            const chatContainer = document.querySelector(".chat-container");
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        },
+        // 模拟调用 GPT 接口
+        async getGPTResponse(message) {
+            // 实现 GPT API 调用
+            // 这里返回一个模拟的回复
+            return "这是 GPT 的回复";
         }
     }
 };
@@ -234,31 +361,11 @@ body {
     justify-content: center;
 }
 
-
-.fullscreen-popover {
-    position: fixed;
-    /* 固定定位 */
-    top: 50%;
-    /* 垂直居中 */
-    left: 50%;
-    /* 水平居中 */
-    transform: translate(-50%, -50%);
-    /* 调整定位以确保完全居中 */
-    width: auto;
-    /* 或者设定具体宽度 */
-    height: auto;
-    /* 或者设定具体高度 */
-    background-color: white;
-    z-index: 1000;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-
-.popover-content {
+.popover_content {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    height: 100%;
 }
 
 
@@ -266,22 +373,6 @@ body {
     margin-top: 20px;
 }
 
-/* 自定义复选框样式
-input[type="checkbox"] {
-    accent-color: green; /* 设置复选框的主题颜色 
-}
-
-自定义标签样式 
-label {
-    margin-left: 8px;
-} */
-/*
-.popover-content {
-    display: flex;  使用 Flexbox 
-    justify-content: space-between;  内容两侧对齐 
-    align-items: center;  垂直居中 
-}
-*/
 /* 弹出框内按钮的容器 */
 .popover-buttons {
     margin-left: auto;
@@ -289,14 +380,11 @@ label {
 }
 
 
-.popover-content {
-    /* 其他样式 */
+/* .popover-content {
     display: flex;
     flex-direction: column;
-    /* 子元素垂直排列 */
     align-items: flex-start;
-    /* 子元素向左对齐 */
-}
+} */
 
 /* 按钮容器的样式 */
 .buttons-container {
@@ -304,5 +392,128 @@ label {
     /* 在内容和按钮之间添加一些空间 */
     align-self: flex-end;
     /* 将按钮组推到右侧 */
+}
+
+.centered-text {
+    line-height: 30px;
+    /* 设置行高为与父元素高度相等 */
+    height: 30px;
+    /* 设置高度为与父元素相等 */
+}
+
+.send_btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.close-btn {
+    position: absolute;
+    /* 相对于 .fullscreen_popover 定位 */
+    top: 15px;
+    /* 距离弹窗顶部的距离 */
+    right: 15px;
+    /* 距离弹窗右侧的距离 */
+    padding: 5px 10px;
+    /* 按钮内边距，根据需要调整 */
+    background: #f5f5f5;
+    /* 按钮背景颜色，根据需要调整 */
+    border: 1px solid #ddd;
+    /* 按钮边框，根据需要调整 */
+    cursor: pointer;
+    /* 使鼠标悬停时呈现为手型指针 */
+    font-size: 15px;
+    /* 根据需要调整字体大小 */
+    border-radius: 4px;
+    /* 如果您希望按钮角是圆的 */
+    /* 也可以直接设置宽度和高度 */
+    width: 55px;
+    /* 根据需要调整宽度 */
+    height: 40px;
+    /* 根据需要调整高度 */
+}
+
+
+
+
+
+
+
+.fullscreen_popover {
+    position: fixed;
+    /* 固定定位 */
+    top: 50%;
+    /* 垂直居中 */
+    left: 80%;
+    /* 水平居中 */
+    transform: translate(-50%, -50%);
+    /* 调整定位以确保完全居中 */
+    width: 400px;
+    /* 固定宽度 */
+    height: 700px;
+    /* 固定高度 */
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.popover_content {
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chat-container {
+    flex-grow: 1; /* 使聊天内容区域占据剩余空间 */
+    overflow-y: auto; /* 仅使聊天内容可滚动 */
+    padding: 10px;
+}
+
+.chat-content {
+    padding: 10px;
+    /* 内边距 */
+}
+
+.chat-message {
+    margin-bottom: 10px;
+    /* 信息间距 */
+    padding: 5px;
+    /* 内边距 */
+    border-radius: 5px;
+    /* 圆角边框 */
+}
+
+.user-message {
+    background-color: #e0e0e0;
+    /* 用户消息背景颜色 */
+    text-align: right;
+    /* 用户消息右对齐 */
+}
+
+.gpt-message {
+    background-color: #f0f0f0;
+    /* GPT 消息背景颜色 */
+    text-align: left;
+    /* GPT 消息左对齐 */
+}
+
+.chat-input-container {
+    display: flex;
+    /* 水平布局 */
+    padding: 10px;
+    /* 内边距 */
+}
+
+#chatInput {
+    flex-grow: 1;
+    /* 输入框占据剩余空间 */
+    margin-right: 10px;
+    /* 与发送按钮间距 */
 }
 </style>
