@@ -51,7 +51,7 @@ export default {
     methods: {
         search() {
             // 重定向到另一个 html 页面
-            axios.get('http://10.80.135.205:8001/api/v1/paper/info', {
+            axios.get('http://10.80.135.205:8080/api/v1/paper/info', {
                 params: {
                     id: this.searchTerm
                 }
