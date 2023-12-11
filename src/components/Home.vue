@@ -13,21 +13,21 @@
 
             <div class="row align-items-center justify-content-center text-center">
                 <div class="col-md-10">
-
-                    <!-- 下拉搜索框 (不带搜索按钮) -->
+                    
+                    <!-- 上方 -->
                     <div class="input-group under_border form-check-input">
-                        <!-- <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        </div> -->
 
-                        <button type="button" class="btn btn_circle_home" :class="{ btn_circle_home_active: this.agreed }"
+                        <!-- Arxiv 选择器 -->
+                        <button type="button" class="btn btn_circle_home " :class="{ btn_circle_home_active: this.agreed }"
                             @click="changeAgreement"><strong>Arxiv</strong>
                         </button>
-                        
 
+                        <!-- 搜索框 -->
                         <input type="text" class="form-control form-control-rounded no_box_shadow" v-model="search_info"
                             @keyup.enter="SearchAndGoToResultPage" aria-label="Text input with dropdown button"
                             :placeholder="`Search by ${search_type}`">
+
+                        <!-- 搜索条件选择器 -->
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
                                 data-toggle="dropdown" aria-expanded="false">{{ search_type }}</button>
@@ -45,16 +45,17 @@
                     </div>
 
 
-
+                    <!-- 下方 -->
                     <!-- 搜索按钮 -->
-                    <button type="button" @click="SearchAndGoToResultPage"
-                        class="btn btn-primary btn-lg btn-block btn-rounded button_white_border">Search</button>
+                    <div class="row col-md-12">
+                        <button type="button" @click="SearchAndGoToResultPage"
+                            class="btn btn-primary btn-lg btn-block btn-rounded button_white_border">Search</button>
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- <div class="container">
         <div class="spinner-border text-primary"></div>
@@ -98,11 +99,10 @@
             <br>
 
             <p class="lead text-right">
-                登陆账号管理，个人信息档案，<br>
-                并行加速数据，智能内容分析，<br>
-                ......&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                全网信息检索，并行加速数据，<br>
+                遵循设计模式，周到异常处理，<br><br>
+                <!-- ......&nbsp;&nbsp;&nbsp;&nbsp;<br> -->
                 <span class="font-weight-bold">统统没有。</span>
-                <!-- <br><span class="font-weight-bold">轻的，未必更重。</span><br> -->
             </p>
         </div>
     </div>
@@ -110,9 +110,11 @@
 
     <div class="jumbotron jumbotron-fluid no_under_margin">
         <div class="container">
-            <h1 class="display-4 text-right"><span class="font-weight-bold">满载动力</span>，<br>满足你的无理。</h1>
+            <h1 class="display-4 text-right">虽然轻，<br>但代码分量<span class="font-weight-bold">重。</span></h1>
             <p class="lead text-left">
-                <img src="../assets/img/intel.png" width="10%">
+                5个人8个分支，无用代码与有用代码共同管理。<br>
+                大小驼峰随意使用，<br>
+                <span class="font-weight-bold">生怕你看得懂。</span>
             </p>
         </div>
     </div>
@@ -127,11 +129,22 @@
             </p>
         </div>
     </div>
+
+
+    <div class="jumbotron jumbotron-fluid no_under_margin">
+        <div class="container">
+            <h1 class="display-4 text-right"><span class="font-weight-bold">满载动力</span>，<br>满足你的无理。</h1>
+            <p class="lead text-left">
+                <img src="../assets/img/intel.png" width="10%">
+            </p>
+        </div>
+    </div>
 </template>
 
 
 <script>
 // 6532290ad507ea15ca185e7f
+// arxiv: 6569d4442c9d068894e2ac4c
 
 export default {
     data() {
@@ -217,7 +230,7 @@ export default {
 }
 
 .middle_title {
-    text-align: center;
+    text-align: center !important;
 }
 
 .under_border {
@@ -267,7 +280,7 @@ export default {
     padding: 0 !important;
     overflow: inherit !important;
     border: none !important;
-    background-color:#ffffff;
+    background-color: #ffffff;
     color: #7832e2;
 }
 
@@ -283,5 +296,5 @@ export default {
 
 .no_box_shadow {
     box-shadow: none !important;
-}   
+}
 </style>

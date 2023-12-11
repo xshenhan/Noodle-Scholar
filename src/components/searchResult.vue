@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div class="row align-items-center justify-content-center text-center">
+            <div class="col-md-10">
+            </div>
+        </div>
         <br><br>
 
         <!-- <div class="media" v-for="(paper, key) in response_data" :key='key'>
@@ -15,7 +19,7 @@
             <div class=" bg-light reform_size_frame">
                 <div class="container reform_size_container">
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
-                        <div class="reform_size_content" :class="{ 'col-lg-9': paper.pic_num!==0 }">
+                        <div class="reform_size_content" :class="{ 'col-lg-9': paper.pic_num !== 0 }">
                             <h5 class=" text-black hoverable "><strong><span @click="GoToPaperPage(paper._id)"
                                         v-html="paper.title"></span></strong></h5>
 
@@ -27,10 +31,10 @@
                             </p>
 
                             <p><span class="badge badge-primary">Author</span>&nbsp;
-                                <span v-for="(n, index) in paper.author.name" :key="index">
+                                <span v-for="(n, index) in paper.author" :key="index">
                                     <!-- <span class="badge badge-success">{{ n }}</span> -->
                                     <span class="color_blue font-weight-bold">{{ n }}</span>
-                                    <span v-if="index !== paper.author.name.length - 1"><strong>&nbsp;|&nbsp;</strong>
+                                    <span v-if="index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
                                     </span>
                                 </span>
                             </p>
@@ -54,7 +58,8 @@
                                         </div>
                                     </div> -->
 
-                                    <div v-for="(url, index) in paper.pics" :key="index" class="carousel-item" :class="{ active: index==='0' }">
+                                    <div v-for="(url, index) in paper.pics" :key="index" class="carousel-item"
+                                        :class="{ active: index === '0' }">
                                         <div class="card shadow-sm border-0">
                                             <img :src="'http://10.80.135.205:8080' + url"
                                                 class="img-fluid mx-auto d-block fill-image">
@@ -97,6 +102,10 @@ import ClipboardJS from 'clipboard';
 export default {
     data() {
         return {
+            search_type: "NULL",
+            search_type_print: "NULL",
+
+
             search_field: "",
             search_info: "",
             search_source: "",
@@ -130,6 +139,18 @@ export default {
     },
 
     methods: {
+
+        selectSearchType(type) {
+            this.search_type = type;
+            if (type === "Subject") {
+                this.search_type_print = "tag";
+            } else {
+                this.search_type_print = type.toLowerCase();
+            }
+            console.log("search_type changed to " + type);
+            console.log("search_type_print: " + type);
+        },
+
         getAllPaperInfo() {
             axios.get('http://10.80.135.205:8080/api/v1/search', {
                 params: {
@@ -244,7 +265,7 @@ export default {
     margin: 0 auto !important;
 }
 
-.reform_size_container{
+.reform_size_container {
     width: 100% !important;
     margin-top: 15px !important;
     margin-left: 2% !important;
