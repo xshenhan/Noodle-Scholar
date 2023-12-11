@@ -39,7 +39,7 @@ export default {
 
     methods: {
         search() {
-            axios.get('http://10.80.135.205:8001/api/v1/paper/info', {
+            axios.get('http://10.80.135.205:8080/api/v1/paper/info', {
                 params: {
                     id: this.search_id,
                 }
