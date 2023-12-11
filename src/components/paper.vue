@@ -4,9 +4,14 @@
         <div class="container">
             <h2 class="text-left">{{ this.paper_title }}</h2>
             <br>
-            <p class="lead"><span class="badge badge-pill badge-primary">Abstract</span>&nbsp;
-                {{ this.paper_abstract }}
+            <p class="lead"><span class="badge badge-primary">Author</span>&nbsp;
+                <span v-for="(aut, i) in this.paper_author" :key="i">
+                    <span class="color_blue font-weight-bold">{{ aut }}</span>
+                    <span v-if="i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
+                </span>
             </p>
+            <p class="lead"><span class="badge badge-primary">Abstract</span>&nbsp;
+                {{ this.paper_abstract }}</p>
 
 
             <div class="col-lg-4 text-md-center text-lg-left mt-4 mb-4">
@@ -27,15 +32,16 @@
                     </svg>
                 </a>
                 &nbsp;
-                <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
+
+                <!-- <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
 
                     <div v-if="display_summary_window" class="fullscrenn-popover">
                         <div class="popover-content">
                             <p>{{ this.model_message }}</p>
                         </div>
                     </div>
+                </button> -->
 
-                </button>
             </div>
 
 
@@ -61,6 +67,10 @@ export default {
             paper_cite: "NULL",
             paper_kqi: "NULL",
             paper_tag: "NULL",
+            paper_doi: "NULL",
+            paper_author: [],
+            paper_affiliation: [],
+
 
             display_summary_window: false,
             model_model_type: "NULL",
@@ -101,6 +111,14 @@ export default {
                     this.paper_cite = response.data.cite;
                     this.paper_kqi = response.data.kqi;
                     this.paper_tag = response.data.tag;
+                    for (var i = 0; i < response.data.author.length; i++) {
+                        if (this.paper_author.indexOf(response.data.author[i]) == -1)
+                            this.paper_author.push(response.data.author[i]);
+                    }
+                    for (var i = 0; i < response.data.affiliation.length; i++) {
+                        if (this.paper_affiliation.indexOf(response.data.affiliation[i]) == -1)
+                            this.paper_affiliation.push(response.data.affiliation[i]);
+                    }
                     console.log("Got paper [" + _ID + "] data");
                 })
                 .catch((error) => {
@@ -135,20 +153,20 @@ export default {
         modelSummary() {
             this.display_summary_window = !this.display_summary_window;
 
-            axios.get('http://10.80.135.205:8080/api/v1/model/summary', {
-                params: {
-                    id: this.paper_id,
-                    source: this.paper_source,
-                }
-            })
-                .then((response) => {
-                    this.model_message = response.data.message;
-                    this.model_model_type = response.data.model;
-                })
-                .catch((error) => {
-                    console.log(error);
-                    this.paper_id = "!! ERROR !!";
-                });
+            // axios.get('http://10.80.135.205:8080/api/v1/model/summary', {
+            //     params: {
+            //         id: this.paper_id,
+            //         source: this.paper_source,
+            //     }
+            // })
+            //     .then((response) => {
+            //         this.model_message = response.data.message;
+            //         this.model_model_type = response.data.model;
+            //     })
+            //     .catch((error) => {
+            //         console.log(error);
+            //         this.paper_id = "!! ERROR !!";
+            //     });
         }
     }
 };
