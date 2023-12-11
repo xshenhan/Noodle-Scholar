@@ -1,4 +1,3 @@
-    <!-- Paper.vue -->
 <template>
     <div class="jumbotron jumbotron-fluid set_margin set_padding">
         <div class="container">
@@ -105,18 +104,19 @@
                     </div> -->
 
             </div>
+        </div>
+    </div>
+    <div v-show="display_summary_window" class="fullscreen_popover">
+        <div class="popover_content">
+            <h3>GPT_4</h3>
+            <button @click.prevent="modelSummary" class="close-btn">关闭</button>
+            <div class="chat-container">
+                <!-- 对话内容 -->
+                <div class="chat-content">
+                    <!-- 这里放置对话消息 -->
+                    <!-- 更多消息 -->
 
-            <div v-show="display_summary_window" class="fullscreen_popover">
-                <div class="popover_content">
-                    <h3>GPT_4</h3>
-                    <button @click.prevent="modelSummary" class="close-btn">关闭</button>
-                    <div class="chat-container">
-                        <!-- 对话内容 -->
-                        <div class="chat-content">
-                            <!-- 这里放置对话消息 -->
-                            <!-- 更多消息 -->
-
-                <!-- <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
+                    <!-- <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
 
                     <div v-if="display_summary_window" class="fullscrenn-popover">
                         <div class="popover-content">
@@ -130,14 +130,15 @@
                 </div>
                 </button> -->
 
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- 渲染全部表格 (已预加载过全部标签) -->
-    <div v-for="key in (this.paper_tables_num)" :key="key">
-        <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
-        <div :id="'table' + (key)"></div>
+        <!-- 渲染全部表格 (已预加载过全部标签) -->
+        <div v-for="key in (this.paper_tables_num)" :key="key">
+            <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
+            <div :id="'table' + (key)"></div>
+        </div>
     </div>
 </template>
     
