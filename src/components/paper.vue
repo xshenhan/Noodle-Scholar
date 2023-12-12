@@ -1,8 +1,9 @@
 <template>
     <div class="jumbotron jumbotron-fluid set_margin set_padding">
         <div class="container">
-            <h2 class="text-left">{{ this.paper_title }}</h2>
-            <br>
+            <h2 class="text-left">{{ this.paper_title }}&nbsp;<span class="badge reform_badge_outline">{{ this.paper_year
+            }}</span></h2>
+            <!-- <br> -->
             <p class="lead"><span class="badge badge-primary">Author</span>&nbsp;
                 <span v-for="(aut, i) in this.paper_author" :key="i">
                     <span class="color_blue font-weight-bold">{{ aut }}</span>
@@ -33,7 +34,21 @@
                 &nbsp;
                 <button @click.prevent="modelSummary" class="btn btn-outline-primary">
                     GPT Summary
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-chat-square-text-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.5a1 1 0 0 0-.8.4l-1.9 2.533a1 1 0 0 1-1.6 0L5.3 12.4a1 1 0 0 0-.8-.4H2a2 2 0 0 1-2-2V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z" />
+                    </svg>
                 </button>
+                &nbsp;
+                <a :href="getOriginWebsite(this.paper_id)" target="_blank" class="btn btn-outline-primary">Website
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-browser-safari" viewBox="0 0 16 16">
+                        <path
+                            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm.25-14.75v1.5a.25.25 0 0 1-.5 0v-1.5a.25.25 0 0 1 .5 0Zm0 12v1.5a.25.25 0 1 1-.5 0v-1.5a.25.25 0 1 1 .5 0ZM4.5 1.938a.25.25 0 0 1 .342.091l.75 1.3a.25.25 0 0 1-.434.25l-.75-1.3a.25.25 0 0 1 .092-.341Zm6 10.392a.25.25 0 0 1 .341.092l.75 1.299a.25.25 0 1 1-.432.25l-.75-1.3a.25.25 0 0 1 .091-.34ZM2.28 4.408l1.298.75a.25.25 0 0 1-.25.434l-1.299-.75a.25.25 0 0 1 .25-.434Zm10.392 6 1.299.75a.25.25 0 1 1-.25.434l-1.3-.75a.25.25 0 0 1 .25-.434ZM1 8a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 0 .5h-1.5A.25.25 0 0 1 1 8Zm12 0a.25.25 0 0 1 .25-.25h1.5a.25.25 0 1 1 0 .5h-1.5A.25.25 0 0 1 13 8ZM2.03 11.159l1.298-.75a.25.25 0 0 1 .25.432l-1.299.75a.25.25 0 0 1-.25-.432Zm10.392-6 1.299-.75a.25.25 0 1 1 .25.433l-1.3.75a.25.25 0 0 1-.25-.434ZM4.5 14.061a.25.25 0 0 1-.092-.341l.75-1.3a.25.25 0 0 1 .434.25l-.75 1.3a.25.25 0 0 1-.342.091Zm6-10.392a.25.25 0 0 1-.091-.342l.75-1.299a.25.25 0 1 1 .432.25l-.75 1.3a.25.25 0 0 1-.341.09ZM6.494 1.415l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13ZM9.86 13.972l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13ZM3.05 3.05a.25.25 0 0 1 .354 0l.353.354a.25.25 0 0 1-.353.353l-.354-.353a.25.25 0 0 1 0-.354Zm9.193 9.193a.25.25 0 0 1 .353 0l.354.353a.25.25 0 1 1-.354.354l-.353-.354a.25.25 0 0 1 0-.353ZM1.545 6.01l.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.482Zm12.557 3.365.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.483Zm-12.863.436a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177Zm12.557-3.365a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177ZM3.045 12.944a.299.299 0 0 1-.029-.376l3.898-5.592a.25.25 0 0 1 .062-.062l5.602-3.884a.278.278 0 0 1 .392.392L9.086 9.024a.25.25 0 0 1-.062.062l-5.592 3.898a.299.299 0 0 1-.382-.034l-.005-.006Zm3.143 1.817a.25.25 0 0 1-.176-.306l.129-.483a.25.25 0 0 1 .483.13l-.13.483a.25.25 0 0 1-.306.176ZM9.553 2.204a.25.25 0 0 1-.177-.306l.13-.483a.25.25 0 1 1 .483.13l-.13.483a.25.25 0 0 1-.306.176Z" />
+                    </svg>
+                </a>
+
 
                 <!-- <div v-show="display_summary_window" class="fullscreen_popover">
                         <div class="popover_content">
@@ -106,6 +121,7 @@
             </div>
         </div>
     </div>
+
     <div v-show="display_summary_window" class="fullscreen_popover">
         <div class="popover_content">
             <h3>GPT_4</h3>
@@ -115,21 +131,11 @@
                 <div class="chat-content">
                     <!-- 这里放置对话消息 -->
                     <!-- 更多消息 -->
-
-                    <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
-
-                        <!-- <div v-if="display_summary_window" class="fullscrenn-popover">
-                            <div class="popover-content">
-                                <p>{{ this.model_message }}</p>
-                            </div>
-                        </div> -->
-                        <div class="chat-input-container">
-                            <input type="text" id="chatInput" v-on:keyup.enter="sendMessage" placeholder="输入消息...">
-                            <button @click="sendMessage" class="send_btn">发送</button>
-                        </div>
-                    </button>
-
                 </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" v-on:keyup.enter="sendMessage" placeholder="输入消息...">
+                <button @click="sendMessage" class="send_btn">发送</button>
             </div>
         </div>
     </div>
@@ -162,6 +168,7 @@ export default {
             paper_tag: "NULL",
             paper_doi: "NULL",
             paper_author: [],
+            paper_url: "NULL",
             paper_affiliation: [],
 
 
@@ -231,6 +238,8 @@ export default {
                     this.paper_cite = response.data.cite;
                     this.paper_kqi = response.data.kqi;
                     this.paper_tag = response.data.tag;
+                    this.paper_url = response.data.url;
+                    this.paper_doi = response.data.doi;
                     for (var i = 0; i < response.data.author.length; i++) {
                         if (this.paper_author.indexOf(response.data.author[i]) == -1)
                             this.paper_author.push(response.data.author[i]);
@@ -372,6 +381,8 @@ export default {
                 .then((response) => {
                     this.last_chat_history = response.data;
                     this.addMessageToChat("gpt-message", response.data.message[2].content);
+                    this.last_chat_history = this.DEVGPT;
+                    console.log("set history to: " + this.last_chat_history);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -420,15 +431,13 @@ export default {
             }
 
             console.log("question: " + input_message);
-            console.log("history: " + this.last_chat_history);
+            console.log("history: " + JSON.stringify(this.last_chat_history));
 
             axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
-                body: {
-                    question: input_message,
-                    history: this.last_chat_history,
-                }
+                question: input_message,
+                history: this.last_chat_history,
             })
-                .then((response) => {
+                .then(function (response) {
                     this.last_chat_history = response.data;
                     return response.data;
                 })
@@ -437,6 +446,14 @@ export default {
                     return error;
                 });
             // return "测试--不发送请求";
+        },
+
+        getOriginWebsite() {
+            if (this.paper_source == "arxiv") {
+                return this.paper_url;
+            } else {
+                return "https://doi.org/" + this.paper_doi;
+            }
         }
     }
 };
@@ -706,4 +723,11 @@ body {
     margin-left: 140px !important;
     background-color: #4c8dae !important;
 }
-</style>
+
+.reform_badge_outline {
+    color: #2578b5;
+    background-color: transparent !important;
+    border: solid 1px #2578b5 !important;
+    border-color: #2578b5 !important;
+    padding: 0.1rem 0.3rem !important;
+}</style>

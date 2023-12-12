@@ -71,3 +71,8 @@ searchId();
 3. 增加搜索篇数（通过 watch (paper_num) 的变化，重新搜索内容）
 4. 判断返回的状态码，区分登录状态
 5. paper页面显示所有照片
+6. arxiv作者格式不同
+    ![arxiv作者格式不同](todo-author_format.png)
+
+7. paper页面的图片、表格、可视化都放在一个可切换的窗口里
+8. paper页面右侧加一栏，展示各种杂项元数据

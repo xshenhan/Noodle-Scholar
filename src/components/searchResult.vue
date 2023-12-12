@@ -23,7 +23,7 @@
                             <h5 class=" text-black hoverable "><strong><span @click="GoToPaperPage(paper._id)"
                                         v-html="paper.title"></span></strong></h5>
 
-                            <p><span class="badge badge-primary">DOI</span>&nbsp;
+                            <p v-if="paper.doi!=null && paper.doi!=''"><span class="badge badge-primary">DOI</span>&nbsp;
                                 <span @click="copyLink(paper.doi, key)" :class="'copy-button copy-button-' + key"
                                     data-container="body" data-toggle="popover" data-placement="top" data-content="已复制DOI">
                                     <span class="badge badge-success" v-html="paper.doi"></span>
@@ -33,7 +33,7 @@
                             <p><span class="badge badge-primary">Author</span>&nbsp;
                                 <span v-for="(n, index) in paper.author" :key="index">
                                     <!-- <span class="badge badge-success">{{ n }}</span> -->
-                                    <span class="color_blue font-weight-bold">{{ n }}</span>
+                                    <span class="color_blue font-weight-bold" v-html="n"></span>
                                     <span v-if="index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
                                     </span>
                                 </span>
@@ -219,7 +219,9 @@ export default {
         },
 
         GoToPaperPage(_ID) {
-            this.$router.push("/paper?id=" + _ID + "&source=" + this.search_source);
+            const _url = "/paper?id=" + _ID + "&source=" + this.search_source
+            // this.$router.push(_url);
+            window.open(_url, "_blank");
         },
 
         copyLink(_doi, key) {
@@ -262,7 +264,8 @@ export default {
 .reform_size_frame {
     width: 90% !important;
     margin-bottom: 10px !important;
-    margin: 0 auto !important;
+    margin: 0 auto;
+    padding-top: 10px;
 }
 
 .reform_size_container {
@@ -270,7 +273,7 @@ export default {
     margin-top: 15px !important;
     margin-left: 2% !important;
     margin-right: 1% !important;
-    margin: 0 auto !important;
+    margin: 0 0 10px 0;
 }
 
 .reform_size_content {
