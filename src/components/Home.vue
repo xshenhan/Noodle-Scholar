@@ -12,10 +12,10 @@
             <h1 class="display-4 middle_title">唯一的不同，<br><span class="font-weight-bold">是处处都不同。</span></h1><br>
 
             <div class="row align-items-center justify-content-center text-center">
-                <div class="col-md-10">
+                <div class="col-md-10 ">
                     
                     <!-- 上方 -->
-                    <div class="input-group under_border form-check-input">
+                    <div class="input-group under_border form-check-input reform_margin">
 
                         <!-- Arxiv 选择器 -->
                         <button type="button" class="btn btn_circle_home " :class="{ btn_circle_home_active: this.agreed }"
@@ -47,7 +47,7 @@
 
                     <!-- 下方 -->
                     <!-- 搜索按钮 -->
-                    <div class="row col-md-12">
+                    <div class="row col-md-13 reform_margin">
                         <button type="button" @click="SearchAndGoToResultPage"
                             class="btn btn-primary btn-lg btn-block btn-rounded button_white_border">Search</button>
 
@@ -182,7 +182,7 @@ export default {
         //     this.$router.push("/searchResult" + "?id=" + this.searchTerm);
         // },
         SearchAndGoToResultPage() {
-            var url = "/searchResult?field=" + this.search_type_print + "&info=" + this.search_info;
+            var url = "/searchResult?field=" + this.search_type_print + "&info=" + encodeURIComponent(this.search_info);
             if (this.searchArxiv) {
                 url += "&source=arxiv";
             } else {
@@ -242,7 +242,7 @@ export default {
 }
 
 .scratch_high {
-    padding-bottom: 500px !important;
+    padding-bottom: 700px !important;
 }
 
 .display_inline {
@@ -296,5 +296,9 @@ export default {
 
 .no_box_shadow {
     box-shadow: none !important;
+}
+
+.reform_margin {
+    margin: auto;
 }
 </style>

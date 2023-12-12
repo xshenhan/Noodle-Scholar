@@ -116,29 +116,28 @@
                     <!-- 这里放置对话消息 -->
                     <!-- 更多消息 -->
 
-                    <!-- <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
+                    <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
 
-                    <div v-if="display_summary_window" class="fullscrenn-popover">
-                        <div class="popover-content">
-                            <p>{{ this.model_message }}</p>
+                        <!-- <div v-if="display_summary_window" class="fullscrenn-popover">
+                            <div class="popover-content">
+                                <p>{{ this.model_message }}</p>
+                            </div>
+                        </div> -->
+                        <div class="chat-input-container">
+                            <input type="text" id="chatInput" v-on:keyup.enter="sendMessage" placeholder="输入消息...">
+                            <button @click="sendMessage" class="send_btn">发送</button>
                         </div>
-                    </div>
-                    <div class="chat-input-container">
-                        <input type="text" id="chatInput" v-on:keyup.enter="sendMessage" placeholder="输入消息...">
-                        <button @click="sendMessage" class="send_btn">发送</button>
-                    </div>
-                </div>
-                </button> -->
+                    </button>
 
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- 渲染全部表格 (已预加载过全部标签) -->
-        <div v-for="key in (this.paper_tables_num)" :key="key">
-            <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
-            <div :id="'table' + (key)"></div>
-        </div>
+    <!-- 渲染全部表格 (已预加载过全部标签) -->
+    <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
+        <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
+        <div :id="'table' + (key)"></div>
     </div>
 </template>
     
@@ -202,7 +201,9 @@ export default {
             $('[data-toggle="popover"]').popover();
         });
         this.getPaperInfo();
-        this.getTableData();    // 获取全部标签, 并分别加到元素标签上
+        if (this.paper_source != "arxiv") {
+            this.getTableData();    // 获取全部标签, 并分别加到元素标签上
+        }
 
     },
 
@@ -234,9 +235,11 @@ export default {
                         if (this.paper_author.indexOf(response.data.author[i]) == -1)
                             this.paper_author.push(response.data.author[i]);
                     }
-                    for (var i = 0; i < response.data.affiliation.length; i++) {
-                        if (this.paper_affiliation.indexOf(response.data.affiliation[i]) == -1)
-                            this.paper_affiliation.push(response.data.affiliation[i]);
+                    if (this.paper_source != "arxiv") {
+                        for (var i = 0; i < response.data.affiliation.length; i++) {
+                            if (this.paper_affiliation.indexOf(response.data.affiliation[i]) == -1)
+                                this.paper_affiliation.push(response.data.affiliation[i]);
+                        }
                     }
                     console.log("Got paper [" + _ID + "] data");
                 })
@@ -372,7 +375,6 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
-                    this.paper_id = "!! ERROR !!";
                 });
 
             // 测试
