@@ -13,7 +13,7 @@
 
             <div class="row align-items-center justify-content-center text-center">
                 <div class="col-md-10 ">
-                    
+
                     <!-- 上方 -->
                     <div class="input-group under_border form-check-input reform_margin">
 
@@ -110,7 +110,7 @@
 
     <div class="jumbotron jumbotron-fluid no_under_margin">
         <div class="container">
-            <h1 class="display-4 text-right">虽然轻，<br>但代码分量<span class="font-weight-bold">重。</span></h1>
+            <h1 class="display-4 text-right">虽然轻，<br>但<span class="font-weight-bold">代码</span>分量<span class="font-weight-bold">重。</span></h1>
             <p class="lead text-left">
                 5个人8个分支，无用代码与有用代码共同管理。<br>
                 大小驼峰随意使用，<br>
@@ -145,6 +145,7 @@
 <script>
 // 6532290ad507ea15ca185e7f
 // arxiv: 6569d4442c9d068894e2ac4c
+import axios from 'axios';
 
 export default {
     data() {
@@ -209,6 +210,49 @@ export default {
             console.log("searchArxiv changed to " + this.searchArxiv);
         },
 
+        getAutoComplement() {
+            var cache = {};
+            if (this.searchArxiv) {
+                var search_source = "arxiv";
+            } else {
+                var search_source = "100pdfs";
+            }
+
+            axios.get('http://10.80.135.205:8080/api/v1/search/autocomplete', {
+                params: {
+                    field: this.search_type.toLowerCase(),
+                    query: this.search_info,
+                    source: search_source,
+                }
+            })
+                .then((response) => {
+                    this.responses = response;
+                    this.response_data = Object.fromEntries(Object.entries(this.responses.data).slice(0, this.paper_number));
+                    // 打印response_data长度
+                    console.log(Object.keys(this.response_data).length);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.already_searched = true;
+                    this.paper_id = "!! ERROR !!";
+                })
+            
+            $("#birds").autocomplete({
+                minLength: 2,
+                source: function (request, response) {
+                    var term = request.term;
+                    if (term in cache) {
+                        response(cache[term]);
+                        return;
+                    }
+
+                    $.getJSON("api/v1/search/autocomplement", request, function (data, status, xhr) {
+                        cache[term] = data;
+                        response(data);
+                    });
+                }
+            });
+        }
     },
 
 

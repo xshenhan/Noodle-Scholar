@@ -23,7 +23,7 @@
                             <h5 class=" text-black hoverable "><strong><span @click="GoToPaperPage(paper._id)"
                                         v-html="paper.title"></span></strong></h5>
 
-                            <p v-if="paper.doi!=null && paper.doi!=''"><span class="badge badge-primary">DOI</span>&nbsp;
+                            <p v-if="paper.doi != null && paper.doi != ''"><span class="badge badge-primary">DOI</span>&nbsp;
                                 <span @click="copyLink(paper.doi, key)" :class="'copy-button copy-button-' + key"
                                     data-container="body" data-toggle="popover" data-placement="top" data-content="已复制DOI">
                                     <span class="badge badge-success" v-html="paper.doi"></span>
@@ -91,6 +91,9 @@
             </div>
         </div>
 
+        <div class="alert alert-cyan text_center" role="alert">
+            <strong>已显示全部搜索结果</strong>
+        </div>
 
     </div>
 </template>
@@ -322,6 +325,18 @@ export default {
 
 .color_purple {
     color: #8d4bbb;
+}
+
+.text_center {
+    text-align: center !important;
+    width: auto !important;
+    margin-left: 70.852px;
+    margin-right: 70.852px;
+    margin-top: 10px;
+    margin-bottom: 100px;
+    background-color: #2578b5;
+    color: #ffffff;
+    border: none;
 }
 </style>
 

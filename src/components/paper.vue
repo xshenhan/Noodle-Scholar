@@ -140,10 +140,29 @@
         </div>
     </div>
 
-    <!-- 渲染全部表格 (已预加载过全部标签) -->
-    <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
-        <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
-        <div :id="'table' + (key)"></div>
+
+    <div class="container" id="tabs">
+        <ul>
+            <li v-if="this.paper_source != 'arxiv'"><a href="#tables">table</a></li>
+            <li><a href="#pics">picture</a></li>
+        </ul>
+
+        <!-- 渲染全部表格 (已预加载过全部标签) -->
+        <div id="tables">
+            <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
+                <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
+                <div :id="'table' + (key - 1)"></div>
+            </div>
+        </div>
+
+        <!-- 渲染全部图片 (已预加载过全部标签) -->
+        <div id="pics">
+            <div v-for="key in (this.paper_pictures_num)" :key="key">
+                <h1><span class="badge badge-secondary reform_table_index">Picture {{ key }}</span></h1>
+                <img class="full_screen" :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
+            </div>
+        </div>
+
     </div>
 </template>
     
@@ -155,6 +174,8 @@ import ClipboardJS from 'clipboard';
 export default {
     data() {
         return {
+            displayTable: true,
+
             paper_id: "NULL",
             paper_source: "NULL",
 
@@ -180,6 +201,8 @@ export default {
 
             paper_tables: {},
             paper_tables_num: 0,
+            paper_pictures: {},
+            paper_pictures_num: 0,
 
             DEVGPT: {
                 "model": "gpt-3.5-turbo",
@@ -202,6 +225,9 @@ export default {
     },
 
     mounted() {
+        $(function () {
+            $("#tabs").tabs();
+        });
         this.paper_id = this.$route.query.id;
         this.paper_source = this.$route.query.source;
         $(function () {
@@ -210,8 +236,8 @@ export default {
         this.getPaperInfo();
         if (this.paper_source != "arxiv") {
             this.getTableData();    // 获取全部标签, 并分别加到元素标签上
-        }
-
+        };
+        this.getPicturesData();
     },
 
     methods: {
@@ -269,13 +295,32 @@ export default {
                     this.paper_tables = response.data;
                     this.paper_tables_num = Object.keys(response.data).length;
                     console.log(this.paper_tables);
-                    console.log("number: " + this.paper_tables_num);
+                    console.log("tables number: " + this.paper_tables_num);
                     for (let i = 0; i < this.paper_tables_num; i++) {
                         this.getSingleTableData(i, this.paper_tables[i]);
                     }
                 })
                 .catch((error) => {
-                    console.log("Something wrong when [" + this.paper_id + "]");
+                    console.log("Something wrong when tables in [" + this.paper_id + "]");
+                    console.log(error);
+                })
+        },
+
+        getPicturesData() {
+            console.log("Begin getting picture data of [" + this.paper_id + "]");
+            axios.get('http://10.80.135.205:8080/api/v1/paper/pics', {
+                params: {
+                    id: this.paper_id,
+                }
+            })
+                .then((response) => {
+                    this.paper_pictures = response.data;
+                    this.paper_pictures_num = Object.keys(response.data).length;
+                    // console.log(this.paper_pictures);
+                    console.log("pictures number: " + this.paper_pictures_num);
+                })
+                .catch((error) => {
+                    console.log("Something wrong when pictures in [" + this.paper_id + "]");
                     console.log(error);
                 })
         },
@@ -299,7 +344,7 @@ export default {
 
                             // 创建表格元素
                             const table = document.createElement('table');
-                            table.className = "table table-hover";
+                            table.className = "table table-hover full_screen";
 
                             // 创建表头行
                             const thead = document.createElement('thead');
@@ -720,7 +765,7 @@ body {
 }
 
 .reform_table_index {
-    margin-left: 140px !important;
+    margin-left: 10px !important;
     background-color: #4c8dae !important;
 }
 
@@ -730,4 +775,13 @@ body {
     border: solid 1px #2578b5 !important;
     border-color: #2578b5 !important;
     padding: 0.1rem 0.3rem !important;
-}</style>
+}
+
+.not {
+    display: none;
+}
+
+.full_screen {
+    width: 100% !important;
+}
+</style>
