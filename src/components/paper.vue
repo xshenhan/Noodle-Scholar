@@ -141,27 +141,62 @@
     </div>
 
 
-    <div class="container" id="tabs">
-        <ul>
+
+    <div class="constainer outside_border">
+        <div class="container add_bottom_margin" id="tabs">
+            <!-- bootstrap 导航栏 -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link my_text_font active" id="table-tab" data-toggle="tab" href="#table" role="tab"
+                        aria-controls="table" aria-selected="true">Tables</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link my_text_font" id="picture-tab" data-toggle="tab" href="#picture" role="tab"
+                        aria-controls="picture" aria-selected="false">Pictures</a>
+                </li>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="tab-content" id="myTabContent">
+                <!-- 渲染全部表格 -->
+                <div class="tab-pane fade show active" id="table" role="tabpanel" aria-labelledby="table-tab">
+                    <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
+                        <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
+                        <div :id="'table' + (key - 1)"></div>
+                    </div>
+                </div>
+                <!-- 渲染全部图片 -->
+                <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">
+                    <div v-for="key in (this.paper_pictures_num)" :key="key">
+                        <img class="full_screen" :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
+                        <!-- TODO: 把这个分割线改成包裹图片的框 -->
+                        <div class="alert alert-cyan pic_gap" role="alert"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- jquery 导航栏 -->
+        <!-- <ul>
             <li v-if="this.paper_source != 'arxiv'"><a href="#tables">table</a></li>
             <li><a href="#pics">picture</a></li>
-        </ul>
+        </ul> -->
 
         <!-- 渲染全部表格 (已预加载过全部标签) -->
-        <div id="tables">
+        <!-- <div id="tables">
             <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
                 <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
                 <div :id="'table' + (key - 1)"></div>
             </div>
-        </div>
+        </div> -->
 
         <!-- 渲染全部图片 (已预加载过全部标签) -->
-        <div id="pics">
+        <!-- <div id="pics">
             <div v-for="key in (this.paper_pictures_num)" :key="key">
                 <h1><span class="badge badge-secondary reform_table_index">Picture {{ key }}</span></h1>
                 <img class="full_screen" :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
             </div>
-        </div>
+        </div> -->
 
     </div>
 </template>
@@ -783,5 +818,32 @@ body {
 
 .full_screen {
     width: 100% !important;
+}
+
+.my_text_font {
+    font-weight: 700 !important;
+    color: #2578b5 !important;
+}
+
+.outside_border {
+    border: 10px solid #dee2e6 !important;
+    border-radius: 1rem;
+    margin-top: 20px !important;
+    margin-right: 20px !important;
+    margin-left: 20px !important;
+    padding: 20px !important;
+}
+
+.add_bottom_margin {
+    margin-bottom: 20px;
+}
+
+.pic_gap {
+    border-color: #643441;
+    background-color: #643441;
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
 }
 </style>
