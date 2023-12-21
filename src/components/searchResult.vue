@@ -20,7 +20,7 @@
                 <div class="container reform_size_container">
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
                         <div class="reform_size_content" :class="{ 'col-lg-9': paper.pic_num !== 0 }">
-                            <h5 class=" text-black hoverable "><strong><span @click="GoToPaperPage(paper._id)"
+                            <h5 class="text-black hoverable cursor_pointer"><strong><span @click="GoToPaperPage(paper._id)"
                                         v-html="paper.title"></span></strong></h5>
 
                             <p v-if="paper.doi != null && paper.doi != ''"><span class="badge badge-primary">DOI</span>&nbsp;
@@ -33,7 +33,7 @@
                             <p><span class="badge badge-primary">Author</span>&nbsp;
                                 <span v-for="(n, index) in paper.author" :key="index">
                                     <!-- <span class="badge badge-success">{{ n }}</span> -->
-                                    <span class="color_blue font-weight-bold" v-html="n"></span>
+                                    <span @click="SearchAuthor(n)" class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
                                     <span v-if="index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
                                     </span>
                                 </span>
@@ -221,8 +221,13 @@ export default {
             return downloadURL;
         },
 
+        SearchAuthor(_name) {
+            var _url = "/searchResult?field=author" + "&info=" + encodeURIComponent(_name) + "&source=" + this.search_source;
+            window.open(_url, "_blank");
+        },
+
         GoToPaperPage(_ID) {
-            const _url = "/paper?id=" + _ID + "&source=" + this.search_source
+            const _url = "/api/v1/search" + _ID + "&source=" + this.search_source
             // this.$router.push(_url);
             window.open(_url, "_blank");
         },
@@ -337,6 +342,10 @@ export default {
     background-color: #2578b5;
     color: #ffffff;
     border: none;
+}
+
+.cursor_pointer {
+    cursor: pointer;
 }
 </style>
 
