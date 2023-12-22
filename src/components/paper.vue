@@ -1,11 +1,13 @@
 <template>
     <div class="jumbotron jumbotron-fluid set_margin set_padding">
         <div class="container">
-            <h2 class="text-left">{{ this.paper_title }}</h2>
-            <br>
+            <h2 class="text-left">{{ this.paper_title }}&nbsp;<span class="badge reform_badge_outline">{{ this.paper_year
+            }}</span></h2>
+            <!-- <br> -->
             <p class="lead"><span class="badge badge-primary">Author</span>&nbsp;
                 <span v-for="(aut, i) in this.paper_author" :key="i">
-                    <span class="color_blue font-weight-bold">{{ aut }}</span>
+                    <span @click="SearchAuthor(n)" class="color_blue font-weight-bold hoverable cursor_pointer">{{ aut
+                    }}</span>
                     <span v-if="i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
                 </span>
             </p>
@@ -33,79 +35,25 @@
                 &nbsp;
                 <button @click.prevent="modelSummary" class="btn btn-outline-primary">
                     GPT Summary
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-chat-square-text-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.5a1 1 0 0 0-.8.4l-1.9 2.533a1 1 0 0 1-1.6 0L5.3 12.4a1 1 0 0 0-.8-.4H2a2 2 0 0 1-2-2V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z" />
+                    </svg>
                 </button>
-
-                <!-- <div v-show="display_summary_window" class="fullscreen_popover">
-                        <div class="popover_content">
-                            <div class="popover_content">
-                                <h3>GPT_4</h3>
-                                <button @click.prevent="modelSummary" class="close-btn">关闭</button>
-                            </div>
-                            <div class="popover_content">
-                                <p>隐私政策
-
-    生效日期：[填写日期]
-
-    1. 引言
-
-    欢迎您使用我们的服务。我们非常重视您的隐私，并致力于保护您的个人信息。本隐私政策旨在向您解释我们如何收集、使用、披露和保护您的个人信息。请在使用我们的服务之前仔细阅读本政策。
-
-    2. 收集的信息
-
-    在提供服务过程中，我们可能会收集以下类型的个人信息：
-
-    - 姓名
-    - 电子邮件地址
-    - 联系信息
-    - 设备信息（例如，IP地址、浏览器类型、操作系统）
-    - 使用情况数据（例如，访问日期和时间、浏览页面、点击信息）
-    - 其他根据法律和法规要求的信息
-
-    3. 信息的使用
-
-    我们可能会使用您的个人信息来：
-
-    - 向您提供所请求的服务
-    - 处理您的付款
-    - 向您发送与服务相关的通知和更新
-    - 改进我们的服务
-    - 解决争议和解决问题
-    - 遵守法律和法规的要求
-
-    4. 信息的披露
-
-    我们不会出售、租赁或以其他方式向第三方披露您的个人信息，除非获得您的明确同意或受法律要求。我们可能会与以下第三方分享您的信息：
-
-    - 与我们合作提供服务的供应商和合作伙伴
-    - 法律要求披露信息的情况下
-
-    5. 信息的保护
-
-    我们采取合理的安全措施来保护您的个人信息，以防止未经授权的访问、使用或披露。然而，互联网上的数据传输永远不是100%安全的，因此我们无法保证信息的绝对安全。
-
-    6. 隐私权的选择
-
-    您可以选择提供或不提供个人信息。如果您选择不提供某些信息，可能会影响我们提供的服务。
-
-    7. 隐私政策的变更
-
-    我们可能会不时更新本隐私政策，以反映我们的实践和法律要求的变化。我们将在生效日期前通知您有关更新。请定期查看本政策以了解最新信息。
-
-    8. 联系我们
-
-    如果您对本隐私政策有任何疑问或疑虑，或者希望行使与您的个人信息相关的权利，请通过以下联系方式与我们联系：
-
-    [您的联系信息]
-
-    感谢您阅读我们的隐私政策，我们将继续致力于保护您的隐私和个人信息。</p>
-                            </div>
-                        </div>
-
-                    </div> -->
-
+                &nbsp;
+                <a :href="getOriginWebsite(this.paper_id)" target="_blank" class="btn btn-outline-primary">Website
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-browser-safari" viewBox="0 0 16 16">
+                        <path
+                            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm.25-14.75v1.5a.25.25 0 0 1-.5 0v-1.5a.25.25 0 0 1 .5 0Zm0 12v1.5a.25.25 0 1 1-.5 0v-1.5a.25.25 0 1 1 .5 0ZM4.5 1.938a.25.25 0 0 1 .342.091l.75 1.3a.25.25 0 0 1-.434.25l-.75-1.3a.25.25 0 0 1 .092-.341Zm6 10.392a.25.25 0 0 1 .341.092l.75 1.299a.25.25 0 1 1-.432.25l-.75-1.3a.25.25 0 0 1 .091-.34ZM2.28 4.408l1.298.75a.25.25 0 0 1-.25.434l-1.299-.75a.25.25 0 0 1 .25-.434Zm10.392 6 1.299.75a.25.25 0 1 1-.25.434l-1.3-.75a.25.25 0 0 1 .25-.434ZM1 8a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 0 .5h-1.5A.25.25 0 0 1 1 8Zm12 0a.25.25 0 0 1 .25-.25h1.5a.25.25 0 1 1 0 .5h-1.5A.25.25 0 0 1 13 8ZM2.03 11.159l1.298-.75a.25.25 0 0 1 .25.432l-1.299.75a.25.25 0 0 1-.25-.432Zm10.392-6 1.299-.75a.25.25 0 1 1 .25.433l-1.3.75a.25.25 0 0 1-.25-.434ZM4.5 14.061a.25.25 0 0 1-.092-.341l.75-1.3a.25.25 0 0 1 .434.25l-.75 1.3a.25.25 0 0 1-.342.091Zm6-10.392a.25.25 0 0 1-.091-.342l.75-1.299a.25.25 0 1 1 .432.25l-.75 1.3a.25.25 0 0 1-.341.09ZM6.494 1.415l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13ZM9.86 13.972l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13ZM3.05 3.05a.25.25 0 0 1 .354 0l.353.354a.25.25 0 0 1-.353.353l-.354-.353a.25.25 0 0 1 0-.354Zm9.193 9.193a.25.25 0 0 1 .353 0l.354.353a.25.25 0 1 1-.354.354l-.353-.354a.25.25 0 0 1 0-.353ZM1.545 6.01l.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.482Zm12.557 3.365.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.483Zm-12.863.436a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177Zm12.557-3.365a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177ZM3.045 12.944a.299.299 0 0 1-.029-.376l3.898-5.592a.25.25 0 0 1 .062-.062l5.602-3.884a.278.278 0 0 1 .392.392L9.086 9.024a.25.25 0 0 1-.062.062l-5.592 3.898a.299.299 0 0 1-.382-.034l-.005-.006Zm3.143 1.817a.25.25 0 0 1-.176-.306l.129-.483a.25.25 0 0 1 .483.13l-.13.483a.25.25 0 0 1-.306.176ZM9.553 2.204a.25.25 0 0 1-.177-.306l.13-.483a.25.25 0 1 1 .483.13l-.13.483a.25.25 0 0 1-.306.176Z" />
+                    </svg>
+                </a>
             </div>
         </div>
     </div>
+
+
     <div v-show="display_summary_window" class="fullscreen_popover">
         <div class="popover_content">
             <h3>GPT_4</h3>
@@ -115,29 +63,66 @@
                 <div class="chat-content">
                     <!-- 这里放置对话消息 -->
                     <!-- 更多消息 -->
-
-                    <!-- <button @click.prevent="modelSummary" class="btn btn-outline-primary">GPT Sumaary
-
-                    <div v-if="display_summary_window" class="fullscrenn-popover">
-                        <div class="popover-content">
-                            <p>{{ this.model_message }}</p>
-                        </div>
-                    </div>
-                    <div class="chat-input-container">
-                        <input type="text" id="chatInput" v-on:keyup.enter="sendMessage" placeholder="输入消息...">
-                        <button @click="sendMessage" class="send_btn">发送</button>
-                    </div>
-                </div>
-                </button> -->
-
                 </div>
             </div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" v-on:keyup.enter="sendMessage" placeholder="输入消息...">
+                <button @click="sendMessage" class="send_btn">发送</button>
+            </div>
         </div>
+    </div>
 
-        <!-- 渲染全部表格 (已预加载过全部标签) -->
-        <div v-for="key in (this.paper_tables_num)" :key="key">
-            <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
-            <div :id="'table' + (key)"></div>
+
+    <!-- 下方的左右两栏布局 -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- 左侧栏: 图片+表格 -->
+            <div class="col-8">
+                <div class="constainer outside_border" style="margin-right: 0 !important;">
+                    <div class="container add_bottom_margin" id="tabs">
+                        <!-- bootstrap 导航栏 -->
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link my_text_font active" id="table-tab" data-toggle="tab" href="#table"
+                                    role="tab" aria-controls="table" aria-selected="true">Tables</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link my_text_font" id="picture-tab" data-toggle="tab" href="#picture"
+                                    role="tab" aria-controls="picture" aria-selected="false">Pictures</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="container">
+                        <div class="tab-content" id="myTabContent">
+                            <!-- 渲染全部表格 -->
+                            <div class="tab-pane fade show active" id="table" role="tabpanel" aria-labelledby="table-tab">
+                                <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
+                                    <h3><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h3>
+                                    <div :id="'table' + (key - 1)" style="overflow-x: auto;"></div>
+                                    <br><br>
+                                </div>
+                            </div>
+                            <!-- 渲染全部图片 -->
+                            <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">
+                                <div v-for="key in (this.paper_pictures_num)" :key="key">
+                                    <div class="container my_cont">
+                                        <img class="full_screen"
+                                            :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧栏: 其他元数据+可视化 -->
+            <div class="col-4">
+                <div class="constainer outside_border" style="margin-left: 0 !important;">
+                    <h2>Data + Visualization</h2>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -150,6 +135,8 @@ import ClipboardJS from 'clipboard';
 export default {
     data() {
         return {
+            displayTable: true,
+
             paper_id: "NULL",
             paper_source: "NULL",
 
@@ -163,6 +150,7 @@ export default {
             paper_tag: "NULL",
             paper_doi: "NULL",
             paper_author: [],
+            paper_url: "NULL",
             paper_affiliation: [],
 
 
@@ -174,6 +162,8 @@ export default {
 
             paper_tables: {},
             paper_tables_num: 0,
+            paper_pictures: {},
+            paper_pictures_num: 0,
 
             DEVGPT: {
                 "model": "gpt-3.5-turbo",
@@ -196,14 +186,19 @@ export default {
     },
 
     mounted() {
+        $(function () {
+            $("#tabs").tabs();
+        });
         this.paper_id = this.$route.query.id;
         this.paper_source = this.$route.query.source;
         $(function () {
             $('[data-toggle="popover"]').popover();
         });
         this.getPaperInfo();
-        this.getTableData();    // 获取全部标签, 并分别加到元素标签上
-
+        if (this.paper_source != "arxiv") {
+            this.getTableData();    // 获取全部标签, 并分别加到元素标签上
+        };
+        this.getPicturesData();
     },
 
     methods: {
@@ -230,13 +225,17 @@ export default {
                     this.paper_cite = response.data.cite;
                     this.paper_kqi = response.data.kqi;
                     this.paper_tag = response.data.tag;
+                    this.paper_url = response.data.url;
+                    this.paper_doi = response.data.doi;
                     for (var i = 0; i < response.data.author.length; i++) {
                         if (this.paper_author.indexOf(response.data.author[i]) == -1)
                             this.paper_author.push(response.data.author[i]);
                     }
-                    for (var i = 0; i < response.data.affiliation.length; i++) {
-                        if (this.paper_affiliation.indexOf(response.data.affiliation[i]) == -1)
-                            this.paper_affiliation.push(response.data.affiliation[i]);
+                    if (this.paper_source != "arxiv") {
+                        for (var i = 0; i < response.data.affiliation.length; i++) {
+                            if (this.paper_affiliation.indexOf(response.data.affiliation[i]) == -1)
+                                this.paper_affiliation.push(response.data.affiliation[i]);
+                        }
                     }
                     console.log("Got paper [" + _ID + "] data");
                 })
@@ -244,6 +243,11 @@ export default {
                     console.log(error);
                     this.paper_id = "!! ERROR !!";
                 });
+        },
+
+        SearchAuthor(_name) {
+            var _url = "/searchResult?field=author" + "&info=" + encodeURIComponent(_name) + "&source=" + this.search_source;
+            window.open(_url, "_blank");
         },
 
         getTableData() {
@@ -257,13 +261,32 @@ export default {
                     this.paper_tables = response.data;
                     this.paper_tables_num = Object.keys(response.data).length;
                     console.log(this.paper_tables);
-                    console.log("number: " + this.paper_tables_num);
+                    console.log("tables number: " + this.paper_tables_num);
                     for (let i = 0; i < this.paper_tables_num; i++) {
                         this.getSingleTableData(i, this.paper_tables[i]);
                     }
                 })
                 .catch((error) => {
-                    console.log("Something wrong when [" + this.paper_id + "]");
+                    console.log("Something wrong when tables in [" + this.paper_id + "]");
+                    console.log(error);
+                })
+        },
+
+        getPicturesData() {
+            console.log("Begin getting picture data of [" + this.paper_id + "]");
+            axios.get('http://10.80.135.205:8080/api/v1/paper/pics', {
+                params: {
+                    id: this.paper_id,
+                }
+            })
+                .then((response) => {
+                    this.paper_pictures = response.data;
+                    this.paper_pictures_num = Object.keys(response.data).length;
+                    // console.log(this.paper_pictures);
+                    console.log("pictures number: " + this.paper_pictures_num);
+                })
+                .catch((error) => {
+                    console.log("Something wrong when pictures in [" + this.paper_id + "]");
                     console.log(error);
                 })
         },
@@ -287,7 +310,7 @@ export default {
 
                             // 创建表格元素
                             const table = document.createElement('table');
-                            table.className = "table table-hover";
+                            table.className = "table table-hover full_screen";
 
                             // 创建表头行
                             const thead = document.createElement('thead');
@@ -369,10 +392,11 @@ export default {
                 .then((response) => {
                     this.last_chat_history = response.data;
                     this.addMessageToChat("gpt-message", response.data.message[2].content);
+                    this.last_chat_history = this.DEVGPT;
+                    console.log("set history to: " + this.last_chat_history);
                 })
                 .catch((error) => {
                     console.log(error);
-                    this.paper_id = "!! ERROR !!";
                 });
 
             // 测试
@@ -418,15 +442,13 @@ export default {
             }
 
             console.log("question: " + input_message);
-            console.log("history: " + this.last_chat_history);
+            console.log("history: " + JSON.stringify(this.last_chat_history));
 
             axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
-                body: {
-                    question: input_message,
-                    history: this.last_chat_history,
-                }
+                question: input_message,
+                history: this.last_chat_history,
             })
-                .then((response) => {
+                .then(function (response) {
                     this.last_chat_history = response.data;
                     return response.data;
                 })
@@ -435,6 +457,14 @@ export default {
                     return error;
                 });
             // return "测试--不发送请求";
+        },
+
+        getOriginWebsite() {
+            if (this.paper_source == "arxiv") {
+                return this.paper_url;
+            } else {
+                return "https://doi.org/" + this.paper_doi;
+            }
         }
     }
 };
@@ -701,7 +731,50 @@ body {
 }
 
 .reform_table_index {
-    margin-left: 140px !important;
+    margin-left: 10px !important;
     background-color: #4c8dae !important;
+}
+
+.reform_badge_outline {
+    color: #2578b5;
+    background-color: transparent !important;
+    border: solid 1px #2578b5 !important;
+    border-color: #2578b5 !important;
+    padding: 0.1rem 0.3rem !important;
+}
+
+.not {
+    display: none;
+}
+
+.full_screen {
+    width: 100% !important;
+}
+
+.my_text_font {
+    font-weight: 700 !important;
+    color: #2578b5 !important;
+}
+
+.outside_border {
+    border: 10px solid #dee2e6 !important;
+    border-radius: 1rem;
+    margin-top: 20px !important;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 20px !important;
+}
+
+.add_bottom_margin {
+    margin-bottom: 20px;
+}
+
+.pic_gap {
+    border-color: #643441;
+    background-color: #643441;
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
 }
 </style>
