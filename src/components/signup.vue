@@ -37,7 +37,7 @@
 							</svg>
 						</button>
 						&nbsp;&nbsp;&nbsp;
-						<span class="centered-text">请被迫接收<a href="#" @click.prevent="togglePopover">用户协议</a></span>
+						<span class="centered-text">什么是<a href="#" @click.prevent="togglePopover">用户协议</a></span>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 					</div>
@@ -69,14 +69,14 @@
 					- 您登陆此网站的密码<br>
 					- 虚拟 IP<br>
 					■ 信息的披露<br>
-					在第三方给出足够的开价的情况下，我们会视情况出售用户的信息。但我们可以保证独家出售，不会出现多方版权纠纷<br>
+					在第三方给出足够的开价的情况下，我们可能会视情况出售您的信息。但我们可以承诺独家出售。<br>
 					■ 信息的保护<br>
-					我们将不采取任何安全措施来保护您的个人信息，以至于任何后台数据都是一定程度上可见的<br>
+					我们将采取一些细小的安全措施来保护您的个人信息；任何后台数据都是一定程度上可见的<br>
 					■ 隐私权的选择<br>
 					您可以选择拒绝提供某些信息，同时我们也将拒绝网站对您的权限。<br>
 					■ 隐私政策的变更<br>
-					我们没准任何时候更新本协议，基于我们灵活的隐私政策，届时所有注册用户将自动视为认同更新后的协议。<br>
-				<p class="font-weight-bold">以上。</p>
+					我们没准任何时候更新本协议，基于我们灵活的隐私政策。<br>
+					<p class="font-weight-bold">以上。</p>
 				</p>
 
 				<div class="popover-buttons">
