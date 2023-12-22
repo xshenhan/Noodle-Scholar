@@ -14,7 +14,7 @@
 在 `mounted()` 挂载中，本意是先运行 `searchInfo()` 再运行 `searchId()`，但在前者中未来及向 `_id` 赋值就运行了后者。这可能是因为异步操作导致的问题。异步操作是非阻塞的，意味着它们会在后台执行，并且不会等待其完成而继续执行后续代码。
 
 为了解决这个问题，可以使用回调函数、Promise 或 async/await 等方式来确保在 `searchInfo` 完成后再调用 `searchId`
-以下是使用 Promise 的示例代码
+* 使用 Promise 的示例代码
 ```js
 function searchInfo(callback) {
   // 在异步操作完成后调用回调函数
@@ -34,13 +34,32 @@ searchId();
 ```
 在上述代码中，searchInfo 函数中使用了 setTimeout 来模拟异步操作，并在操作完成后调用了回调函数，并将 _id 作为参数传递给回调函数。然后，searchId 函数通过传递一个回调函数给 searchInfo 函数来获取 _id，并在回调函数中打印 _id。
 
+* 使用 async/await 的示例代码
+将 `mounted()` 声明为异步函数，同时将所有需要优先完成的函数（即需要上锁的函数）前也加上`await`声明
+```js
+async mounted {
+  await this.getAuthorPapers(0, 50);
+  this.chart = echarts.init(document.getElementById('chart'));
+  this.setChart();
+}
+```
+并进一步在声明的异步函数中返回 `Promise` 类型，即直接返回 `axios` 的请求结果
+```js
+async getAuthorPapers(_start, _end) {
+            return axios.get('http://10.80.135.205:8080/api/v1/vis/author/papers', {
+                params: {}
+            })
+                .then((response) => {})
+                .catch((error) => {})
+        },
+```
+
 2. 优化回流和重绘次数
 [提高前端性能：回流与重绘的优化策略](https://juejin.cn/post/7281581471897387071)
 
 ## 功能与展示
 
 1. 
-
 
 ## 一些细节
 
@@ -71,6 +90,5 @@ searchId();
 3. 判断返回的状态码，区分登录状态
 4. arxiv作者格式不同
     ![arxiv作者格式不同](todo-author_format.png)
-5. paper页面右侧加一栏，展示各种杂项元数据
-6. gpt交互
-7. 主页面的可视化（按年份展示论文数、按作者展示论文数、（arxiv中按领域展示论文数））
+5. gpt交互
+6. 主页面的可视化（按年份展示论文数、按作者展示论文数、（arxiv中按领域展示论文数））

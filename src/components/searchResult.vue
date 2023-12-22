@@ -26,12 +26,12 @@
                             <p v-if="paper.doi != null && paper.doi != ''"><span class="badge badge-primary">DOI</span>&nbsp;
                                 <span @click="copyLink(paper.doi, key)" :class="'copy-button copy-button-' + key"
                                     data-container="body" data-toggle="popover" data-placement="top" data-content="已复制DOI">
-                                    <span class="badge badge-success" v-html="paper.doi"></span>
+                                    <span class="badge badge-success cursor_pointer" v-html="paper.doi"></span>
                                 </span>
                             </p>
 
                             <p><span class="badge badge-primary">Author</span>&nbsp;
-                                <span v-for="(n, index) in paper.author" :key="index">
+                                <span v-for="(n, index) in paper.author.name" :key="index">
                                     <!-- <span class="badge badge-success">{{ n }}</span> -->
                                     <span @click="SearchAuthor(n)" class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
                                     <span v-if="index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
@@ -227,7 +227,7 @@ export default {
         },
 
         GoToPaperPage(_ID) {
-            const _url = "/api/v1/search" + _ID + "&source=" + this.search_source
+            const _url = "/paper?id=" + _ID + "&source=" + this.search_source
             // this.$router.push(_url);
             window.open(_url, "_blank");
         },

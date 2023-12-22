@@ -6,7 +6,8 @@
             <!-- <br> -->
             <p class="lead"><span class="badge badge-primary">Author</span>&nbsp;
                 <span v-for="(aut, i) in this.paper_author" :key="i">
-                    <span class="color_blue font-weight-bold">{{ aut }}</span>
+                    <span @click="SearchAuthor(n)" class="color_blue font-weight-bold hoverable cursor_pointer">{{ aut
+                    }}</span>
                     <span v-if="i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
                 </span>
             </p>
@@ -48,79 +49,10 @@
                             d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm.25-14.75v1.5a.25.25 0 0 1-.5 0v-1.5a.25.25 0 0 1 .5 0Zm0 12v1.5a.25.25 0 1 1-.5 0v-1.5a.25.25 0 1 1 .5 0ZM4.5 1.938a.25.25 0 0 1 .342.091l.75 1.3a.25.25 0 0 1-.434.25l-.75-1.3a.25.25 0 0 1 .092-.341Zm6 10.392a.25.25 0 0 1 .341.092l.75 1.299a.25.25 0 1 1-.432.25l-.75-1.3a.25.25 0 0 1 .091-.34ZM2.28 4.408l1.298.75a.25.25 0 0 1-.25.434l-1.299-.75a.25.25 0 0 1 .25-.434Zm10.392 6 1.299.75a.25.25 0 1 1-.25.434l-1.3-.75a.25.25 0 0 1 .25-.434ZM1 8a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 0 .5h-1.5A.25.25 0 0 1 1 8Zm12 0a.25.25 0 0 1 .25-.25h1.5a.25.25 0 1 1 0 .5h-1.5A.25.25 0 0 1 13 8ZM2.03 11.159l1.298-.75a.25.25 0 0 1 .25.432l-1.299.75a.25.25 0 0 1-.25-.432Zm10.392-6 1.299-.75a.25.25 0 1 1 .25.433l-1.3.75a.25.25 0 0 1-.25-.434ZM4.5 14.061a.25.25 0 0 1-.092-.341l.75-1.3a.25.25 0 0 1 .434.25l-.75 1.3a.25.25 0 0 1-.342.091Zm6-10.392a.25.25 0 0 1-.091-.342l.75-1.299a.25.25 0 1 1 .432.25l-.75 1.3a.25.25 0 0 1-.341.09ZM6.494 1.415l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13ZM9.86 13.972l.13.483a.25.25 0 1 1-.483.13l-.13-.483a.25.25 0 0 1 .483-.13ZM3.05 3.05a.25.25 0 0 1 .354 0l.353.354a.25.25 0 0 1-.353.353l-.354-.353a.25.25 0 0 1 0-.354Zm9.193 9.193a.25.25 0 0 1 .353 0l.354.353a.25.25 0 1 1-.354.354l-.353-.354a.25.25 0 0 1 0-.353ZM1.545 6.01l.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.482Zm12.557 3.365.483.13a.25.25 0 1 1-.13.483l-.483-.13a.25.25 0 1 1 .13-.483Zm-12.863.436a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177Zm12.557-3.365a.25.25 0 0 1 .176-.306l.483-.13a.25.25 0 1 1 .13.483l-.483.13a.25.25 0 0 1-.306-.177ZM3.045 12.944a.299.299 0 0 1-.029-.376l3.898-5.592a.25.25 0 0 1 .062-.062l5.602-3.884a.278.278 0 0 1 .392.392L9.086 9.024a.25.25 0 0 1-.062.062l-5.592 3.898a.299.299 0 0 1-.382-.034l-.005-.006Zm3.143 1.817a.25.25 0 0 1-.176-.306l.129-.483a.25.25 0 0 1 .483.13l-.13.483a.25.25 0 0 1-.306.176ZM9.553 2.204a.25.25 0 0 1-.177-.306l.13-.483a.25.25 0 1 1 .483.13l-.13.483a.25.25 0 0 1-.306.176Z" />
                     </svg>
                 </a>
-
-
-                <!-- <div v-show="display_summary_window" class="fullscreen_popover">
-                        <div class="popover_content">
-                            <div class="popover_content">
-                                <h3>GPT_4</h3>
-                                <button @click.prevent="modelSummary" class="close-btn">关闭</button>
-                            </div>
-                            <div class="popover_content">
-                                <p>隐私政策
-
-    生效日期：[填写日期]
-
-    1. 引言
-
-    欢迎您使用我们的服务。我们非常重视您的隐私，并致力于保护您的个人信息。本隐私政策旨在向您解释我们如何收集、使用、披露和保护您的个人信息。请在使用我们的服务之前仔细阅读本政策。
-
-    2. 收集的信息
-
-    在提供服务过程中，我们可能会收集以下类型的个人信息：
-
-    - 姓名
-    - 电子邮件地址
-    - 联系信息
-    - 设备信息（例如，IP地址、浏览器类型、操作系统）
-    - 使用情况数据（例如，访问日期和时间、浏览页面、点击信息）
-    - 其他根据法律和法规要求的信息
-
-    3. 信息的使用
-
-    我们可能会使用您的个人信息来：
-
-    - 向您提供所请求的服务
-    - 处理您的付款
-    - 向您发送与服务相关的通知和更新
-    - 改进我们的服务
-    - 解决争议和解决问题
-    - 遵守法律和法规的要求
-
-    4. 信息的披露
-
-    我们不会出售、租赁或以其他方式向第三方披露您的个人信息，除非获得您的明确同意或受法律要求。我们可能会与以下第三方分享您的信息：
-
-    - 与我们合作提供服务的供应商和合作伙伴
-    - 法律要求披露信息的情况下
-
-    5. 信息的保护
-
-    我们采取合理的安全措施来保护您的个人信息，以防止未经授权的访问、使用或披露。然而，互联网上的数据传输永远不是100%安全的，因此我们无法保证信息的绝对安全。
-
-    6. 隐私权的选择
-
-    您可以选择提供或不提供个人信息。如果您选择不提供某些信息，可能会影响我们提供的服务。
-
-    7. 隐私政策的变更
-
-    我们可能会不时更新本隐私政策，以反映我们的实践和法律要求的变化。我们将在生效日期前通知您有关更新。请定期查看本政策以了解最新信息。
-
-    8. 联系我们
-
-    如果您对本隐私政策有任何疑问或疑虑，或者希望行使与您的个人信息相关的权利，请通过以下联系方式与我们联系：
-
-    [您的联系信息]
-
-    感谢您阅读我们的隐私政策，我们将继续致力于保护您的隐私和个人信息。</p>
-                            </div>
-                        </div>
-
-                    </div> -->
-
             </div>
         </div>
     </div>
+
 
     <div v-show="display_summary_window" class="fullscreen_popover">
         <div class="popover_content">
@@ -141,63 +73,57 @@
     </div>
 
 
+    <!-- 下方的左右两栏布局 -->
+    <div class="container-fluid">
+        <div class="row">
 
-    <div class="constainer outside_border">
-        <div class="container add_bottom_margin" id="tabs">
-            <!-- bootstrap 导航栏 -->
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link my_text_font active" id="table-tab" data-toggle="tab" href="#table" role="tab"
-                        aria-controls="table" aria-selected="true">Tables</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link my_text_font" id="picture-tab" data-toggle="tab" href="#picture" role="tab"
-                        aria-controls="picture" aria-selected="false">Pictures</a>
-                </li>
-            </ul>
-        </div>
-        <div class="container">
-            <div class="tab-content" id="myTabContent">
-                <!-- 渲染全部表格 -->
-                <div class="tab-pane fade show active" id="table" role="tabpanel" aria-labelledby="table-tab">
-                    <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
-                        <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
-                        <div :id="'table' + (key - 1)"></div>
+            <!-- 左侧栏: 图片+表格 -->
+            <div class="col-8">
+                <div class="constainer outside_border" style="margin-right: 0 !important;">
+                    <div class="container add_bottom_margin" id="tabs">
+                        <!-- bootstrap 导航栏 -->
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link my_text_font active" id="table-tab" data-toggle="tab" href="#table"
+                                    role="tab" aria-controls="table" aria-selected="true">Tables</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link my_text_font" id="picture-tab" data-toggle="tab" href="#picture"
+                                    role="tab" aria-controls="picture" aria-selected="false">Pictures</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="container">
+                        <div class="tab-content" id="myTabContent">
+                            <!-- 渲染全部表格 -->
+                            <div class="tab-pane fade show active" id="table" role="tabpanel" aria-labelledby="table-tab">
+                                <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
+                                    <h3><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h3>
+                                    <div :id="'table' + (key - 1)" style="overflow-x: auto;"></div>
+                                    <br><br>
+                                </div>
+                            </div>
+                            <!-- 渲染全部图片 -->
+                            <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">
+                                <div v-for="key in (this.paper_pictures_num)" :key="key">
+                                    <div class="container my_cont">
+                                        <img class="full_screen"
+                                            :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- 渲染全部图片 -->
-                <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">
-                    <div v-for="key in (this.paper_pictures_num)" :key="key">
-                        <img class="full_screen" :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
-                        <!-- TODO: 把这个分割线改成包裹图片的框 -->
-                        <div class="alert alert-cyan pic_gap" role="alert"></div>
-                    </div>
+            </div>
+
+            <!-- 右侧栏: 其他元数据+可视化 -->
+            <div class="col-4">
+                <div class="constainer outside_border" style="margin-left: 0 !important;">
+                    <h2>Data + Visualization</h2>
                 </div>
             </div>
         </div>
-
-        <!-- jquery 导航栏 -->
-        <!-- <ul>
-            <li v-if="this.paper_source != 'arxiv'"><a href="#tables">table</a></li>
-            <li><a href="#pics">picture</a></li>
-        </ul> -->
-
-        <!-- 渲染全部表格 (已预加载过全部标签) -->
-        <!-- <div id="tables">
-            <div v-if="this.paper_source != 'arxiv'" v-for="key in (this.paper_tables_num)" :key="key">
-                <h1><span class="badge badge-secondary reform_table_index">Table {{ key }}</span></h1>
-                <div :id="'table' + (key - 1)"></div>
-            </div>
-        </div> -->
-
-        <!-- 渲染全部图片 (已预加载过全部标签) -->
-        <!-- <div id="pics">
-            <div v-for="key in (this.paper_pictures_num)" :key="key">
-                <h1><span class="badge badge-secondary reform_table_index">Picture {{ key }}</span></h1>
-                <img class="full_screen" :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
-            </div>
-        </div> -->
-
     </div>
 </template>
     
@@ -317,6 +243,11 @@ export default {
                     console.log(error);
                     this.paper_id = "!! ERROR !!";
                 });
+        },
+
+        SearchAuthor(_name) {
+            var _url = "/searchResult?field=author" + "&info=" + encodeURIComponent(_name) + "&source=" + this.search_source;
+            window.open(_url, "_blank");
         },
 
         getTableData() {
@@ -829,8 +760,8 @@ body {
     border: 10px solid #dee2e6 !important;
     border-radius: 1rem;
     margin-top: 20px !important;
-    margin-right: 20px !important;
-    margin-left: 20px !important;
+    margin-right: 20px;
+    margin-left: 20px;
     padding: 20px !important;
 }
 
