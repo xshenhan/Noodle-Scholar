@@ -103,10 +103,13 @@ def add_statistic_data(collection, file_name, key_name, value_name):
 
 
 if __name__ == '__main__':
-    db = DataBase(collection_name='num_papers_main_subject')
-    collection = db.collection
+    # db = DataBase(collection_name='num_papers_main_subject')
+    # collection = db.collection
     # add_statistic_data(collection, 'num_papers_authors.json', 'author', 'num_papers')
-    add_statistic_data(collection, 'num_papers_main_subject.json', 'main_subject', 'num_papers')
-    db = DataBase(collection_name='num_papers_sub_subject')
+    # add_statistic_data(collection, 'num_papers_main_subject.json', 'main_subject', 'num_papers')
+    # db = DataBase(collection_name='num_papers_sub_subject')
+    # collection = db.collection
+    # add_statistic_data(collection, 'num_papers_sub_subject.json', 'sub_subject', 'num_papers')
+    db = DataBase(collection_name='num_papers_year', host='10.80.135.195')
     collection = db.collection
-    add_statistic_data(collection, 'num_papers_sub_subject.json', 'sub_subject', 'num_papers')
+    add_statistic_data(collection, 'num_papers_year.json', 'year', 'num_papers')

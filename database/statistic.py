@@ -1,8 +1,10 @@
 import json
 
+
 num_papers_authors = {}
 num_papers_main_subject = {}
 num_papers_sub_subject = {}
+num_papers_year = {}
 tot = 2370685
 
 
@@ -40,6 +42,18 @@ def count_subject(data: dict) -> None:
             num_papers_main_subject[main_subject] = 1
 
 
+def count_year(data: dict):
+    """
+    Count the number of papers of each year
+    :param data: metadata of the paper
+    :return: None
+    """
+    year = data['update_date'][:4]
+    if year in num_papers_year:
+        num_papers_year[year] += 1
+    else:
+        num_papers_year[year] = 1
+
 def fetch_name(author: str) -> str:
     """
     Remove the institute name and "and" string from the author's name
@@ -70,9 +84,11 @@ if __name__ == '__main__':
         for index, line in enumerate(f):
             data = json.loads(line)
             # count_author(data)
-            count_subject(data)
+            # count_subject(data)
+            count_year(data)
             print(f'[{index+1}/{tot}] have been counted.')
     # save_json(num_papers_authors, 'num_papers_authors.json')
-    save_json(num_papers_main_subject, 'num_papers_main_subject.json')
-    save_json(num_papers_sub_subject, 'num_papers_sub_subject.json')
+    # save_json(num_papers_main_subject, 'num_papers_main_subject.json')
+    # save_json(num_papers_sub_subject, 'num_papers_sub_subject.json')
+    save_json(num_papers_year, 'num_papers_year.json')
     
