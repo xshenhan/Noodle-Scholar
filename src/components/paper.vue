@@ -762,6 +762,7 @@ body {
     margin-top: 20px !important;
     margin-right: 20px;
     margin-left: 20px;
+    margin-bottom: 50px !important;
     padding: 20px !important;
 }
 
