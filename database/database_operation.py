@@ -64,25 +64,27 @@ def update_column_pdf_address(collection):
 
 
 def update_column_pics_address(collection):
-    pics_dir = '/mnt/e/2023fall/ICE2604/database/100_PDF_pics'
+    ##############################
+    # change this directory
+    pics_dir = '/mnt/e/2023fall/ICE2604/database/edited_100_PDF_pics'
+    ##############################
 
-    for root, dirs, files in os.walk(pics_dir):
-        # print(f"root: {root}")
-        # print(f"dirs: {dirs}")
-        # print(f"files: {files}")
-        try:
-            paper = collection.find_one({"paper_id": os.path.split(root)[1]})
+    for i, paper in enumerate(collection.find()):
+        # inquire id of files
+        query = {'_id': paper.get('_id')}
 
-            query = {'_id': paper.get("_id")}
-            address_files = [os.path.join("/home/share/files/100_PDF_pics/",os.path.split(root)[1], filename)
-                             for filename in files]
-            print(f"address_files: {address_files}")
-            update = {'$set': {'pics_address': address_files}}
+        # field and values to be renewed
+        pic_address = []
+        for root, dirs, files in os.walk(os.path.join(pics_dir, paper.get('paper_id'))):
+            for file_name in files:
+                print("open", file_name + '\n')
+                pic_address.append(f"/home/share/files/edited_100_PDF_pics/{paper.get('paper_id')}/{file_name}")
+        update = {'$set': {'pics_address': pic_address}}
 
-            # execute the update operation
-            collection.update_one(query, update, upsert=True)
-        except Exception as e:
-            print(e)
+        # execute the update operation
+        collection.update_one(query, update, upsert=True)
+
+        print(f'successfully update {i}-th {paper.get("paper_id")} \n')
 
 
 def add_statistic_data(collection, file_name, key_name, value_name):
@@ -103,13 +105,7 @@ def add_statistic_data(collection, file_name, key_name, value_name):
 
 
 if __name__ == '__main__':
-    # db = DataBase(collection_name='num_papers_main_subject')
-    # collection = db.collection
-    # add_statistic_data(collection, 'num_papers_authors.json', 'author', 'num_papers')
-    # add_statistic_data(collection, 'num_papers_main_subject.json', 'main_subject', 'num_papers')
-    # db = DataBase(collection_name='num_papers_sub_subject')
-    # collection = db.collection
-    # add_statistic_data(collection, 'num_papers_sub_subject.json', 'sub_subject', 'num_papers')
-    db = DataBase(collection_name='num_papers_year', host='10.80.135.195')
+    db = DataBase(host='10.80.135.195', port=27017, db_name='papers', collection_name='100pdfs')
     collection = db.collection
-    add_statistic_data(collection, 'num_papers_year.json', 'year', 'num_papers')
+    update_column_pics_address(collection)
+
