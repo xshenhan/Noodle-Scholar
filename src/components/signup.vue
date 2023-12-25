@@ -41,8 +41,6 @@
 						</span>
 					</li>
 				</ul>
-
-
 			</div>
 		</nav>
 
@@ -173,7 +171,7 @@ import axios from 'axios';
 export default {
 	data() {
 		return {
-            isLogin: false,
+			isLogin: false,
 
 			username: "",
 			password: "",
@@ -188,7 +186,6 @@ export default {
 	},
 
 	methods: {
-
 		async initialize() {
 			await this.checkLogin();
 			document.getElementById('signupForm').addEventListener('submit', function (event) {
@@ -200,13 +197,27 @@ export default {
 					method: 'POST',
 					body: formData
 				})
-					.then(response => response.text())
-					.then(text => {
-						document.getElementById('responseMessage').textContent = text;
+					.then(response => response.json()) // 修改为解析JSON
+					.then(data => {
+						// 显示状态消息
+						const statusMessage = data.status || 'No status available';
+						alert(statusMessage); // 使用弹窗显示状态信息
+
+						// 如果状态是“ok”，则在0.5秒后跳转
+						if (data.status === 'ok') {
+							setTimeout(() => {
+								// window.location.href = '/';
+								window.history.back();
+							}, 500);
+						}
+
+						// 将响应显示在页面上
+						// document.getElementById('responseMessage').textContent = statusMessage;
 					})
 					.catch((error) => {
 						console.error('Error:', error);
-						document.getElementById('responseMessage').textContent = 'Error: ' + error;
+						// document.getElementById('responseMessage').textContent = 'Error: ' + error;
+						alert('Error: ' + error);
 					});
 			});
 		},
@@ -258,7 +269,7 @@ export default {
 		},
 
 		async logOut() {
-			axios.get('http://10.80.135.205:8080/api/v1/user/logout')
+			axios.get('/api/v1/user/logout')
 				.then((response) => {
 					console.log("log out status: " + response.data.logout);
 					this.isLogin = false;
@@ -271,15 +282,15 @@ export default {
 		},
 
 		async checkLogin() {
-            return axios.get('http://10.80.135.205:8080/api/v1/user/check_login')
-                .then((response) => {
-                    this.isLogin = response.data.login_in;
-                    console.log("log in status: " + response.data.login_in);
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-        },
+			return axios.get('/api/v1/user/check_login')
+				.then((response) => {
+					this.isLogin = response.data.login_in;
+					console.log("log in status: " + response.data.login_in);
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+		},
 
 	}
 }

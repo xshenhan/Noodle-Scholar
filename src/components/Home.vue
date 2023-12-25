@@ -1344,7 +1344,7 @@ export default {
         },
 
         async checkLogin() {
-            return axios.get('http://10.80.135.205:8080/api/v1/user/check_login')
+            return axios.get('/api/v1/user/check_login')
                 .then((response) => {
                     this.isLogin = response.data.login_in;
                     console.log("log in status: " + response.data.login_in);
@@ -1403,7 +1403,7 @@ export default {
                         return;
                     }
 
-                    axios.get('http://10.80.135.205:8080/api/v1/search/autocomplete', {
+                    axios.get('/api/v1/search/autocomplete', {
                         params: {
                             field: this.search_type.toLowerCase(),
                             query: this.search_info,
@@ -1423,7 +1423,7 @@ export default {
         },
 
         async getYearPaper() {
-            return axios.get('http://10.80.135.205:8080/api/v1/vis/paper/year')
+            return axios.get('/api/v1/vis/paper/year')
                 .then((response) => {
                     for (const [key, value] of Object.entries(response.data)) {
                         this.year_paper.push({
@@ -1485,7 +1485,7 @@ export default {
         },
 
         async getAuthorPapers(_start, _end) {
-            return axios.get('http://10.80.135.205:8080/api/v1/vis/author/papers', {
+            return axios.get('/api/v1/vis/author/papers', {
                 params: {
                     start: _start,
                     end: _end
@@ -1510,7 +1510,7 @@ export default {
         },
 
         async getSubjectPapers_in_arxiv(_start, _end) {
-            return axios.get("http://10.80.135.205:8080/api/v1/vis/subject/papers?start=0&end=36", {
+            return axios.get("/api/v1/vis/subject/papers?start=0&end=36", {
                 params: {
                     start: _start,
                     end: _end
@@ -1550,7 +1550,7 @@ export default {
         },
 
         async getSubsubjectPapers_in_arxiv(_start, _end) {
-            return axios.get("http://10.80.135.205:8080/api/v1/vis/subsubject/papers", {
+            return axios.get("/api/v1/vis/subsubject/papers", {
                 params: {
                     start: _start,
                     end: _end
@@ -1894,7 +1894,7 @@ export default {
         },
 
         async logOut() {
-            axios.get('http://10.80.135.205:8080/api/v1/user/logout')
+            axios.get('/api/v1/user/logout')
                 .then((response) => {
                     console.log("log out status: " + response.data.logout);
                     this.isLogin = false;

@@ -154,7 +154,7 @@
                                 <div v-for="key in (this.paper_pictures_num)" :key="key">
                                     <div class="container my_cont">
                                         <img class="full_screen"
-                                            :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
+                                            :src="'' + this.paper_pictures[key - 1]">
                                     </div>
                                 </div>
                             </div>
@@ -215,24 +215,6 @@ export default {
             paper_tables_num: 0,
             paper_pictures: {},
             paper_pictures_num: 0,
-
-            DEVGPT: {
-                "model": "gpt-3.5-turbo",
-                "message": [
-                    {
-                        "role": "system",
-                        "content": "The user will give you a url of a paper, you should first read it and then write a summary of it in about 100 words. And then you should help the user with some questions about this paper"
-                    },
-                    {
-                        "role": "user",
-                        "content": "Here is the url of the paper: https://arxiv.org/pdf/2210.07349.pdf"
-                    },
-                    {
-                        "role": "assistant",
-                        "content": "I apologize, but I am currently unable to access external URLs or download files. However, if you provide me with relevant information or specific questions about the paper, I'll be more than happy to assist you in any way I can."
-                    },
-                ]
-            },
         }
     },
 
@@ -259,13 +241,13 @@ export default {
         },
 
         getDownloadLink(id) {
-            return "http://10.80.135.205:8080/api/v1/paper/download?id=" + id;
+            return "/api/v1/paper/download?id=" + id;
         },
 
         getPaperInfo() {
             const _ID = this.$route.query.id;
             const _source = this.$route.query.source;
-            axios.get('http://10.80.135.205:8080/api/v1/paper/info', {
+            axios.get('/api/v1/paper/info', {
                 params: {
                     id: _ID,
                     source: _source,
@@ -308,7 +290,7 @@ export default {
 
         getTableData() {
             console.log("Begin getting table data of [" + this.paper_id + "]");
-            axios.get('http://10.80.135.205:8080/api/v1/paper/tables', {
+            axios.get('/api/v1/paper/tables', {
                 params: {
                     id: this.paper_id,
                 }
@@ -330,7 +312,7 @@ export default {
 
         getPicturesData() {
             console.log("Begin getting picture data of [" + this.paper_id + "]");
-            axios.get('http://10.80.135.205:8080/api/v1/paper/pics', {
+            axios.get('/api/v1/paper/pics', {
                 params: {
                     id: this.paper_id,
                 }
@@ -349,8 +331,8 @@ export default {
 
         getSingleTableData(_i, _url) {
             console.log("begin add table" + _i);
-            console.log("url: http://10.80.135.205:8080" + _url);
-            axios.get("http://10.80.135.205:8080" + _url)
+            console.log("url: " + _url);
+            axios.get("" + _url)
                 .then((response) => {
                     const csvData = response.data;
                     console.log("get single table csv data");
@@ -438,7 +420,7 @@ export default {
                 return;
             }
 
-            axios.get('http://10.80.135.205:8080/api/v1/model/summary', {
+            axios.get('/api/v1/model/summary', {
                 params: {
                     id: this.paper_id,
                     // id: "6569d4442c9d068894e2ac4c",
@@ -534,7 +516,7 @@ export default {
             console.log("history: " + JSON.stringify(this.last_chat_history));
 
             // Return the Promise here
-            return axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
+            return axios.post('/api/v1/model/qa', {
                 question: input_message,
                 history: this.last_chat_history,
             })
@@ -564,7 +546,7 @@ export default {
         },
 
         async logOut() {
-            axios.get('http://10.80.135.205:8080/api/v1/user/logout')
+            axios.get('/api/v1/user/logout')
                 .then((response) => {
                     console.log("log out status: " + response.data.logout);
                     this.isLogin = false;
@@ -577,7 +559,7 @@ export default {
         },
 
         async checkLogin() {
-            return axios.get('http://10.80.135.205:8080/api/v1/user/check_login')
+            return axios.get('/api/v1/user/check_login')
                 .then((response) => {
                     this.isLogin = response.data.login_in;
                     console.log("log in status: " + response.data.login_in);

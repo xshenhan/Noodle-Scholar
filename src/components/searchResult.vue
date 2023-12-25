@@ -171,7 +171,7 @@
 
                                     <!-- <div class="carousel-item active">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8080' + paper.pics['0']"
+                                            <img :src="'' + paper.pics['0']"
                                                 class="img-fluid mx-auto d-block fill-image">
                                         </div>
                                     </div> -->
@@ -179,7 +179,7 @@
                                     <div v-for="(url, index) in paper.pics" :key="index" class="carousel-item"
                                         :class="{ active: index === '0' }">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8080' + url"
+                                            <img :src="'' + url"
                                                 class="img-fluid mx-auto d-block fill-image">
                                         </div>
                                     </div>
@@ -306,7 +306,7 @@ export default {
         },
 
         getAllPaperInfo() {
-            axios.get('http://10.80.135.205:8080/api/v1/search', {
+            axios.get('/api/v1/search', {
                 params: {
                     field: this.search_field,
                     query: this.search_info,
@@ -344,7 +344,7 @@ export default {
         // },
 
         getPicUrls(_ID) {
-            axios.get('http://10.80.135.205:8080/api/v1/paper/pics', {
+            axios.get('/api/v1/paper/pics', {
                 params: {
                     id: _ID,
                 }
@@ -365,7 +365,7 @@ export default {
             console.log("enter");
             try {
                 console.log("before axios");
-                const response = await axios.get(`http://10.80.135.205:8080/api/v1/paper/pics?id=${paper.id}`);
+                const response = await axios.get(`/api/v1/paper/pics?id=${paper.id}`);
                 console.log("after axios");
 
                 if (response.data) {
@@ -378,7 +378,7 @@ export default {
         },
 
         getDownloadLink(ID) {
-            const downloadURL = "http://10.80.135.205:8080/api/v1/paper/download?id=" + ID;
+            const downloadURL = "/api/v1/paper/download?id=" + ID;
             return downloadURL;
         },
 
@@ -424,7 +424,7 @@ export default {
         },
 
         async checkLogin() {
-            return axios.get('http://10.80.135.205:8080/api/v1/user/check_login')
+            return axios.get('/api/v1/user/check_login')
                 .then((response) => {
                     this.isLogin = response.data.login_in;
                     console.log("log in status: " + response.data.login_in);
@@ -435,7 +435,7 @@ export default {
         },
 
         async logOut() {
-            axios.get('http://10.80.135.205:8080/api/v1/user/logout')
+            axios.get('/api/v1/user/logout')
                 .then((response) => {
                     console.log("log out status: " + response.data.logout);
                     this.isLogin = false;
