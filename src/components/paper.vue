@@ -33,7 +33,8 @@
                 </li>
                 <li v-else class="nav-item">
                     <span class="nav-link">
-                        <a class="btn btn-outline-primary btn-round fade-down-left" style="color:#c3a6cb !important; border-color: #c3a6cb !important;" href="/signup">Log out</a>
+                        <a class="btn btn-outline-primary btn-round fade-down-left"
+                            style="color:#c3a6cb !important; border-color: #c3a6cb !important;" @click="logOut">Log out</a>
                     </span>
                 </li>
             </ul>
@@ -41,8 +42,8 @@
 
         </div>
     </nav>
-    
-    
+
+
     <div class="jumbotron jumbotron-fluid set_margin set_padding">
         <div class="container">
             <h2 class="text-left">{{ this.paper_title }}&nbsp;<span class="badge reform_badge_outline">{{ this.paper_year
@@ -56,7 +57,8 @@
                 </span>
             </p>
             <p class="lead"><span class="badge badge-primary">Abstract</span>&nbsp;
-                <span v-html="htmlText"></span></p>
+                <span v-html="htmlText"></span>
+            </p>
 
 
             <div class="col-lg-12 text-md-center text-lg-left mt-4 mb-4">
@@ -176,12 +178,14 @@ import axios from 'axios';
 import ClipboardJS from 'clipboard';
 // import Papa from 'papaparse';
 // import * as marked from 'marked';
-import {marked} from 'marked';
+import { marked } from 'marked';
 import katex from 'katex';
 
 export default {
     data() {
         return {
+            isLogin: false,
+
             displayTable: true,
 
             paper_id: "NULL",
@@ -232,23 +236,28 @@ export default {
         }
     },
 
-    mounted() {
-        $(function () {
-            $("#tabs").tabs();
-        });
-        this.paper_id = this.$route.query.id;
-        this.paper_source = this.$route.query.source;
-        $(function () {
-            $('[data-toggle="popover"]').popover();
-        });
-        this.getPaperInfo();
-        if (this.paper_source != "arxiv") {
-            this.getTableData();    // 获取全部标签, 并分别加到元素标签上
-        };
-        this.getPicturesData();
+    async mounted() {
+        await this.initialize();
     },
 
     methods: {
+        async initialize() {
+            await this.checkLogin();
+            $(function () {
+                $("#tabs").tabs();
+            });
+            this.paper_id = this.$route.query.id;
+            this.paper_source = this.$route.query.source;
+            $(function () {
+                $('[data-toggle="popover"]').popover();
+            });
+            this.getPaperInfo();
+            if (this.paper_source != "arxiv") {
+                this.getTableData();    // 获取全部标签, 并分别加到元素标签上
+            };
+            this.getPicturesData();
+        },
+
         getDownloadLink(id) {
             return "http://10.80.135.205:8080/api/v1/paper/download?id=" + id;
         },
@@ -512,7 +521,31 @@ export default {
             } else {
                 return "https://doi.org/" + this.paper_doi;
             }
-        }
+        },
+
+        async logOut() {
+            axios.get('http://10.80.135.205:8080/api/v1/user/logout')
+                .then((response) => {
+                    console.log("log out status: " + response.data.logout);
+                    this.isLogin = false;
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            await this.initialize();
+        },
+
+        async checkLogin() {
+            return axios.get('http://10.80.135.205:8080/api/v1/user/check_login')
+                .then((response) => {
+                    this.isLogin = response.data.login_in;
+                    console.log("log in status: " + response.data.login_in);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
     },
 
     computed: {
@@ -538,7 +571,7 @@ export default {
 
             // Join the parts back together
             return renderedParts.join('');
-        }
+        },
     }
 };
 </script>

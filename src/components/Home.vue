@@ -34,7 +34,7 @@
                 <li v-else class="nav-item">
                     <span class="nav-link">
                         <a class="btn btn-outline-primary btn-round fade-down-left"
-                            style="color:#c3a6cb !important; border-color: #c3a6cb !important;" href="/signup">Log out</a>
+                            style="color:#c3a6cb !important; border-color: #c3a6cb !important;" @click="logOut">Log out</a>
                     </span>
                 </li>
             </ul>
@@ -332,32 +332,36 @@ export default {
     },
 
     async mounted() {
-        await this.checkLogin();
-
-        await this.getAuthorPapers(0, 50);
-        await this.getSubjectPapers_in_arxiv(0, 37);    // 总共 38 个
-        await this.getSubsubjectPapers_in_arxiv(0, 175); // 总共 176 个
-        await this.getYearPaper();
-
-        $(this.$el).find('[data-toggle="dropdown"]').dropdown();
-
-        this.setYearPaper();
-        this.year_paper_chart.on('click', this.searchYear_in_pie);
-
-        this.setAuthorPaper();
-        this.author_paper_chart.on('click', this.searchAuthor_in_rank);
-
-        this.setSubjectPaper();
-
-        this.setSubsubjectPaper();
-        this.subsub_paper_chart.on('click', this.searchSubsubject_in_rank);
-
-        this.setSubjectPaperBar();
-        this.subject_paper_bar_chart.on('click', this.showSubsubject_in_bar);
+        await this.initialize();
     },
 
 
     methods: {
+        async initialize() {
+            await this.checkLogin();
+
+            await this.getAuthorPapers(0, 50);
+            await this.getSubjectPapers_in_arxiv(0, 37);    // 总共 38 个
+            await this.getSubsubjectPapers_in_arxiv(0, 175); // 总共 176 个
+            await this.getYearPaper();
+
+            $(this.$el).find('[data-toggle="dropdown"]').dropdown();
+
+            this.setYearPaper();
+            this.year_paper_chart.on('click', this.searchYear_in_pie);
+
+            this.setAuthorPaper();
+            this.author_paper_chart.on('click', this.searchAuthor_in_rank);
+
+            this.setSubjectPaper();
+
+            this.setSubsubjectPaper();
+            this.subsub_paper_chart.on('click', this.searchSubsubject_in_rank);
+
+            this.setSubjectPaperBar();
+            this.subject_paper_bar_chart.on('click', this.showSubsubject_in_bar);
+        },
+
         async checkLogin() {
             return axios.get('http://10.80.135.205:8080/api/v1/user/check_login')
                 .then((response) => {
@@ -549,7 +553,7 @@ export default {
                             // BUG: 如果把最后一组 index==37 加上就会报错, 只能这里特判
                             if (i * 10 + j >= 37) {
                                 this.main_subject_rank[i].push("bayes-an");
-                                this.subject_papers_rank[i].push(Math.max(0, -(10*i+j-38)*16));
+                                this.subject_papers_rank[i].push(Math.max(0, -(10 * i + j - 38) * 16));
                                 continue;
                             }
                             this.main_subject_rank[i].push(response.data[i * 10 + j].main_subject);
@@ -856,6 +860,19 @@ export default {
 
         showSubsubject_in_bar(params) {
             // 弹窗展示该 subject 的所有 sub-subject 的数据
+        },
+
+        async logOut() {
+            axios.get('http://10.80.135.205:8080/api/v1/user/logout')
+                .then((response) => {
+                    console.log("log out status: " + response.data.logout);
+                    this.isLogin = false;
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            await this.initialize();
         }
     },
 

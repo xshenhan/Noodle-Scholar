@@ -78,8 +78,8 @@
                 </li>
                 <li v-else class="nav-item">
                     <span class="nav-link">
-                        <a class="btn btn-outline-primary btn-round fade-down-left" style="color:#c3a6cb !important;"
-                            href="/signup">Log out</a>
+                        <a class="btn btn-outline-primary btn-round fade-down-left"
+                            style="color:#c3a6cb !important; border-color: #c3a6cb !important;" @click="logOut">Log out</a>
                     </span>
                 </li>
             </ul>
@@ -131,7 +131,8 @@
                                 <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.author" :key="index">
                                     <span v-if="index <= 10" @click="SearchAuthor(n)"
                                         class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
-                                    <span v-if="index <= 10 && index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
+                                    <span
+                                        v-if="index <= 10 && index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
                                     </span>
                                 </span>
                             </p>
@@ -141,14 +142,15 @@
                                 <span class="badge badge-primary">Keywords</span>&nbsp;
                                 <span v-if="this.search_source === '100pdfs'" v-for="(n, index) in paper.keywords"
                                     :key="index">
-                                    <span @click="SearchSubject(n)"
-                                        class="badge cursor_pointer badge_outline" v-html="n"></span>
+                                    <span @click="SearchSubject(n)" class="badge cursor_pointer badge_outline"
+                                        v-html="n"></span>
                                     <span v-if="index !== paper.keywords.length - 1"><strong>&nbsp;&nbsp;</strong>
                                     </span>
                                 </span>
-                                <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.tag.split(' ')" :key="index">
-                                    <span @click="SearchSubject(n)"
-                                        class="badge cursor_pointer badge_outline" v-html="n"></span>
+                                <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.tag.split(' ')"
+                                    :key="index">
+                                    <span @click="SearchSubject(n)" class="badge cursor_pointer badge_outline"
+                                        v-html="n"></span>
                                     <span v-if="index !== paper.tag.split(' ').length - 1"><strong>&nbsp;&nbsp;</strong>
                                     </span>
                                 </span>
@@ -220,8 +222,10 @@ import ClipboardJS from 'clipboard';
 export default {
     data() {
         return {
-            search_type: "NULL",
-            search_type_print: "NULL",
+            isLogin: false,
+
+            search_type: "All",
+            search_type_print: "All",
 
 
             search_field: "",
@@ -245,28 +249,20 @@ export default {
         }
     },
 
-    mounted() {
-        $(this.$el).find('[data-toggle="dropdown"]').dropdown();
-        this.search_field = this.$route.query.field;
-        this.search_info = this.$route.query.info;
-        this.search_source = this.$route.query.source;
-        console.log("field = " + this.search_field);
-        console.log("info = " + this.search_info);
-        console.log("source = " + this.search_source);
-        this.getAllPaperInfo();
-        // this.getLimitedPaperInfo();
-        $(function () {
-            $('[data-toggle="popover"]').popover();
-        });
+    async mounted() {
+        await this.initialize();
     },
 
     methods: {
 
-        initialize() {
+        async initialize() {
+            await this.checkLogin();
+            console.log("initializing...")
             $(this.$el).find('[data-toggle="dropdown"]').dropdown();
             this.search_field = this.$route.query.field;
             this.search_info = this.$route.query.info;
             this.search_source = this.$route.query.source;
+            this.search_type = this.search_field[0].toUpperCase() + this.search_field.substring(1);
             console.log("field = " + this.search_field);
             console.log("info = " + this.search_info);
             console.log("source = " + this.search_source);
@@ -415,7 +411,41 @@ export default {
                 target: document.querySelector(selector)
             });
         },
+
+        async checkLogin() {
+            return axios.get('http://10.80.135.205:8080/api/v1/user/check_login')
+                .then((response) => {
+                    this.isLogin = response.data.login_in;
+                    console.log("log in status: " + response.data.login_in);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
+
+        async logOut() {
+            axios.get('http://10.80.135.205:8080/api/v1/user/logout')
+                .then((response) => {
+                    console.log("log out status: " + response.data.logout);
+                    this.isLogin = false;
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            await this.initialize();
+        }
+    },
+
+    watch: {
+        '$route': {
+            immediate: true,
+            handler() {
+                this.initialize();
+            }
+        },
     }
+
 }
 
 
