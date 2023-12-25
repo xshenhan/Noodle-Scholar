@@ -149,7 +149,7 @@
                                 <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.tag.split(' ')" :key="index">
                                     <span @click="SearchSubject(n)"
                                         class="badge cursor_pointer badge_outline" v-html="n"></span>
-                                    <span v-if="index !== paper.author.length - 1"><strong>&nbsp;&nbsp;</strong>
+                                    <span v-if="index !== paper.tag.split(' ').length - 1"><strong>&nbsp;&nbsp;</strong>
                                     </span>
                                 </span>
                             </p>
