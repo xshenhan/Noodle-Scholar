@@ -14,7 +14,7 @@
                         <a class="nav-link" href="./" style="font-weight: none; font-size: 15px">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./searchresult" style="font-weight: none; font-size: 15px">Search</a>
+                        <a class="nav-link" href="./searchresult?field=all&info=%20&source=100pdfs" style="font-weight: none; font-size: 15px">Search</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto d-flex align-items-center">
@@ -81,9 +81,8 @@
                                 <a class="dropdown-item" @click="selectSearchType('Title')"><strong>Title</strong></a>
                                 <a class="dropdown-item" @click="selectSearchType('Subject')"><strong>Subject</strong></a>
                                 <a class="dropdown-item" @click="selectSearchType('Author')"><strong>Author</strong></a>
-                                <a class="dropdown-item" @click="selectSearchType('Journal')"><strong>Journal</strong></a>
-                                <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
                                 <a class="dropdown-item" @click="selectSearchType('Abstract')"><strong>Abstract</strong></a>
+                                <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
                             </div>
                         </div>
                     </div>
@@ -217,7 +216,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- Container for the ECharts pie chart -->
-                        <div id="subSubjectPieChart" style="width: 400%; height: 400%;"></div>
+                        <div id="subSubjectPieChart" style="width: 500%; height: 400%;"></div>
                     </div>
                 </div>
             </div>
@@ -1712,7 +1711,7 @@ export default {
                     axisLine: {
                         lineStyle: {
                             color: '#fff',
-                            width: 15,
+                            width: 1,
                             type: "solid",
                         }
                     },
@@ -1786,7 +1785,8 @@ export default {
                     axisLine: {
                         lineStyle: {
                             color: '#fff',
-                            width: 15,
+                            // y轴的线条宽度
+                            width: 1,
                             type: "solid",
                             // shadowColor: "#a1afc9",
                             // shadowOffsetX: 5,

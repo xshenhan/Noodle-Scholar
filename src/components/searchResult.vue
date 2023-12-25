@@ -28,7 +28,7 @@
 
                             <!-- Arxiv 选择器 -->
                             <button type="button" class=" btn btn_circle_home "
-                                :class="{ btn_circle_home_active: this.agreed }"
+                                :class="{ btn_circle_home_active: this.searchArxiv }"
                                 @click="changeAgreement"><strong>Arxiv</strong>
                             </button>
 
@@ -36,13 +36,13 @@
                             <input id="search-input" type="text" class="form-control form-control-rounded no_box_shadow"
                                 v-model="search_info" @keyup.enter="SearchAndGoToResultPage"
                                 aria-label="Text input with dropdown button"
-                                :placeholder="`Search by ${search_type_print}`">
+                                :placeholder="`Search by ${new_search_type_print}`">
 
                             <!-- 搜索条件选择器 -->
                             <!-- BUG: 为什么尖叫向上 && 只能下拉一次菜单 -->
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
-                                    data-toggle="dropdown" aria-expanded="false">{{ search_type_print }}</button>
+                                    data-toggle="dropdown" aria-expanded="false">{{ new_search_type_print }}</button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" @click="selectSearchType('All')"><strong>All</strong></a>
                                     <div role="separator" class="dropdown-divider"></div>
@@ -51,10 +51,8 @@
                                         @click="selectSearchType('Subject')"><strong>Subject</strong></a>
                                     <a class="dropdown-item" @click="selectSearchType('Author')"><strong>Author</strong></a>
                                     <a class="dropdown-item"
-                                        @click="selectSearchType('Journal')"><strong>Journal</strong></a>
-                                    <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
-                                    <a class="dropdown-item"
                                         @click="selectSearchType('Abstract')"><strong>Abstract</strong></a>
+                                    <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
                                 </div>
                             </div>
                         </div>
@@ -179,8 +177,7 @@
                                     <div v-for="(url, index) in paper.pics" :key="index" class="carousel-item"
                                         :class="{ active: index === '0' }">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'' + url"
-                                                class="img-fluid mx-auto d-block fill-image">
+                                            <img :src="'' + url" class="img-fluid mx-auto d-block fill-image">
                                         </div>
                                     </div>
 
@@ -225,11 +222,13 @@ export default {
         return {
             isLogin: false,
 
-            search_type: "all",
-            search_type_print: "All",
+            new_search_type: "all",
+            new_search_type_print: "All",
+            // old_search_source: "100pdfs",
 
+            search_field: "havnt_search",
+            search_field_print: "havnt_search",
 
-            search_field: "all",
             search_info: "",
             search_source: "",
 
@@ -261,9 +260,26 @@ export default {
             console.log("initializing...")
             $(this.$el).find('[data-toggle="dropdown"]').dropdown();
             this.search_field = this.$route.query.field;
+            this.search_field_print = this.new_search_type_print;
+            console.log("old search field: " + this.search_field);
+
+            if (this.search_field === "tag") {
+                this.new_search_type = "tag";
+                this.new_search_type_print = "Subject";
+            } else {
+                // Capitalize the first letter for other cases
+                this.new_search_type = this.search_field;
+                this.new_search_type_print = this.search_field.charAt(0).toUpperCase() + this.search_field.slice(1);
+            }
+            console.log("new search type: " + this.new_search_type);
+            console.log("new search type print: " + this.new_search_type_print);
+
             this.search_info = this.$route.query.info;
             this.search_source = this.$route.query.source;
-            this.search_type = this.search_field[0].toUpperCase() + this.search_field.substring(1);
+            // this.old_search_source = this.search_source;
+            this.searchArxiv = this.search_source === "arxiv";
+            this.agreed = this.searchArxiv;
+
             console.log("field = " + this.search_field);
             console.log("info = " + this.search_info);
             console.log("source = " + this.search_source);
@@ -274,7 +290,7 @@ export default {
         },
 
         SearchAndGoToResultPage() {
-            var url = "/searchResult?field=" + this.search_type + "&info=" + encodeURIComponent(this.search_info);
+            var url = "/searchResult?field=" + this.new_search_type + "&info=" + encodeURIComponent(this.search_info);
             if (this.searchArxiv) {
                 url += "&source=arxiv";
             } else {
@@ -292,14 +308,14 @@ export default {
         },
 
         selectSearchType(type) {
-            this.search_type = type;
+            this.new_search_type_print = type;
             this.$nextTick(() => {
                 $(this.$el).find('[data-toggle="dropdown"]').dropdown('update');
             });
             if (type === "Subject") {
-                this.search_type_print = "tag";
+                this.new_search_type = "tag";
             } else {
-                this.search_type_print = type.toLowerCase();
+                this.new_search_type = type.toLowerCase();
             }
             console.log("search_type changed to " + type);
             console.log("search_type_print: " + type);
@@ -538,7 +554,7 @@ export default {
     margin-left: 70.852px;
     margin-right: 70.852px;
     margin-top: 10px;
-    margin-bottom: 100px;
+    margin-bottom: 200px;
     background-color: #2578b5;
     color: #ffffff;
     border: none;
@@ -558,6 +574,27 @@ export default {
 .badge_outline {
     border: 1px solid #2578b5 !important;
     color: black !important;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    /* Position below the button */
+    left: 0;
+    z-index: 1000;
+    /* Ensure it's above other content */
+    display: none;
+    /* Initially hidden */
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    /* Show on hover */
 }
 </style>
 

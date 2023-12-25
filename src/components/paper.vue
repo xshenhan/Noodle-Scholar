@@ -46,18 +46,22 @@
 
     <div class="jumbotron jumbotron-fluid set_margin set_padding">
         <div class="container">
-            <h2 class="text-left">{{ this.paper_title }}&nbsp;<span class="badge reform_badge_outline">{{ this.paper_year
+            <h2 class="text-left"><span v-html="titleLatex"></span>&nbsp;<span class="badge reform_badge_outline">{{
+                this.paper_year
             }}</span></h2>
             <!-- <br> -->
             <p class="lead"><span class="badge badge-primary">Author</span>&nbsp;
                 <span v-for="(aut, i) in this.paper_author" :key="i">
-                    <span @click="SearchAuthor(n)" class="color_blue font-weight-bold hoverable cursor_pointer">{{ aut
-                    }}</span>
-                    <span v-if="i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
+                    <span v-if="showAllAuthors || i < 10" @click="SearchAuthor(n)"
+                        class="color_blue font-weight-bold hoverable cursor_pointer">{{ aut
+                        }}</span>
+                    <span v-if="showAllAuthors || i < 10 && i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
                 </span>
+                <div class="btn btn-outline-cyan" style="padding: .35rem 1rem; line-height: 1; border-radius: 1rem;" v-if="!showAllAuthors && this.paper_author.length > 10" @click="showAllAuthors = true">展开</div>
+                <div class="btn btn-outline-cyan" style="padding: .35rem 1rem; line-height: 1; border-radius: 1rem;" v-if="showAllAuthors && this.paper_author.length > 10" @click="showAllAuthors = false">收起</div>
             </p>
             <p class="lead"><span class="badge badge-primary">Abstract</span>&nbsp;
-                <span v-html="htmlText"></span>
+                <span v-html="abstractLatex"></span>
             </p>
 
 
@@ -124,7 +128,7 @@
         <div class="row">
 
             <!-- 左侧栏: 图片+表格 -->
-            <div class="col-8">
+            <div class="col-12">
                 <div class="constainer outside_border" style="margin-right: 0 !important;">
                     <div class="container add_bottom_margin" id="tabs">
                         <!-- bootstrap 导航栏 -->
@@ -153,8 +157,8 @@
                             <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">
                                 <div v-for="key in (this.paper_pictures_num)" :key="key">
                                     <div class="container my_cont">
-                                        <img class="full_screen"
-                                            :src="'' + this.paper_pictures[key - 1]">
+                                        <img class="" style="width: 45% !important;"
+                                            :src="'' + this.paper_pictures[key - 1]"><br><br>
                                     </div>
                                 </div>
                             </div>
@@ -164,11 +168,11 @@
             </div>
 
             <!-- 右侧栏: 其他元数据+可视化 -->
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <div class="constainer outside_border" style="margin-left: 0 !important;">
                     <h2>Data + Visualization</h2>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -187,6 +191,7 @@ export default {
             isLogin: false,
 
             displayTable: true,
+            showAllAuthors: false,
 
             paper_id: "NULL",
             paper_source: "NULL",
@@ -241,7 +246,7 @@ export default {
         },
 
         getDownloadLink(id) {
-            return "/api/v1/paper/download?id=" + id;
+            return "/api/v1/paper/download?id=" + id + "&source=" + this.paper_source;
         },
 
         getPaperInfo() {
@@ -415,10 +420,10 @@ export default {
 
         modelSummary() {
             this.display_summary_window = !this.display_summary_window;
-            if (this.paper_source != "arxiv") {
-                this.addMessageToChat("gpt-message", "暂不支持该论文源, 请查询 Arxiv 论文");
-                return;
-            }
+            // if (this.paper_source != "arxiv") {
+            //     this.addMessageToChat("gpt-message", "暂不支持该论文源, 请查询 Arxiv 论文");
+            //     return;
+            // }
 
             axios.get('/api/v1/model/summary', {
                 params: {
@@ -582,40 +587,53 @@ export default {
     },
 
     watch: {
-        paperAbstractHTML(newValue, oldValue) {
-            // 每当computedData更新时，这个函数将被调用
-            this.removeKatexHtmlElements();
-        }
+        // abstractLatex(newValue, oldValue) {
+        //     // 每当computedData更新时，这个函数将被调用
+        //     this.removeKatexHtmlElements();
+        // }
     },
 
     computed: {
-        paperAbstractHTML() {
-            return marked(this.paper_abstract);
-        },
-
-        // htmlText() {
-        //     // Split the text into parts that are inside $...$ and parts that are outside
-        //     const parts = this.paper_abstract.split(/(\$.*?\$)/g);
-
-        //     // Render the parts that are inside $...$ with katex
-        //     const renderedParts = parts.map(part => {
-        //         if (part.startsWith('$') && part.endsWith('$')) {
-        //             // Remove the $ symbols and render with katex
-        //             const latex = part.slice(1, -1).replace(/\$/g, '');
-        //             return katex.renderToString(latex);
-        //         } else {
-        //             // Leave the parts that are outside $...$ unchanged
-        //             return part;
-        //         }
-        //     });
-
-        //     // Join the parts back together
-        //     return renderedParts.join('');
+        // paperAbstractHTML() {
+        //     return marked(this.paper_abstract);
         // },
 
-        htmlText() {
+        abstractLatex() {
             const regex = /(\$\$?[^$]+\$?\$)/g;
             const text = this.paper_abstract;
+            let lastIndex = 0;
+            let result = '';
+
+            text.replace(regex, (match, tex, index) => {
+                result += text.slice(lastIndex, index);
+                const latex = tex.slice(tex.startsWith('$$') ? 2 : 1, tex.endsWith('$$') ? -2 : -1);
+
+                // Create a dummy div element to parse the HTML string
+                const dummyDiv = document.createElement('div');
+                dummyDiv.innerHTML = katex.renderToString(latex, { throwOnError: false });
+
+                // Remove the <span class="katex-html"> element
+                const katexHtml = dummyDiv.querySelector('.katex-html');
+                if (katexHtml) {
+                    katexHtml.remove();
+                }
+
+                // Append the modified HTML to the result
+                result += dummyDiv.innerHTML;
+
+                lastIndex = index + tex.length;
+                return match;
+            });
+
+            result += text.slice(lastIndex);
+
+
+            return result;
+        },
+
+        titleLatex() {
+            const regex = /(\$\$?[^$]+\$?\$)/g;
+            const text = this.paper_title;
             let lastIndex = 0;
             let result = '';
 
