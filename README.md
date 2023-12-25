@@ -107,9 +107,7 @@ async getAuthorPapers(_start, _end) {
 ## 代办
 
 1. gpt交互
-2. searchResult 页面搜素框正常工作
-3. 修latex渲染会有两遍
-4. 
+2. 修latex渲染会有两遍
 
 ## 可视化
 
@@ -122,5 +120,4 @@ async getAuthorPapers(_start, _end) {
 ## 紧急-必须完成
 
 1. 确定可以搜索的关键词有哪些（100pdfs和arxiv分别）
-2. 搜索界面的搜索框正常工作
-3. 可视化--subject翻页展示，点击搜索
+3. 可视化--subject点击搜索

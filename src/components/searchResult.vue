@@ -35,13 +35,14 @@
                             <!-- 搜索框 -->
                             <input id="search-input" type="text" class="form-control form-control-rounded no_box_shadow"
                                 v-model="search_info" @keyup.enter="SearchAndGoToResultPage"
-                                aria-label="Text input with dropdown button" :placeholder="`Search by ${search_type}`">
+                                aria-label="Text input with dropdown button"
+                                :placeholder="`Search by ${search_type_print}`">
 
                             <!-- 搜索条件选择器 -->
                             <!-- BUG: 为什么尖叫向上 && 只能下拉一次菜单 -->
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
-                                    data-toggle="dropdown" aria-expanded="false">{{ search_type }}</button>
+                                    data-toggle="dropdown" aria-expanded="false">{{ search_type_print }}</button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" @click="selectSearchType('All')"><strong>All</strong></a>
                                     <div role="separator" class="dropdown-divider"></div>
@@ -224,11 +225,11 @@ export default {
         return {
             isLogin: false,
 
-            search_type: "All",
+            search_type: "all",
             search_type_print: "All",
 
 
-            search_field: "",
+            search_field: "all",
             search_info: "",
             search_source: "",
 
@@ -273,7 +274,7 @@ export default {
         },
 
         SearchAndGoToResultPage() {
-            var url = "/searchResult?field=" + this.search_type_print + "&info=" + encodeURIComponent(this.search_info);
+            var url = "/searchResult?field=" + this.search_type + "&info=" + encodeURIComponent(this.search_info);
             if (this.searchArxiv) {
                 url += "&source=arxiv";
             } else {
@@ -314,17 +315,27 @@ export default {
             })
                 .then((response) => {
                     this.responses = response;
-                    this.response_data = Object.fromEntries(Object.entries(this.responses.data).slice(0, this.paper_number));
-                    // 打印response_data长度
+
+                    // Sort the data and then assign it directly
+                    const sortedData = {};
+                    Object.keys(this.responses.data)
+                        .sort((a, b) => a - b)
+                        .forEach(key => {
+                            sortedData[key] = this.responses.data[key];
+                        });
+
+                    // Assign the sorted data to response_data
+                    this.response_data = sortedData;
+
                     console.log(Object.keys(this.response_data).length);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.error('Error:', error);
                     this.already_searched = true;
                     this.paper_id = "!! ERROR !!";
-                })
-
+                });
         },
+
 
         // getLimitedPaperInfo() {
         //     response_data = Object.fromEntries(Object.entries(this.responses.data).slice(0, this.paper_number));

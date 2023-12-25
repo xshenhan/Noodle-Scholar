@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import searchResult from '../components/searchResult.vue'
-import Paper from '../components/Paper.vue'
+import Paper from '../components/paper.vue'
 import SignUp from '../components/signup.vue'
 import LogIn from '../components/login.vue'
 

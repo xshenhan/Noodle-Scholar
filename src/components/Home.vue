@@ -193,12 +193,38 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
+
+
                 </div>
 
 
             </div>
         </div>
+        <!-- Bootstrap modal for sub-subject pie chart -->
+        <div class="modal fade" id="subSubjectModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Sub-Subject Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Container for the ECharts pie chart -->
+                        <div id="subSubjectPieChart" style="width: 400%; height: 400%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
 
 
 
@@ -304,9 +330,6 @@ export default {
             agreed: false,
             searchArxiv: false,
 
-
-
-
             year_paper: [],
             year_paper_chart: null,
 
@@ -326,8 +349,966 @@ export default {
             activePage_subject_paper: 0,
             subject_paper_bar_chart: null,
 
-
             subsub_paper_bar_chart: null,
+
+            json: {
+                "hep-ph": [
+                    {
+                        "sub_subject": "hep-ph",
+                        "full_name": "High Energy Physics - Phenomenology",
+                        "num_papers": 175652
+                    }
+                ],
+                "math": [
+                    {
+                        "sub_subject": "math.CO",
+                        "full_name": "Combinatorics",
+                        "num_papers": 62691
+                    },
+                    {
+                        "sub_subject": "math.CA",
+                        "full_name": "Classical Analysis and ODEs",
+                        "num_papers": 21365
+                    },
+                    {
+                        "sub_subject": "math.FA",
+                        "full_name": "Functional Analysis",
+                        "num_papers": 29626
+                    },
+                    {
+                        "sub_subject": "math.NT",
+                        "full_name": "Number Theory",
+                        "num_papers": 39835
+                    },
+                    {
+                        "sub_subject": "math.AG",
+                        "full_name": "Algebraic Geometry",
+                        "num_papers": 50490
+                    },
+                    {
+                        "sub_subject": "math.AT",
+                        "full_name": "Algebraic Topology",
+                        "num_papers": 14962
+                    },
+                    {
+                        "sub_subject": "math.PR",
+                        "full_name": "Probability",
+                        "num_papers": 53597
+                    },
+                    {
+                        "sub_subject": "math.NA",
+                        "full_name": "Numerical Analysis",
+                        "num_papers": 35194
+                    },
+                    {
+                        "sub_subject": "math.RA",
+                        "full_name": "Rings and Algebras",
+                        "num_papers": 16598
+                    },
+                    {
+                        "sub_subject": "math.OA",
+                        "full_name": "Operator Algebras",
+                        "num_papers": 12155
+                    },
+                    {
+                        "sub_subject": "math.QA",
+                        "full_name": "Quantum Algebra",
+                        "num_papers": 18442
+                    },
+                    {
+                        "sub_subject": "math.MP",
+                        "full_name": "Mathematical Physics",
+                        "num_papers": 76640
+                    },
+                    {
+                        "sub_subject": "math.IT",
+                        "full_name": "Information Theory",
+                        "num_papers": 44508
+                    },
+                    {
+                        "sub_subject": "math.DG",
+                        "full_name": "Differential Geometry",
+                        "num_papers": 40499
+                    },
+                    {
+                        "sub_subject": "math.CV",
+                        "full_name": "Complex Variables",
+                        "num_papers": 16325
+                    },
+                    {
+                        "sub_subject": "math.DS",
+                        "full_name": "Dynamical Systems",
+                        "num_papers": 34801
+                    },
+                    {
+                        "sub_subject": "math.RT",
+                        "full_name": "Representation Theory",
+                        "num_papers": 25011
+                    },
+                    {
+                        "sub_subject": "math.GR",
+                        "full_name": "Group Theory",
+                        "num_papers": 21221
+                    },
+                    {
+                        "sub_subject": "math.AC",
+                        "full_name": "Commutative Algebra",
+                        "num_papers": 12363
+                    },
+                    {
+                        "sub_subject": "math.SG",
+                        "full_name": "Symplectic Geometry",
+                        "num_papers": 8734
+                    },
+                    {
+                        "sub_subject": "math.KT",
+                        "full_name": "K-Theory and Homology",
+                        "num_papers": 5691
+                    },
+                    {
+                        "sub_subject": "math.GT",
+                        "full_name": "Geometric Topology",
+                        "num_papers": 21988
+                    },
+                    {
+                        "sub_subject": "math.AP",
+                        "full_name": "Analysis of PDEs",
+                        "num_papers": 58766
+                    },
+                    {
+                        "sub_subject": "math.MG",
+                        "full_name": "Metric Geometry",
+                        "num_papers": 10674
+                    },
+                    {
+                        "sub_subject": "math.SP",
+                        "full_name": "Spectral Theory",
+                        "num_papers": 9291
+                    },
+                    {
+                        "sub_subject": "math.ST",
+                        "full_name": "Statistics Theory",
+                        "num_papers": 21776
+                    },
+                    {
+                        "sub_subject": "math.OC",
+                        "full_name": "Optimization and Control",
+                        "num_papers": 44895
+                    },
+                    {
+                        "sub_subject": "math.CT",
+                        "full_name": "Category Theory",
+                        "num_papers": 8074
+                    },
+                    {
+                        "sub_subject": "math.LO",
+                        "full_name": "Logic",
+                        "num_papers": 12595
+                    },
+                    {
+                        "sub_subject": "math.GM",
+                        "full_name": "General Mathematics",
+                        "num_papers": 3799
+                    },
+                    {
+                        "sub_subject": "math.GN",
+                        "full_name": "General Topology",
+                        "num_papers": 4918
+                    },
+                    {
+                        "sub_subject": "math.HO",
+                        "full_name": "History and Overview",
+                        "num_papers": 3480
+                    }
+                ],
+                "cs": [
+                    {
+                        "sub_subject": "cs.CG",
+                        "full_name": "Computational Geometry",
+                        "num_papers": 6487
+                    },
+                    {
+                        "sub_subject": "cs.IT",
+                        "full_name": "Information Theory",
+                        "num_papers": 44508
+                    },
+                    {
+                        "sub_subject": "cs.NE",
+                        "full_name": "Neural and Evolutionary Computing",
+                        "num_papers": 13295
+                    },
+                    {
+                        "sub_subject": "cs.AI",
+                        "full_name": "Artificial Intelligence",
+                        "num_papers": 75694
+                    },
+                    {
+                        "sub_subject": "cs.DS",
+                        "full_name": "Data Structures and Algorithms",
+                        "num_papers": 22802
+                    },
+                    {
+                        "sub_subject": "cs.CE",
+                        "full_name": "Computational Engineering, Finance, and Science",
+                        "num_papers": 6334
+                    },
+                    {
+                        "sub_subject": "cs.MS",
+                        "full_name": "Mathematical Software",
+                        "num_papers": 2117
+                    },
+                    {
+                        "sub_subject": "cs.NA",
+                        "full_name": "Numerical Analysis",
+                        "num_papers": 21218
+                    },
+                    {
+                        "sub_subject": "cs.CC",
+                        "full_name": "Computational Complexity",
+                        "num_papers": 10222
+                    },
+                    {
+                        "sub_subject": "cs.DM",
+                        "full_name": "Discrete Mathematics",
+                        "num_papers": 12699
+                    },
+                    {
+                        "sub_subject": "cs.LO",
+                        "full_name": "Logic in Computer Science",
+                        "num_papers": 15259
+                    },
+                    {
+                        "sub_subject": "cs.CR",
+                        "full_name": "Cryptography and Security",
+                        "num_papers": 29579
+                    },
+                    {
+                        "sub_subject": "cs.NI",
+                        "full_name": "Networking and Internet Architecture",
+                        "num_papers": 20763
+                    },
+                    {
+                        "sub_subject": "cs.LG",
+                        "full_name": "Machine Learning",
+                        "num_papers": 157532
+                    },
+                    {
+                        "sub_subject": "cs.PF",
+                        "full_name": "Performance",
+                        "num_papers": 3676
+                    },
+                    {
+                        "sub_subject": "cs.SE",
+                        "full_name": "Software Engineering",
+                        "num_papers": 14783
+                    },
+                    {
+                        "sub_subject": "cs.AR",
+                        "full_name": "Hardware Architecture",
+                        "num_papers": 4341
+                    },
+                    {
+                        "sub_subject": "cs.SC",
+                        "full_name": "Symbolic Computation",
+                        "num_papers": 2401
+                    },
+                    {
+                        "sub_subject": "cs.CY",
+                        "full_name": "Computers and Society",
+                        "num_papers": 16622
+                    },
+                    {
+                        "sub_subject": "cs.IR",
+                        "full_name": "Information Retrieval",
+                        "num_papers": 15293
+                    },
+                    {
+                        "sub_subject": "cs.CV",
+                        "full_name": "Computer Vision and Pattern Recognition",
+                        "num_papers": 108977
+                    },
+                    {
+                        "sub_subject": "cs.OH",
+                        "full_name": "Other Computer Science",
+                        "num_papers": 2178
+                    },
+                    {
+                        "sub_subject": "cs.DB",
+                        "full_name": "Databases",
+                        "num_papers": 8125
+                    },
+                    {
+                        "sub_subject": "cs.DL",
+                        "full_name": "Digital Libraries",
+                        "num_papers": 4601
+                    },
+                    {
+                        "sub_subject": "cs.HC",
+                        "full_name": "Human-Computer Interaction",
+                        "num_papers": 14975
+                    },
+                    {
+                        "sub_subject": "cs.PL",
+                        "full_name": "Programming Languages",
+                        "num_papers": 7325
+                    },
+                    {
+                        "sub_subject": "cs.GT",
+                        "full_name": "Computer Science and Game Theory",
+                        "num_papers": 10554
+                    },
+                    {
+                        "sub_subject": "cs.DC",
+                        "full_name": "Distributed, Parallel, and Cluster Computing",
+                        "num_papers": 19872
+                    },
+                    {
+                        "sub_subject": "cs.MA",
+                        "full_name": "Multiagent Systems",
+                        "num_papers": 6944
+                    },
+                    {
+                        "sub_subject": "cs.CL",
+                        "full_name": "Computation and Language",
+                        "num_papers": 53451
+                    },
+                    {
+                        "sub_subject": "cs.MM",
+                        "full_name": "Multimedia",
+                        "num_papers": 5793
+                    },
+                    {
+                        "sub_subject": "cs.RO",
+                        "full_name": "Robotics",
+                        "num_papers": 28198
+                    },
+                    {
+                        "sub_subject": "cs.ET",
+                        "full_name": "Emerging Technologies",
+                        "num_papers": 3751
+                    },
+                    {
+                        "sub_subject": "cs.GL",
+                        "full_name": "General Literature",
+                        "num_papers": 210
+                    },
+                    {
+                        "sub_subject": "cs.FL",
+                        "full_name": "Formal Languages and Automata Theory",
+                        "num_papers": 4701
+                    },
+                    {
+                        "sub_subject": "cs.OS",
+                        "full_name": "Operating Systems",
+                        "num_papers": 838
+                    },
+                    {
+                        "sub_subject": "cs.SD",
+                        "full_name": "Sound",
+                        "num_papers": 12529
+                    },
+                    {
+                        "sub_subject": "cs.GR",
+                        "full_name": "Graphics",
+                        "num_papers": 5302
+                    },
+                    {
+                        "sub_subject": "cs.SY",
+                        "full_name": "Systems and Control",
+                        "num_papers": 28621
+                    },
+                    {
+                        "sub_subject": "cs.SI",
+                        "full_name": "Social and Information Networks",
+                        "num_papers": 18607
+                    }
+                ],
+                "physics": [
+                    {
+                        "sub_subject": "physics.gen-ph",
+                        "full_name": "General Physics",
+                        "num_papers": 10166
+                    },
+                    {
+                        "sub_subject": "physics.chem-ph",
+                        "full_name": "Chemical Physics",
+                        "num_papers": 20801
+                    },
+                    {
+                        "sub_subject": "physics.optics",
+                        "full_name": "Optics",
+                        "num_papers": 43762
+                    },
+                    {
+                        "sub_subject": "physics.comp-ph",
+                        "full_name": "Computational Physics",
+                        "num_papers": 21469
+                    },
+                    {
+                        "sub_subject": "physics.plasm-ph",
+                        "full_name": "Plasma Physics",
+                        "num_papers": 15710
+                    },
+                    {
+                        "sub_subject": "physics.space-ph",
+                        "full_name": "Space Physics",
+                        "num_papers": 6063
+                    },
+                    {
+                        "sub_subject": "physics.ed-ph",
+                        "full_name": "Physics Education",
+                        "num_papers": 3670
+                    },
+                    {
+                        "sub_subject": "physics.pop-ph",
+                        "full_name": "Popular Physics",
+                        "num_papers": 2336
+                    },
+                    {
+                        "sub_subject": "physics.soc-ph",
+                        "full_name": "Physics and Society",
+                        "num_papers": 21116
+                    },
+                    {
+                        "sub_subject": "physics.flu-dyn",
+                        "full_name": "Fluid Dynamics",
+                        "num_papers": 26509
+                    },
+                    {
+                        "sub_subject": "physics.data-an",
+                        "full_name": "Data Analysis, Statistics and Probability",
+                        "num_papers": 9980
+                    },
+                    {
+                        "sub_subject": "physics.class-ph",
+                        "full_name": "Classical Physics",
+                        "num_papers": 8243
+                    },
+                    {
+                        "sub_subject": "physics.bio-ph",
+                        "full_name": "Biological Physics",
+                        "num_papers": 14597
+                    },
+                    {
+                        "sub_subject": "physics.atom-ph",
+                        "full_name": "Atomic Physics",
+                        "num_papers": 20315
+                    },
+                    {
+                        "sub_subject": "physics.ao-ph",
+                        "full_name": "Atmospheric and Oceanic Physics",
+                        "num_papers": 6015
+                    },
+                    {
+                        "sub_subject": "physics.ins-det",
+                        "full_name": "Instrumentation and Detectors",
+                        "num_papers": 20085
+                    },
+                    {
+                        "sub_subject": "physics.geo-ph",
+                        "full_name": "Geophysics",
+                        "num_papers": 6701
+                    },
+                    {
+                        "sub_subject": "physics.atm-clus",
+                        "full_name": "Atomic and Molecular Clusters",
+                        "num_papers": 2661
+                    },
+                    {
+                        "sub_subject": "physics.acc-ph",
+                        "full_name": "Accelerator Physics",
+                        "num_papers": 7483
+                    },
+                    {
+                        "sub_subject": "physics.hist-ph",
+                        "full_name": "History and Philosophy of Physics",
+                        "num_papers": 4738
+                    },
+                    {
+                        "sub_subject": "physics.med-ph",
+                        "full_name": "Medical Physics",
+                        "num_papers": 6407
+                    },
+                    {
+                        "sub_subject": "physics.app-ph",
+                        "full_name": "Applied Physics",
+                        "num_papers": 16552
+                    }
+                ],
+                "cond-mat": [
+                    {
+                        "sub_subject": "cond-mat.mes-hall",
+                        "full_name": "Mesoscale and Nanoscale Physics",
+                        "num_papers": 86893
+                    },
+                    {
+                        "sub_subject": "cond-mat.mtrl-sci",
+                        "full_name": "Materials Science",
+                        "num_papers": 88039
+                    },
+                    {
+                        "sub_subject": "cond-mat.str-el",
+                        "full_name": "Strongly Correlated Electrons",
+                        "num_papers": 71240
+                    },
+                    {
+                        "sub_subject": "cond-mat.stat-mech",
+                        "full_name": "Statistical Mechanics",
+                        "num_papers": 71163
+                    },
+                    {
+                        "sub_subject": "cond-mat.soft",
+                        "full_name": "Soft Condensed Matter",
+                        "num_papers": 38305
+                    },
+                    {
+                        "sub_subject": "cond-mat.other",
+                        "full_name": "Other Condensed Matter",
+                        "num_papers": 15380
+                    },
+                    {
+                        "sub_subject": "cond-mat.supr-con",
+                        "full_name": "Superconductivity",
+                        "num_papers": 41999
+                    },
+                    {
+                        "sub_subject": "cond-mat.dis-nn",
+                        "full_name": "Disordered Systems and Neural Networks",
+                        "num_papers": 22848
+                    },
+                    {
+                        "sub_subject": "cond-mat.quant-gas",
+                        "full_name": "Quantum Gases",
+                        "num_papers": 20280
+                    },
+                    {
+                        "sub_subject": "cond-mat",
+                        "full_name": "Condensed Matter",
+                        "num_papers": 14215
+                    }
+                ],
+                "gr-qc": [
+                    {
+                        "sub_subject": "gr-qc",
+                        "full_name": "General Relativity and Quantum Cosmology",
+                        "num_papers": 103494
+                    }
+                ],
+                "astro-ph": [
+                    {
+                        "sub_subject": "astro-ph",
+                        "full_name": "Astrophysics",
+                        "num_papers": 105380
+                    },
+                    {
+                        "sub_subject": "astro-ph.HE",
+                        "full_name": "High Energy Astrophysical Phenomena",
+                        "num_papers": 54703
+                    },
+                    {
+                        "sub_subject": "astro-ph.EP",
+                        "full_name": "Earth and Planetary Astrophysics",
+                        "num_papers": 27487
+                    },
+                    {
+                        "sub_subject": "astro-ph.SR",
+                        "full_name": "Solar and Stellar Astrophysics",
+                        "num_papers": 57666
+                    },
+                    {
+                        "sub_subject": "astro-ph.CO",
+                        "full_name": "Cosmology and Nongalactic Astrophysics",
+                        "num_papers": 64733
+                    },
+                    {
+                        "sub_subject": "astro-ph.IM",
+                        "full_name": "Instrumentation and Methods for Astrophysics",
+                        "num_papers": 27380
+                    },
+                    {
+                        "sub_subject": "astro-ph.GA",
+                        "full_name": "Astrophysics of Galaxies",
+                        "num_papers": 60703
+                    }
+                ],
+                "hep-th": [
+                    {
+                        "sub_subject": "hep-th",
+                        "full_name": "High Energy Physics - Theory",
+                        "num_papers": 162079
+                    }
+                ],
+                "hep-ex": [
+                    {
+                        "sub_subject": "hep-ex",
+                        "full_name": "High Energy Physics - Experiment",
+                        "num_papers": 51928
+                    }
+                ],
+                "nlin": [
+                    {
+                        "sub_subject": "nlin.PS",
+                        "full_name": "Pattern Formation and Solitons",
+                        "num_papers": 9397
+                    },
+                    {
+                        "sub_subject": "nlin.CD",
+                        "full_name": "Chaotic Dynamics",
+                        "num_papers": 15288
+                    },
+                    {
+                        "sub_subject": "nlin.SI",
+                        "full_name": "Exactly Solvable and Integrable Systems",
+                        "num_papers": 11566
+                    },
+                    {
+                        "sub_subject": "nlin.CG",
+                        "full_name": "Cellular Automata and Lattice Gases",
+                        "num_papers": 1466
+                    },
+                    {
+                        "sub_subject": "nlin.AO",
+                        "full_name": "Adaptation and Self-Organizing Systems",
+                        "num_papers": 6907
+                    }
+                ],
+                "q-bio": [
+                    {
+                        "sub_subject": "q-bio.MN",
+                        "full_name": "Molecular Networks",
+                        "num_papers": 3604
+                    },
+                    {
+                        "sub_subject": "q-bio.PE",
+                        "full_name": "Populations and Evolution",
+                        "num_papers": 10962
+                    },
+                    {
+                        "sub_subject": "q-bio.CB",
+                        "full_name": "Cell Behavior",
+                        "num_papers": 2075
+                    },
+                    {
+                        "sub_subject": "q-bio.QM",
+                        "full_name": "Quantitative Methods",
+                        "num_papers": 9746
+                    },
+                    {
+                        "sub_subject": "q-bio.OT",
+                        "full_name": "Other Quantitative Biology",
+                        "num_papers": 1208
+                    },
+                    {
+                        "sub_subject": "q-bio.BM",
+                        "full_name": "Biomolecules",
+                        "num_papers": 5194
+                    },
+                    {
+                        "sub_subject": "q-bio.NC",
+                        "full_name": "Neurons and Cognition",
+                        "num_papers": 8914
+                    },
+                    {
+                        "sub_subject": "q-bio.SC",
+                        "full_name": "Subcellular Processes",
+                        "num_papers": 1659
+                    },
+                    {
+                        "sub_subject": "q-bio.GN",
+                        "full_name": "Genomics",
+                        "num_papers": 2982
+                    },
+                    {
+                        "sub_subject": "q-bio.TO",
+                        "full_name": "Tissues and Organs",
+                        "num_papers": 2147
+                    },
+                    {
+                        "sub_subject": "q-bio",
+                        "full_name": "Quantitative Biology",
+                        "num_papers": 1356
+                    }
+                ],
+                "quant-ph": [
+                    {
+                        "sub_subject": "quant-ph",
+                        "full_name": "Quantum Physics",
+                        "num_papers": 141289
+                    }
+                ],
+                "hep-lat": [
+                    {
+                        "sub_subject": "hep-lat",
+                        "full_name": "High Energy Physics - Lattice",
+                        "num_papers": 27204
+                    }
+                ],
+                "nucl-th": [
+                    {
+                        "sub_subject": "nucl-th",
+                        "full_name": "Nuclear Theory",
+                        "num_papers": 55577
+                    }
+                ],
+                "math-ph": [
+                    {
+                        "sub_subject": "math-ph",
+                        "full_name": "Mathematical Physics",
+                        "num_papers": 76640
+                    }
+                ],
+                "nucl-ex": [
+                    {
+                        "sub_subject": "nucl-ex",
+                        "full_name": "Nuclear Experiment",
+                        "num_papers": 25030
+                    }
+                ],
+                "stat": [
+                    {
+                        "sub_subject": "stat.TH",
+                        "full_name": "Statistics Theory",
+                        "num_papers": 21776
+                    },
+                    {
+                        "sub_subject": "stat.ME",
+                        "full_name": "Methodology",
+                        "num_papers": 24706
+                    },
+                    {
+                        "sub_subject": "stat.AP",
+                        "full_name": "Applications",
+                        "num_papers": 17224
+                    },
+                    {
+                        "sub_subject": "stat.CO",
+                        "full_name": "Computation",
+                        "num_papers": 7710
+                    },
+                    {
+                        "sub_subject": "stat.ML",
+                        "full_name": "Machine Learning",
+                        "num_papers": 62126
+                    },
+                    {
+                        "sub_subject": "stat.OT",
+                        "full_name": "Other Statistics",
+                        "num_papers": 1254
+                    }
+                ],
+                "q-fin": [
+                    {
+                        "sub_subject": "q-fin.CP",
+                        "full_name": "Computational Finance",
+                        "num_papers": 2234
+                    },
+                    {
+                        "sub_subject": "q-fin.PR",
+                        "full_name": "Pricing of Securities",
+                        "num_papers": 1908
+                    },
+                    {
+                        "sub_subject": "q-fin.RM",
+                        "full_name": "Risk Management",
+                        "num_papers": 2123
+                    },
+                    {
+                        "sub_subject": "q-fin.GN",
+                        "full_name": "General Finance",
+                        "num_papers": 2569
+                    },
+                    {
+                        "sub_subject": "q-fin.ST",
+                        "full_name": "Statistical Finance",
+                        "num_papers": 3413
+                    },
+                    {
+                        "sub_subject": "q-fin.PM",
+                        "full_name": "Portfolio Management",
+                        "num_papers": 1745
+                    },
+                    {
+                        "sub_subject": "q-fin.TR",
+                        "full_name": "Trading and Market Microstructure",
+                        "num_papers": 1659
+                    },
+                    {
+                        "sub_subject": "q-fin.EC",
+                        "full_name": "Economics",
+                        "num_papers": 4112
+                    },
+                    {
+                        "sub_subject": "q-fin.MF",
+                        "full_name": "Mathematical Finance",
+                        "num_papers": 2358
+                    }
+                ],
+                "econ": [
+                    {
+                        "sub_subject": "econ.EM",
+                        "full_name": "Econometrics",
+                        "num_papers": 3208
+                    },
+                    {
+                        "sub_subject": "econ.TH",
+                        "full_name": "Theoretical Economics",
+                        "num_papers": 2139
+                    },
+                    {
+                        "sub_subject": "econ.GN",
+                        "full_name": "General Economics",
+                        "num_papers": 3545
+                    }
+                ],
+                "eess": [
+                    {
+                        "sub_subject": "eess.SY",
+                        "full_name": "Systems and Control",
+                        "num_papers": 20166
+                    },
+                    {
+                        "sub_subject": "eess.IV",
+                        "full_name": "Image and Video Processing",
+                        "num_papers": 20617
+                    },
+                    {
+                        "sub_subject": "eess.AS",
+                        "full_name": "Audio and Speech Processing",
+                        "num_papers": 13017
+                    },
+                    {
+                        "sub_subject": "eess.SP",
+                        "full_name": "Signal Processing",
+                        "num_papers": 24683
+                    }
+                ],
+                "acc-phys": [
+                    {
+                        "sub_subject": "acc-phys",
+                        "full_name": "Accelerator Physics",
+                        "num_papers": 49
+                    }
+                ],
+                "adap-org": [
+                    {
+                        "sub_subject": "adap-org",
+                        "full_name": "Adaptation, Noise, and Self-Organizing Systems",
+                        "num_papers": 584
+                    }
+                ],
+                "chao-dyn": [
+                    {
+                        "sub_subject": "chao-dyn",
+                        "full_name": "Chaotic Dynamics",
+                        "num_papers": 2398
+                    }
+                ],
+                "patt-sol": [
+                    {
+                        "sub_subject": "patt-sol",
+                        "full_name": "Pattern Formation and Solitons",
+                        "num_papers": 650
+                    }
+                ],
+                "dg-ga": [
+                    {
+                        "sub_subject": "dg-ga",
+                        "full_name": "Differential Geometry",
+                        "num_papers": 732
+                    }
+                ],
+                "solv-int": [
+                    {
+                        "sub_subject": "solv-int",
+                        "full_name": "Exactly Solvable and Integrable Systems",
+                        "num_papers": 1413
+                    }
+                ],
+                "bayes-an": [
+                    {
+                        "sub_subject": "bayes-an",
+                        "full_name": "Bayesian Analysis",
+                        "num_papers": 16
+                    }
+                ],
+                "comp-gas": [
+                    {
+                        "sub_subject": "comp-gas",
+                        "full_name": "Cellular Automata and Lattice Gases",
+                        "num_papers": 221
+                    }
+                ],
+                "alg-geom": [
+                    {
+                        "sub_subject": "alg-geom",
+                        "full_name": "Algebraic Geometry",
+                        "num_papers": 1423
+                    }
+                ],
+                "funct-an": [
+                    {
+                        "sub_subject": "funct-an",
+                        "full_name": "Functional Analysis",
+                        "num_papers": 427
+                    }
+                ],
+                "q-alg": [
+                    {
+                        "sub_subject": "q-alg",
+                        "full_name": "Quantum Algebra and Topology",
+                        "num_papers": 1578
+                    }
+                ],
+                "ao-sci": [
+                    {
+                        "sub_subject": "ao-sci",
+                        "full_name": "Atmospheric-Oceanic Sciences",
+                        "num_papers": 17
+                    }
+                ],
+                "atom-ph": [
+                    {
+                        "sub_subject": "atom-ph",
+                        "full_name": "Atomic, Molecular and Optical Physics",
+                        "num_papers": 123
+                    }
+                ],
+                "chem-ph": [
+                    {
+                        "sub_subject": "chem-ph",
+                        "full_name": "Chemical Physics",
+                        "num_papers": 251
+                    }
+                ],
+                "plasm-ph": [
+                    {
+                        "sub_subject": "plasm-ph",
+                        "full_name": "Plasma Physics",
+                        "num_papers": 38
+                    }
+                ],
+                "mtrl-th": [
+                    {
+                        "sub_subject": "mtrl-th",
+                        "full_name": "Materials Theory",
+                        "num_papers": 262
+                    }
+                ],
+                "cmp-lg": [
+                    {
+                        "sub_subject": "cmp-lg",
+                        "full_name": "Computation and Language",
+                        "num_papers": 894
+                    }
+                ],
+                "supr-con": [
+                    {
+                        "sub_subject": "supr-con",
+                        "full_name": "Superconductivity",
+                        "num_papers": 175
+                    }
+                ]
+            }
         };
     },
 
@@ -845,21 +1826,71 @@ export default {
         },
 
         searchYear_in_pie(params) {
-            // ===============还没改需要 encode 的内容===============
             console.log(params.name, params.value);
             var _url = "/searchResult?field=all" + "&info=the" + "&source=arxiv" + "&start_year=" + params.name + "&end_year=" + params.name;
             window.open(_url, "_blank");
         },
 
         searchSubsubject_in_rank(params) {
-            // ===============还没改需要 encode 的内容===============
             console.log(params.name, params.value);
             var _url = "/searchResult?field=tag" + "&info=" + encodeURIComponent(params.name) + "&source=" + "arxiv";
             window.open(_url, "_blank");
         },
 
+        searchSubsubject_in_pie(params) {
+            console.log(params.name, params.value);
+            var _url = "/searchResult?field=tag" + "&info=" + encodeURIComponent(params.data.sub_subject) + "&source=" + "arxiv";
+            window.open(_url, "_blank");
+        },
+
         showSubsubject_in_bar(params) {
             // 弹窗展示该 subject 的所有 sub-subject 的数据
+            $('#subSubjectModal').modal('show');
+
+            // Find the selected main subject
+            const mainSubject = this.main_subject_rank[Math.floor((params.name - 1) / 10)][(params.name - 1) % 10];
+
+            // Get the data for the sub-subjects
+            const subSubjectsData = this.json[mainSubject];
+
+            // Map the data to the format ECharts expects for pie charts
+            const pieChartData = subSubjectsData.map(sub => ({
+                name: sub.full_name,
+                value: sub.num_papers,
+                sub_subject: sub.sub_subject
+            }));
+
+            let subSubjectPieChart = echarts.init(document.getElementById('subSubjectPieChart'));
+
+            subSubjectPieChart.setOption({
+                legend: {
+                    show: false // 不显示图例
+                },
+                title: {
+                    text: '',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                series: [
+                    {
+                        name: 'Number of Papers',
+                        type: 'pie',
+                        radius: '50%',
+                        data: pieChartData,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+
+            subSubjectPieChart.on('click', this.searchSubsubject_in_pie);
         },
 
         async logOut() {

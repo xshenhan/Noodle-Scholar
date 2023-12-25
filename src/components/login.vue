@@ -97,7 +97,7 @@
 
 
 			</form>
-			<div id="responseMessage" class="mt-3"></div>
+			<!-- <div id="responseMessage" class="mt-3"></div> -->
 		</div>
 
 
@@ -131,8 +131,6 @@
 
 			</div>
 		</div>
-
-
 
 
 		<!-- light footer -->
@@ -199,9 +197,15 @@ export default {
 					method: 'POST',
 					body: formData
 				})
-					.then(response => response.text())
-					.then(text => {
-						document.getElementById('responseMessage').textContent = text;
+					.then(response => response.json())
+					.then(data => {
+						console.log(data); // Print the JSON data to the console
+    					document.getElementById('responseMessage').textContent = JSON.stringify(data);
+
+    					if (data.status === "ok") {
+      					// Redirect to the home page if status is "ok"
+        					window.location.href = "/";
+						}
 					})
 					.catch((error) => {
 						console.error('Error:', error);

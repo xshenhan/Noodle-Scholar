@@ -102,7 +102,7 @@
 
     <div v-show="display_summary_window" class="fullscreen_popover">
         <div class="popover_content">
-            <h3>GPT_4</h3>
+            <h3>Summary</h3>
             <button @click.prevent="modelSummary" class="close-btn">关闭</button>
             <div class="chat-container">
                 <!-- 对话内容 -->
@@ -447,9 +447,8 @@ export default {
             })
                 .then((response) => {
                     this.last_chat_history = response.data;
-                    this.addMessageToChat("gpt-message", response.data.message[2].content);
-                    this.last_chat_history = this.DEVGPT;
                     console.log("set history to: " + this.last_chat_history);
+                    this.addMessageToChat("gpt-message", response.data.message[2].content);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -468,12 +467,21 @@ export default {
             input.value = ""; // 清空输入框
 
             // 将用户消息添加到聊天内容
+            console.log("user message: " + message);
             this.addMessageToChat("user-message", message);
 
             // 调用 GPT 接口获取回复（这里需要您自己实现API调用逻辑）
-            this.getGPTResponse(message).then(response => {
-                this.addMessageToChat("gpt-message", response);
+            // this.getGPTResponse(message).then(response => {
+            //     console.log("response: " + response);
+            //     this.addMessageToChat("gpt-message", "response 112");
+            // });
+            this.getGPTResponse(message).then(lastMessageContent => {
+                console.log("Last Message Content: ", lastMessageContent);
+                this.addMessageToChat("gpt-message", lastMessageContent);
+            }).catch(error => {
+                console.error("Error occurred: ", error);
             });
+
         },
 
         addMessageToChat(type, text) {
@@ -492,28 +500,60 @@ export default {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         },
         // 模拟调用 GPT 接口
-        async getGPTResponse(input_message) {
+        // async getGPTResponse(input_message) {
+        //     if (this.paper_source != "arxiv") {
+        //         return "暂不支持该论文源, 请查询 Arxiv 论文";
+        //     }
+
+        //     console.log("question: " + input_message);
+        //     console.log("history: " + JSON.stringify(this.last_chat_history));
+
+        //     axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
+        //         question: input_message,
+        //         history: this.last_chat_history,
+        //     })
+        //         .then(function (response) {
+        //             // this.last_chat_history = response.data;
+        //             // console.log("set history in gpt-response to: " + this.last_chat_history);
+        //             console.log("response: " + "here before response");
+        //             console.log("response: " + response);
+        //             return response;
+        //         })
+        //         .catch((error) => {
+        //             console.log(error);
+        //             return error;
+        //         });
+        //     // return "测试--不发送请求";
+        // },
+        getGPTResponse(input_message) {
             if (this.paper_source != "arxiv") {
-                return "暂不支持该论文源, 请查询 Arxiv 论文";
+                return Promise.resolve("暂不支持该论文源, 请查询 Arxiv 论文");
             }
 
             console.log("question: " + input_message);
             console.log("history: " + JSON.stringify(this.last_chat_history));
 
-            axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
+            // Return the Promise here
+            return axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
                 question: input_message,
                 history: this.last_chat_history,
             })
-                .then(function (response) {
+                .then(response => {
                     this.last_chat_history = response.data;
-                    return response.data;
+                    console.log("response: ", response);
+
+                    // Extract the content of the last message
+                    const messages = response.data.message;
+                    const lastMessageContent = messages[messages.length - 1].content;
+                    return lastMessageContent;
                 })
-                .catch((error) => {
-                    console.log(error);
-                    return error;
+                .catch(error => {
+                    console.error("Error: ", error);
+                    return error.message;
                 });
-            // return "测试--不发送请求";
         },
+
+
 
         getOriginWebsite() {
             if (this.paper_source == "arxiv") {
@@ -546,6 +586,24 @@ export default {
                     console.log(error);
                 })
         },
+
+        removeKatexHtmlElements() {
+            // 获取所有的 span.katex-html 元素
+            console.log("remove katex");
+            var elements = document.querySelectorAll('span.katex-html');
+
+            // 遍历这些元素并逐个移除
+            elements.forEach(function (element) {
+                element.parentNode.removeChild(element);
+            });
+        }
+    },
+
+    watch: {
+        paperAbstractHTML(newValue, oldValue) {
+            // 每当computedData更新时，这个函数将被调用
+            this.removeKatexHtmlElements();
+        }
     },
 
     computed: {
@@ -553,25 +611,59 @@ export default {
             return marked(this.paper_abstract);
         },
 
-        htmlText() {
-            // Split the text into parts that are inside $...$ and parts that are outside
-            const parts = this.paper_abstract.split(/(\$.*?\$)/g);
+        // htmlText() {
+        //     // Split the text into parts that are inside $...$ and parts that are outside
+        //     const parts = this.paper_abstract.split(/(\$.*?\$)/g);
 
-            // Render the parts that are inside $...$ with katex
-            const renderedParts = parts.map(part => {
-                if (part.startsWith('$') && part.endsWith('$')) {
-                    // Remove the $ symbols and render with katex
-                    const latex = part.slice(1, -1).replace(/\$/g, '');
-                    return katex.renderToString(latex);
-                } else {
-                    // Leave the parts that are outside $...$ unchanged
-                    return part;
+        //     // Render the parts that are inside $...$ with katex
+        //     const renderedParts = parts.map(part => {
+        //         if (part.startsWith('$') && part.endsWith('$')) {
+        //             // Remove the $ symbols and render with katex
+        //             const latex = part.slice(1, -1).replace(/\$/g, '');
+        //             return katex.renderToString(latex);
+        //         } else {
+        //             // Leave the parts that are outside $...$ unchanged
+        //             return part;
+        //         }
+        //     });
+
+        //     // Join the parts back together
+        //     return renderedParts.join('');
+        // },
+
+        htmlText() {
+            const regex = /(\$\$?[^$]+\$?\$)/g;
+            const text = this.paper_abstract;
+            let lastIndex = 0;
+            let result = '';
+
+            text.replace(regex, (match, tex, index) => {
+                result += text.slice(lastIndex, index);
+                const latex = tex.slice(tex.startsWith('$$') ? 2 : 1, tex.endsWith('$$') ? -2 : -1);
+
+                // Create a dummy div element to parse the HTML string
+                const dummyDiv = document.createElement('div');
+                dummyDiv.innerHTML = katex.renderToString(latex, { throwOnError: false });
+
+                // Remove the <span class="katex-html"> element
+                const katexHtml = dummyDiv.querySelector('.katex-html');
+                if (katexHtml) {
+                    katexHtml.remove();
                 }
+
+                // Append the modified HTML to the result
+                result += dummyDiv.innerHTML;
+
+                lastIndex = index + tex.length;
+                return match;
             });
 
-            // Join the parts back together
-            return renderedParts.join('');
+            result += text.slice(lastIndex);
+
+
+            return result;
         },
+
     }
 };
 </script>
