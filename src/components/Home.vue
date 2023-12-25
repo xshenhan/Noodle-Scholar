@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a href="/"><img src="/img/N.png" alt="LOGO" width="25px"></a>
+            <a href="/"><img src="/img/N.png" alt="LOGO" style="width: 25px !important;"></a>
             &nbsp;&nbsp;&nbsp;
             <a class="navbar-brand" href="./"><i class="mr-2"></i><span style="font-weight: bold">Noodle</span> Scholar</a>
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
@@ -31,9 +31,10 @@
                         <a class="btn btn-secondary btn-round " href="/login">Log in</a>
                     </span>
                 </li>
-                <li v-if="this.isLogin" class="nav-item">
+                <li v-else class="nav-item">
                     <span class="nav-link">
-                        <a class="btn btn-outline-secondary btn-round fade-down-left" href="/signup">Log out</a>
+                        <a class="btn btn-outline-primary btn-round fade-down-left"
+                            style="color:#c3a6cb !important; border-color: #c3a6cb !important;" href="/signup">Log out</a>
                     </span>
                 </li>
             </ul>
@@ -70,7 +71,7 @@
                             aria-label="Text input with dropdown button" :placeholder="`Search by ${search_type}`">
 
                         <!-- 搜索条件选择器 -->
-                        <!-- BUG: 为什么尖叫向上 && 只能下拉一次菜单 -->
+                        <!-- BUG: 为什么只能下拉一次菜单 -->
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
                                 data-toggle="dropdown" aria-expanded="false">{{ search_type }}</button>
@@ -92,7 +93,7 @@
                     <!-- 搜索按钮 -->
                     <div class="row col-md-13 reform_margin">
                         <button type="button" @click="SearchAndGoToResultPage"
-                            class="btn btn-primary btn-lg btn-block btn-rounded button_white_border">Search</button>
+                            class="btn btn-primary btn-lg btn-block btn-rounded button_white_border_home">Search</button>
 
                     </div>
                 </div>
@@ -166,25 +167,6 @@
                     <div class="col">
                         <div class="home_table_container">
 
-                            <div class="modal" v-show="showModal">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Subsub Paper Distribution</h5>
-                                            <button type="button" class="close" @click="showModal = false">
-                                                <span>&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div id="pie-chart" style="width: 100%; height: 400px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="close" @click="closeModal">
-                                <span>&times;</span>
-                            </button>
-
                             <h3 class="home_table_title text-center">Subject with most Papers</h3>
                             <div id="sub_paper_bar" style="width: 100%; height: 300px;"></div>
 
@@ -197,12 +179,12 @@
                                         </li>
 
                                         <li class="page-item" :class="{ active: activePage_subject_paper === index }"
-                                            v-for="(item, index) in 5" :key="index">
+                                            v-for="(item, index) in 4" :key="index">
                                             <a class="page-link" @click="changeChart_subject_paper(index)">{{ index + 1
                                             }}</a>
                                         </li>
 
-                                        <li class="page-item" :class="{ disabled: activePage_subject_paper === 4 }">
+                                        <li class="page-item" :class="{ disabled: activePage_subject_paper === 3 }">
                                             <a class="page-link"
                                                 @click="changeChart_subject_paper(activePage_subject_paper + 1)">&raquo;</a>
                                         </li>
@@ -323,8 +305,7 @@ export default {
             searchArxiv: false,
 
 
-            sub_paper: [],
-            subsub_paper: [],
+
 
             year_paper: [],
             year_paper_chart: null,
@@ -334,11 +315,19 @@ export default {
             activePage_author_paper: 0,
             author_paper_chart: null,
 
-            activePage_subject_paper: 0,
+            sub_paper: [],
             subject_paper_chart: null,
 
-            showModal: true,
-            currentSubPaper: null,
+            subsub_paper: [],
+            subsub_paper_chart: null,
+
+            main_subject_rank: [[1], [2], [3], [4]],
+            subject_papers_rank: [[1], [2], [3], [4]],
+            activePage_subject_paper: 0,
+            subject_paper_bar_chart: null,
+
+
+            subsub_paper_bar_chart: null,
         };
     },
 
@@ -353,17 +342,18 @@ export default {
         $(this.$el).find('[data-toggle="dropdown"]').dropdown();
 
         this.setYearPaper();
-        this.setSubjectPaper();
-        this.setSubsubjectPaper();
-
-        this.setYearPaper();
         this.year_paper_chart.on('click', this.searchYear_in_pie);
 
         this.setAuthorPaper();
         this.author_paper_chart.on('click', this.searchAuthor_in_rank);
 
         this.setSubjectPaper();
-        this.subject_paper_chart.on('click', this.searchSubject_in_rank);
+
+        this.setSubsubjectPaper();
+        this.subsub_paper_chart.on('click', this.searchSubsubject_in_rank);
+
+        this.setSubjectPaperBar();
+        this.subject_paper_bar_chart.on('click', this.showSubsubject_in_bar);
     },
 
 
@@ -549,7 +539,25 @@ export default {
                         });
                     }
                     console.log("get subject papers in arxiv");
-                    // console.log(this.sub_paper);
+
+                    // 以 10 为一个循环, 将数据分为 4 组
+                    for (let i = 0; i < 4; i++) {
+                        this.main_subject_rank[i] = [];
+                        this.subject_papers_rank[i] = [];
+                        for (let j = 0; j < 10; j++) {
+                            // 如果索引大于 37 就跳出循环
+                            // BUG: 如果把最后一组 index==37 加上就会报错, 只能这里特判
+                            if (i * 10 + j >= 37) {
+                                this.main_subject_rank[i].push("bayes-an");
+                                this.subject_papers_rank[i].push(Math.max(0, -(10*i+j-38)*16));
+                                continue;
+                            }
+                            this.main_subject_rank[i].push(response.data[i * 10 + j].main_subject);
+                            this.subject_papers_rank[i].push(response.data[i * 10 + j].num_papers);
+                        }
+                    }
+                    console.log("main_subject: " + this.main_subject_rank);
+                    console.log("subject_papers: " + this.subject_papers_rank);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -619,7 +627,7 @@ export default {
         },
 
         setSubsubjectPaper() {
-            var subsub_paper_chart = echarts.init(document.getElementById('subsub_paper'));
+            this.subsub_paper_chart = echarts.init(document.getElementById('subsub_paper'));
             var subsub_paper_data = this.subsub_paper;
             subsub_paper_data.sort(function (a, b) {  // 按照比例排序
                 return a.value - b.value;
@@ -656,7 +664,7 @@ export default {
                     }
                 ]
             };
-            subsub_paper_chart.setOption(subsub_paper_option);
+            this.subsub_paper_chart.setOption(subsub_paper_option);
         },
 
         changeChart_author_paper(index) {
@@ -667,11 +675,80 @@ export default {
         },
 
         changeChart_subject_paper(index) {
-            // 未完成--按照subject的页面顺序做
-            if (index >= 0 && index < 5) {
+            if (index >= 0 && index < 4) {
                 this.activePage_subject_paper = index;
-                this.setAuthorPaper();
+                this.setSubjectPaperBar();
             }
+        },
+
+        setSubjectPaperBar() {
+            this.subject_paper_bar_chart = echarts.init(document.getElementById('sub_paper_bar'));
+            this.subject_paper_bar_chart.setOption({
+                tooltip: {
+                    trigger: 'item',
+                    axisPointer: {
+                        type: 'shadow',
+                    },
+                    position: function (point, params, dom, rect, size) {
+                        return [point[0] + 10, point[1] - size.contentSize[1] - 10];
+                    },
+                    formatter: (params) => {
+                        var block = Math.floor((params.name - 1) / 10);
+                        var index = (params.name - 1) % 10;
+                        return `${params.value} papers in ${this.main_subject_rank[block][index]}`;
+                    }
+                },
+
+                xAxis: {
+                    name: "论文数量",
+                    type: 'value',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ffffff',
+                            width: 3,
+                            type: "solid",
+                        },
+                    },
+                    axisLabel: {
+                        margin: 20,
+                        rich: {
+                            a: {
+                                color: '#000',
+                                lineHeight: 10,
+                            },
+                        },
+                    },
+                },
+
+                yAxis: {
+                    name: "领域",
+                    type: 'category',
+                    data: this.subject_data_to_rank,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#fff',
+                            width: 15,
+                            type: "solid",
+                        }
+                    },
+                    axisLabel: {
+                        margin: 15,
+                        rich: {
+                            a: {
+                                // 好像这里没什么用
+                            },
+                        },
+                    },
+                },
+
+                series: [{
+                    data: this.subject_papers_rank[this.activePage_subject_paper].slice(0).reverse(),
+                    type: 'bar',
+                    itemStyle: {
+                        color: '#c3a6cb',
+                    },
+                }],
+            });
         },
 
         setAuthorPaper() {
@@ -720,7 +797,7 @@ export default {
                     name: "排名",
                     type: 'category',
                     // data: this.authors_rank[this.activePage].slice(0).reverse(),
-                    data: this.yAxisData,
+                    data: this.author_data_to_rank,
                     axisLine: {
                         lineStyle: {
                             color: '#fff',
@@ -766,16 +843,20 @@ export default {
         searchYear_in_pie(params) {
             // ===============还没改需要 encode 的内容===============
             console.log(params.name, params.value);
-            var _url = "/searchResult?field=year" + "&info=" + encodeURIComponent(params.data.name) + "&source=" + "arxiv";
+            var _url = "/searchResult?field=all" + "&info=the" + "&source=arxiv" + "&start_year=" + params.name + "&end_year=" + params.name;
             window.open(_url, "_blank");
         },
 
-        searchSubject_in_rank(params) {
+        searchSubsubject_in_rank(params) {
             // ===============还没改需要 encode 的内容===============
             console.log(params.name, params.value);
-            var _url = "/searchResult?field=categories" + "&info=" + encodeURIComponent(params.name) + "&source=" + "arxiv";
+            var _url = "/searchResult?field=tag" + "&info=" + encodeURIComponent(params.name) + "&source=" + "arxiv";
             window.open(_url, "_blank");
         },
+
+        showSubsubject_in_bar(params) {
+            // 弹窗展示该 subject 的所有 sub-subject 的数据
+        }
     },
 
     watch: {
@@ -792,9 +873,15 @@ export default {
     },
 
     computed: {
-        yAxisData() {
+        author_data_to_rank() {
             let start = this.activePage_author_paper * 10 + 1;
             let end = this.activePage_author_paper * 10 + 10;
+            return Array(end - start + 1).fill().map((_, idx) => end - idx);
+        },
+
+        subject_data_to_rank() {
+            let start = this.activePage_subject_paper * 10 + 1;
+            let end = this.activePage_subject_paper * 10 + 10;
             return Array(end - start + 1).fill().map((_, idx) => end - idx);
         }
     },
@@ -836,7 +923,7 @@ export default {
     border-radius: 20px;
 }
 
-.button_white_border {
+.button_white_border_home {
     border-color: #ffffff;
 }
 
@@ -873,7 +960,6 @@ export default {
 
 .btn_circle:hover {
     background-color: #7832e2 !important;
-
 }
 
 .no_box_shadow {

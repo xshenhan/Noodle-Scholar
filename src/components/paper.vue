@@ -1,4 +1,48 @@
 <template>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a href="/"><img src="/img/N.png" alt="LOGO" style="width: 25px !important;"></a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="navbar-brand" href="./"><i class="mr-2"></i><span style="font-weight: bold">Noodle</span> Scholar</a>
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
+                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="navbarColor02" style="">
+                <ul class="navbar-nav mr-auto d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./" style="font-weight: none; font-size: 15px">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./searchresult" style="font-weight: none; font-size: 15px">Search</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto d-flex align-items-center">
+                    <li class="nav-item">
+                    </li>
+                </ul>
+            </div>
+
+
+            <ul class="navbar-nav ml-auto d-flex align-items-center">
+                <li v-if="!this.isLogin" class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-secondary btn-round fade-down-left" href="/signup">Sign Up</a>&nbsp;
+                        <a class="btn btn-secondary btn-round " href="/login">Log in</a>
+                    </span>
+                </li>
+                <li v-else class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-outline-primary btn-round fade-down-left" style="color:#c3a6cb !important; border-color: #c3a6cb !important;" href="/signup">Log out</a>
+                    </span>
+                </li>
+            </ul>
+
+
+        </div>
+    </nav>
+    
+    
     <div class="jumbotron jumbotron-fluid set_margin set_padding">
         <div class="container">
             <h2 class="text-left">{{ this.paper_title }}&nbsp;<span class="badge reform_badge_outline">{{ this.paper_year
@@ -12,7 +56,7 @@
                 </span>
             </p>
             <p class="lead"><span class="badge badge-primary">Abstract</span>&nbsp;
-                {{ this.paper_abstract }}</p>
+                <span v-html="htmlText"></span></p>
 
 
             <div class="col-lg-12 text-md-center text-lg-left mt-4 mb-4">
@@ -131,6 +175,9 @@
 import axios from 'axios';
 import ClipboardJS from 'clipboard';
 // import Papa from 'papaparse';
+// import * as marked from 'marked';
+import {marked} from 'marked';
+import katex from 'katex';
 
 export default {
     data() {
@@ -465,6 +512,32 @@ export default {
             } else {
                 return "https://doi.org/" + this.paper_doi;
             }
+        }
+    },
+
+    computed: {
+        paperAbstractHTML() {
+            return marked(this.paper_abstract);
+        },
+
+        htmlText() {
+            // Split the text into parts that are inside $...$ and parts that are outside
+            const parts = this.paper_abstract.split(/(\$.*?\$)/g);
+
+            // Render the parts that are inside $...$ with katex
+            const renderedParts = parts.map(part => {
+                if (part.startsWith('$') && part.endsWith('$')) {
+                    // Remove the $ symbols and render with katex
+                    const latex = part.slice(1, -1).replace(/\$/g, '');
+                    return katex.renderToString(latex);
+                } else {
+                    // Leave the parts that are outside $...$ unchanged
+                    return part;
+                }
+            });
+
+            // Join the parts back together
+            return renderedParts.join('');
         }
     }
 };

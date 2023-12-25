@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a href="./"><img src="../assets/img/N.png" alt="LOGO" width="25px"></a>
+            <a href="./"><img src="../assets/img/N.png" alt="LOGO" style="width: 25px !important;"></a>
             &nbsp;&nbsp;&nbsp;
             <a class="navbar-brand" href="./"><i class="mr-2"></i><strong>Noodle</strong> Scholar</a>
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
@@ -14,55 +14,57 @@
                         <a class="nav-link" href="./">Home</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ml-auto d-flex align-items-center">
-                    <li class="nav-item">
-                    </li>
-                </ul>
-            </div>
 
 
-            <!-- nav 中的搜索框 -->
-            <div class="container">
-                <div class="col-8 d-flex">
+                <!-- </div> -->
 
-                    <!-- 上方 -->
-                    <div class="input-group under_border form-check-input">
 
-                        <!-- Arxiv 选择器 -->
-                        <button type="button" class=" btn btn_circle_home " :class="{ btn_circle_home_active: this.agreed }"
-                            @click="changeAgreement"><strong>Arxiv</strong>
-                        </button>
+                <!-- nav 中的搜索框 -->
+                <div class="container" style="padding-left: 20px; padding-right: 0px;">
+                    <div class="col d-flex">
 
-                        <!-- 搜索框 -->
-                        <input id="search-input" type="text" class="form-control form-control-rounded no_box_shadow"
-                            v-model="search_info" @keyup.enter="SearchAndGoToResultPage"
-                            aria-label="Text input with dropdown button" :placeholder="`Search by ${search_type}`">
+                        <!-- 上方 -->
+                        <div class="input-group under_border form-check-input">
 
-                        <!-- 搜索条件选择器 -->
-                        <!-- BUG: 为什么尖叫向上 && 只能下拉一次菜单 -->
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
-                                data-toggle="dropdown" aria-expanded="false">{{ search_type }}</button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" @click="selectSearchType('All')"><strong>All</strong></a>
-                                <div role="separator" class="dropdown-divider"></div>
-                                <a class="dropdown-item" @click="selectSearchType('Title')"><strong>Title</strong></a>
-                                <a class="dropdown-item" @click="selectSearchType('Subject')"><strong>Subject</strong></a>
-                                <a class="dropdown-item" @click="selectSearchType('Author')"><strong>Author</strong></a>
-                                <a class="dropdown-item" @click="selectSearchType('Journal')"><strong>Journal</strong></a>
-                                <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
-                                <a class="dropdown-item" @click="selectSearchType('Abstract')"><strong>Abstract</strong></a>
+                            <!-- Arxiv 选择器 -->
+                            <button type="button" class=" btn btn_circle_home "
+                                :class="{ btn_circle_home_active: this.agreed }"
+                                @click="changeAgreement"><strong>Arxiv</strong>
+                            </button>
+
+                            <!-- 搜索框 -->
+                            <input id="search-input" type="text" class="form-control form-control-rounded no_box_shadow"
+                                v-model="search_info" @keyup.enter="SearchAndGoToResultPage"
+                                aria-label="Text input with dropdown button" :placeholder="`Search by ${search_type}`">
+
+                            <!-- 搜索条件选择器 -->
+                            <!-- BUG: 为什么尖叫向上 && 只能下拉一次菜单 -->
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
+                                    data-toggle="dropdown" aria-expanded="false">{{ search_type }}</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" @click="selectSearchType('All')"><strong>All</strong></a>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <a class="dropdown-item" @click="selectSearchType('Title')"><strong>Title</strong></a>
+                                    <a class="dropdown-item"
+                                        @click="selectSearchType('Subject')"><strong>Subject</strong></a>
+                                    <a class="dropdown-item" @click="selectSearchType('Author')"><strong>Author</strong></a>
+                                    <a class="dropdown-item"
+                                        @click="selectSearchType('Journal')"><strong>Journal</strong></a>
+                                    <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
+                                    <a class="dropdown-item"
+                                        @click="selectSearchType('Abstract')"><strong>Abstract</strong></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
 
-                    <!-- 下方 -->
-                    <!-- 搜索按钮 -->
-                    <div class="col-4">
-                        <button type="button" @click="SearchAndGoToResultPage"
-                            class="btn btn-primary btn-lg btn-block btn-rounded button_white_border">Search</button>
-
+                        <!-- 下方 -->
+                        <!-- 搜索按钮 -->
+                        <div class="col">
+                            <button type="button" @click="SearchAndGoToResultPage"
+                                class="btn btn-primary btn-rounded button_white_border_search">Search</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -74,14 +76,13 @@
                         <a class="btn btn-secondary btn-round " href="/login">Log in</a>
                     </span>
                 </li>
-                <li v-if="this.isLogin" class="nav-item">
+                <li v-else class="nav-item">
                     <span class="nav-link">
-                        <a class="btn btn-outline-secondary btn-round fade-down-left" href="/signup">Log out</a>
+                        <a class="btn btn-outline-primary btn-round fade-down-left" style="color:#c3a6cb !important;"
+                            href="/signup">Log out</a>
                     </span>
                 </li>
             </ul>
-
-
         </div>
 
 
@@ -122,15 +123,33 @@
                             <p><span class="badge badge-primary">Author</span>&nbsp;
                                 <span v-if="this.search_source === '100pdfs'" v-for="(n, index) in paper.author.name"
                                     :key="index">
-                                    <span @click="SearchAuthor(n)"
+                                    <span v-if="index <= 10" @click="SearchAuthor(n)"
                                         class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
                                     <span v-if="index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
                                     </span>
                                 </span>
                                 <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.author" :key="index">
-                                    <span @click="SearchAuthor(n)"
+                                    <span v-if="index <= 10" @click="SearchAuthor(n)"
                                         class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
-                                    <span v-if="index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
+                                    <span v-if="index <= 10 && index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
+                                    </span>
+                                </span>
+                            </p>
+
+                            <p
+                                v-if="(this.search_source === 'arxiv' && paper.tag !== null) || (this.search_source === '100pdfs' && paper.keywords.length !== 0)">
+                                <span class="badge badge-primary">Keywords</span>&nbsp;
+                                <span v-if="this.search_source === '100pdfs'" v-for="(n, index) in paper.keywords"
+                                    :key="index">
+                                    <span @click="SearchSubject(n)"
+                                        class="badge cursor_pointer badge_outline" v-html="n"></span>
+                                    <span v-if="index !== paper.keywords.length - 1"><strong>&nbsp;&nbsp;</strong>
+                                    </span>
+                                </span>
+                                <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.tag.split(' ')" :key="index">
+                                    <span @click="SearchSubject(n)"
+                                        class="badge cursor_pointer badge_outline" v-html="n"></span>
+                                    <span v-if="index !== paper.author.length - 1"><strong>&nbsp;&nbsp;</strong>
                                     </span>
                                 </span>
                             </p>
@@ -243,6 +262,20 @@ export default {
 
     methods: {
 
+        initialize() {
+            $(this.$el).find('[data-toggle="dropdown"]').dropdown();
+            this.search_field = this.$route.query.field;
+            this.search_info = this.$route.query.info;
+            this.search_source = this.$route.query.source;
+            console.log("field = " + this.search_field);
+            console.log("info = " + this.search_info);
+            console.log("source = " + this.search_source);
+            this.getAllPaperInfo();
+            $(function () {
+                $('[data-toggle="popover"]').popover();
+            });
+        },
+
         SearchAndGoToResultPage() {
             var url = "/searchResult?field=" + this.search_type_print + "&info=" + encodeURIComponent(this.search_info);
             if (this.searchArxiv) {
@@ -251,6 +284,7 @@ export default {
                 url += "&source=100pdfs";
             }
             this.$router.push(url);
+            this.initialize();
         },
 
         changeAgreement() {
@@ -343,6 +377,11 @@ export default {
 
         SearchAuthor(_name) {
             var _url = "/searchResult?field=author" + "&info=" + encodeURIComponent(_name) + "&source=" + this.search_source;
+            window.open(_url, "_blank");
+        },
+
+        SearchSubject(_subject) {
+            var _url = "/searchResult?field=tag" + "&info=" + encodeURIComponent(_subject) + "&source=" + this.search_source;
             window.open(_url, "_blank");
         },
 
@@ -466,6 +505,18 @@ export default {
 
 .cursor_pointer {
     cursor: pointer;
+}
+
+.button_white_border_search {
+    border-color: #ffffff;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    right: -50%;
+}
+
+.badge_outline {
+    border: 1px solid #2578b5 !important;
+    color: black !important;
 }
 </style>
 
