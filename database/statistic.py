@@ -1,10 +1,10 @@
 import json
 
-
 num_papers_authors = {}
 num_papers_main_subject = {}
 num_papers_sub_subject = {}
 num_papers_year = {}
+main_sub_dict = {}
 tot = 2370685
 
 
@@ -54,6 +54,22 @@ def count_year(data: dict):
     else:
         num_papers_year[year] = 1
 
+
+def main_sub(num_papers_sub_subject: dict):
+    """
+    Count the number of papers of each main subject
+    :param data: metadata of the paper
+    :return: None
+    """
+    full_name = json.load(open('full_name.json'))
+    for key, value in num_papers_sub_subject.items():
+        main_subject = key.split('.')[0]
+        if main_subject not in main_sub_dict:
+            main_sub_dict[main_subject] = []
+        main_sub_dict[main_subject].append({"sub_subject": key,
+                                            "full_name": full_name[key],
+                                            "num_papers": value})
+
 def fetch_name(author: str) -> str:
     """
     Remove the institute name and "and" string from the author's name
@@ -67,7 +83,6 @@ def fetch_name(author: str) -> str:
         author = author[0].upper() + author[1:]
     return author
 
-
 def save_json(data: dict, file_name) -> None:
     """
     Save the result to json file
@@ -80,15 +95,18 @@ def save_json(data: dict, file_name) -> None:
 
 
 if __name__ == '__main__':
-    with open('arxiv.json') as f:
-        for index, line in enumerate(f):
-            data = json.loads(line)
-            # count_author(data)
-            # count_subject(data)
-            count_year(data)
-            print(f'[{index+1}/{tot}] have been counted.')
+    # with open('arxiv.json') as f:
+    #     for index, line in enumerate(f):
+    #         data = json.loads(line)
+    #         # count_author(data)
+    #         # count_subject(data)
+    #         count_year(data)
+    #         print(f'[{index+1}/{tot}] have been counted.')
     # save_json(num_papers_authors, 'num_papers_authors.json')
     # save_json(num_papers_main_subject, 'num_papers_main_subject.json')
     # save_json(num_papers_sub_subject, 'num_papers_sub_subject.json')
-    save_json(num_papers_year, 'num_papers_year.json')
+    # save_json(num_papers_year, 'num_papers_year.json')
+    num_papers_sub_subject = json.load(open('num_papers_sub_subject.json'))
+    main_sub(num_papers_sub_subject)
+    save_json(main_sub_dict, 'main_sub_dict.json')
     
