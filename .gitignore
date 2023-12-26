@@ -28,4 +28,4 @@ coverage
 *.sw?
 
 tests/
-.gitignore
+frontend/dist
