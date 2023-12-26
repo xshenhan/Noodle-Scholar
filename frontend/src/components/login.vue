@@ -69,7 +69,7 @@
 
 
 				<!-- 是否同意协议 -->
-				<div class="container2">
+				<!-- <div class="container2">
 					<div class="button-with-text">
 						<button type="button" class="btn btn-outline-primary btn_circle_login"
 							:class="{ btn_circle_login_active: this.agreed }" @click="changeAgreement">
@@ -86,13 +86,13 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 					</div>
-				</div>
+				</div> -->
 
 
 				<div><br></div>
 				<!-- 提交按钮 -->
 				<div class="submit_button">
-					<button type="submit" class="btn btn-primary submit_btn_longer" :disabled="!this.agreed">Submit</button>
+					<button type="submit" class="btn btn-primary submit_btn_longer">Submit</button>
 				</div>
 
 
@@ -105,7 +105,7 @@
 
 
 		<!-- 全屏弹出框 -->
-		<div v-if="isPopoverVisible" class="fullscreen-popover">
+		<!-- <div v-if="isPopoverVisible" class="fullscreen-popover">
 			<div class="popover-content">
 				<p><strong>隐私政策：</strong>
 					欢迎您使用我们的服务。我们不是很重视您的隐私，但是您也得把下面读完并同意。<br>
@@ -130,21 +130,17 @@
 				</div>
 
 			</div>
-		</div>
+		</div> -->
 
 
 		<!-- light footer -->
 		<!-- <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1440 126" style="enable-background:new 0 0 1440 126;" xml:space="preserve">
 		<path class="bg-light" d="M685.6,38.8C418.7-11.1,170.2,9.9,0,30v96h1440V30C1252.7,52.2,1010,99.4,685.6,38.8z"></path>
 		</svg> -->
-		<footer class="bg-light pb-5 foot-container">
+		<footer class="bg-light pb-5 foot-container" style="margin-top: 300px !important;padding-bottom: 10px !important;">
 			<div>
 				<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-					xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1440 126"
-					style="enable-background:new 0 0 1440 126;" xml:space="preserve" class="footer-svg">
-					<path class="bg-light"
-						d="M685.6,38.8C418.7-11.1,170.2,9.9,0,30v96h1440V30C1252.7,52.2,1010,99.4,685.6,38.8z">
-					</path>
+					xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1440 126" style="height: 30px;">
 				</svg>
 
 			</div>
@@ -153,7 +149,7 @@
 					<div class="col-12">
 						<h3 class="middle_title">
 							NOODLE SCHOLAR &nbsp;
-							<img src="../assets/img/N.png" :width="40">
+							<img src="../assets/img/N.png" width="40">
 							&nbsp; 开搜未来
 						</h3>
 					</div>

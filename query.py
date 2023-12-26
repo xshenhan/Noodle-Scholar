@@ -52,6 +52,7 @@ class PaperSearch:
                 "pre_tags": ["<strong>"],
                 "post_tags": ["</strong>"]
             },
+            "_source": True,
             "size": size
         }
 
@@ -104,8 +105,8 @@ if __name__ == "__main__":
     # print(year_range_results)
     # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    search_all_fields_results = paper_search.search_all_fields('a mildly ', 'all', 10, query_type='match')
-    print(search_all_fields_results)
+    # search_all_fields_results = paper_search.search_all_fields('a mildly ', 'all', 10, query_type='match')
+    # print(search_all_fields_results)
 
     # match_results_with_year = paper_search._search('cnn', '', 10, 'match', '2002', '2015')
     # print(match_results_with_year)
@@ -117,8 +118,10 @@ if __name__ == "__main__":
     # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     # # 使用通配符查询
-    # wildcard_results = paper_search.search_specific_field('roc*', 'title', 10, query_type='wildcard')
-    # print(wildcard_results)
+    wildcard_results = paper_search.search_specific_field('rocks in the Mojave Desert, California', 'title', 10)
+    print(wildcard_results)
+    for key, value in wildcard_results.items():
+        print(key, value)
     # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     # # 使用正则表达式查询

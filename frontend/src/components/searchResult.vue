@@ -155,7 +155,7 @@
                                 </span>
                             </p>
 
-                            <p><span class="badge badge-primary">Abstract</span>&nbsp; <span v-html="htmlLatex(paper.abstract[0])"></span>
+                            <p><span class="badge badge-primary">Abstract</span>&nbsp; <span v-html="htmlLatex(paper.abstract)"></span>
                             </p>
 
                         </div>

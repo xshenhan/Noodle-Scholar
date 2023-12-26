@@ -52,7 +52,7 @@
             <!-- <br> -->
             <p class="lead"><span class="badge badge-primary">Author</span>&nbsp;
                 <span v-for="(aut, i) in this.paper_author" :key="i">
-                    <span v-if="showAllAuthors || i < 10" @click="SearchAuthor(n)"
+                    <span v-if="showAllAuthors || i < 10" @click="SearchAuthor(aut)"
                         class="color_blue font-weight-bold hoverable cursor_pointer">{{ aut
                         }}</span>
                     <span v-if="showAllAuthors || i < 10 && i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
@@ -84,7 +84,7 @@
                 </a>
                 &nbsp;
                 <button @click.prevent="modelSummary" class="btn btn-outline-primary">
-                    GPT Summary
+                    Bot
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-chat-square-text-fill" viewBox="0 0 16 16">
                         <path
@@ -289,7 +289,7 @@ export default {
         },
 
         SearchAuthor(_name) {
-            var _url = "/searchResult?field=author" + "&info=" + encodeURIComponent(_name) + "&source=" + this.search_source;
+            var _url = "/searchResult?field=author" + "&info=" + encodeURIComponent(_name) + "&source=" + this.paper_source;
             window.open(_url, "_blank");
         },
 
@@ -513,9 +513,9 @@ export default {
         //     // return "测试--不发送请求";
         // },
         getGPTResponse(input_message) {
-            if (this.paper_source != "arxiv") {
-                return Promise.resolve("暂不支持该论文源, 请查询 Arxiv 论文");
-            }
+            // if (this.paper_source != "arxiv") {
+            //     return Promise.resolve("暂不支持该论文源, 请查询 Arxiv 论文");
+            // }
 
             console.log("question: " + input_message);
             console.log("history: " + JSON.stringify(this.last_chat_history));

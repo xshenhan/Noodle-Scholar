@@ -192,12 +192,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
-
-
-
                 </div>
 
 
@@ -214,7 +208,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="padding: 0 !important;">
                         <!-- Container for the ECharts pie chart -->
                         <div id="subSubjectPieChart" style="width: 500%; height: 400%;"></div>
                     </div>

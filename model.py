@@ -44,10 +44,10 @@ async def summary(request):
         #     {"role": "user", "content": f"Here is the url of the paper: {paper_url}. What's the paper mainly about?"}
         # ]
         # model_type = request.args.get("model_type", "gpt-3.5-turbo")
-        model_type = request.args.get("model_type", "gpt-3.5-turbo")
+        model_type = request.args.get("model_type", "gpt-3.5-turbo-16k")
         # print(paper_url)
         msg = [
-            {"role": "system", "content": f"Here is a paper named {document['title']} and its abstact is {document['abstract']}. You should first read it carefully and then write a summary of it based on your knowledge and the title and the abstarct as short as possible. And then user will ask you a few questions. You should help the user with some questions about this paper. And you should answer in Chinese as default."},
+            {"role": "system", "content": f"Here is a paper named {document['title']} and its abstact is {document['abstract']}. You should first read it carefully and then write a summary of it based on your knowledge, title and the abstarct. Then user will ask you a few questions. You should help the user with some questions about this paper. Answer in Chinese as default. Always answer as short as possible. I will tip you 100 dollar if your answer is short enough."},
             {"role": "user", "content": f"What's the paper mainly about?"},
         ]
     elif source == "100pdfs":
@@ -74,7 +74,7 @@ async def summary(request):
     # 调用 OpenAI API
     response = client.chat.completions.create(model=model_type,
     messages=history["message"],
-    max_tokens=500)
+    max_tokens=5000)
     answer = response.choices[0].message.content
     print("model output: ", answer)
     # 将结果添加到历史记录并返回
@@ -104,7 +104,7 @@ async def ask_openai(request: Request):
     # 调用 OpenAI API
     response = client.chat.completions.create(model=history["model"],
     messages=history["message"],
-    max_tokens=150)
+    max_tokens=5000)
     answer = response.choices[0].message.content
 
     # 将回答添加到历史记录并返回

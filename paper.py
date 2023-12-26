@@ -142,7 +142,7 @@ async def tables(requests):
     if document == None:
         return text("The paper doesn't exists!, the paper id you asked is {}".format(id), status=416
                     , headers={"Access-Control-Allow-Origin": "*"})
-    table_num = len(document["table_rendition_address"])
+    table_num = len(document["csv_address"])
     res = {}
     url = "/api/v1/paper/table"
     for i in range(table_num):
@@ -166,7 +166,7 @@ async def table_img(requests):
     if index >= len(document["table_rendition_address"]):
         return text("The index is too large!", status=416, headers={"Access-Control-Allow-Origin": "*"})
     return await file(document["table_rendition_address"][index], mime_type="image/png", headers={"Access-Control-Allow-Origin": "*"})
-    # return text(document["table_rendition_address"][index])
+
 
 @paper.get("/table")
 async def table(requests):
@@ -182,7 +182,7 @@ async def table(requests):
     if document == None:
         return text("The paper doesn't exists!, the paper id you asked is {}".format(id), status=416
                     , headers={"Access-Control-Allow-Origin": "*"})
-    if index >= len(document["table_rendition_address"]):
+    if index >= len(document["csv_address"]):
         return text("The index is too large!", status=416, headers={"Access-Control-Allow-Origin": "*"})
     path = "/home/share/files/100_PDF_csv/" + document["paper_id"] + "/" + str(index) + ".csv"
     path = document["csv_address"][index]

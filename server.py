@@ -71,5 +71,5 @@ async def catch_all(request, path):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, dev=True)
+    app.run(host="0.0.0.0", port=8088, dev=True)
     # app.run(host="0.0.0.0", port=8080, debug=False, access_log=False, fast=True)
