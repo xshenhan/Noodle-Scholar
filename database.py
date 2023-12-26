@@ -11,7 +11,4 @@ collection = client.papers["100pdfs"]
 
 async def test():
     res = await collection.find_one({"_id": ObjectId("6532290ad507ea15ca185e7f")})
-    print(res)
-    print(type(res))
-
 uvloop.run(test())

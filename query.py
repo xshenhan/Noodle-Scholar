@@ -11,7 +11,8 @@ class PaperSearch:
         self.es = Elasticsearch(hosts=host)
         self.index_name = index_name
 
-    def _search(self, query, field=None, size=20, query_type='match' ):
+    def _search(self, query, field=None, size=20, query_type='match', start_year=None, end_year=None):
+        # 基于查询类型构建查询
         if query_type == 'prefix':
             match_part = {"prefix": {field: query}}
         elif query_type == 'wildcard':
@@ -20,13 +21,30 @@ class PaperSearch:
             match_part = {"regexp": {field: query}}
         else:
             if field:
-                match_part = {"match": {field: {"query":query,"fuzziness":"AUTO"}}}
+                match_part = {"match": {field: {"query": query, "fuzziness": "AUTO"}}}
             else:
-                match_part = {"multi_match": {"query": query, "fields": ["*"],"fuzziness":"AUTO"}}
-        # 构造请求体
+                match_part = {"multi_match": {"query": query, "fields": ["*"], "fuzziness": "AUTO"}}
+        
+        # 构建布尔查询
+        must_clauses = [match_part]
+        if start_year and end_year:
+            range_clause = {
+                "range": {
+                    "date": {  # 假设年份字段名为 'year'
+                        "gte": f"{start_year}-01-01",
+                        "lte": f"{end_year}-12-31",
+                        "format": "yyyy-MM-dd"
+                    }
+                }
+            }
+            must_clauses.append(range_clause)
+
         body = {
-            "query": match_part,
-            
+            "query": {
+                "bool": {
+                    "must": must_clauses
+                }
+            },
             "highlight": {
                 "fields": {
                     "*": {}
@@ -34,40 +52,64 @@ class PaperSearch:
                 "pre_tags": ["<strong>"],
                 "post_tags": ["</strong>"]
             },
-            "size" : size
+            "size": size
         }
-
 
         response = self.es.search(index=self.index_name, body=body)
 
         results = {}
         for hit in response['hits']['hits']:
-            if (self.index_name == "papers"):
-                id = hit['_source'].get('hash_id')
-            else:
-                id = hit['_source'].get('hash_id')
+            id = hit['_source'].get('hash_id')
             highlights = hit.get('highlight', {})
             results[id] = highlights
 
         return results
+    
+    def search_by_year_range(self, start_year, end_year, size=20):
+        body = {
+            "query": {
+                "range": {
+                    "date": {  
+                        # 假设年份字段名为 'year'
+                        "gte": f"{start_year}-01-01",
+                        "lte": f"{end_year}-12-31",
+                        "format": "yyyy-MM-dd"
+                    }
+                }
+            },
+            "size": size
+        }
 
-    def search_all_fields(self, query, field, size, query_type='match'):
-        return self._search(query, None, size=size, query_type=query_type)
+        response = self.es.search(index=self.index_name, body=body)
 
-    def search_specific_field(self, query, field, size, query_type='match'):
-        return self._search(query, field, size=size, query_type=query_type)
+        results = {}
+        for hit in response['hits']['hits']:
+            id = hit['_source'].get('hash_id')
+            results[id] = id
+
+        return results
+
+
+    def search_all_fields(self, query, field, size, query_type='match', start_year=None, end_year=None):
+        return self._search(query, None, size=size, query_type=query_type, start_year=start_year, end_year=end_year)
+
+    def search_specific_field(self, query, field, size, query_type='match', start_year=None, end_year=None):
+        return self._search(query, field, size=size, query_type=query_type, start_year=start_year, end_year=end_year)
 
 # 使用示例
 if __name__ == "__main__":
-    # paper_search = PaperSearch("papers")
-    # # 使用match查询
-    # match_results = paper_search._search('rock', "author", 1, query_type='match')
-    # print(match_results)
-    paper_search = PaperSearch()
 
-    prefix_results = paper_search.search_specific_field('rock', 'title', 10, query_type='match')
-    print(prefix_results)
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    paper_search = PaperSearch("papers")
+    # year_range_results = paper_search.search_by_year_range('2020', '2022', 10)
+    # print(year_range_results)
+    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+    search_all_fields_results = paper_search.search_all_fields('a mildly ', 'all', 10, query_type='match')
+    print(search_all_fields_results)
+
+    # match_results_with_year = paper_search._search('cnn', '', 10, 'match', '2002', '2015')
+    # print(match_results_with_year)
+    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     # # 使用前缀查询
     # prefix_results = paper_search.search_specific_field('roc', 'title', 10, query_type='prefix')

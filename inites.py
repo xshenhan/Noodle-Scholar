@@ -5,11 +5,9 @@ db = client["papers"]
 collection = db["arxiv"]
 documents = collection.find()
 
-print("connected to mongodb")
 host = "http://172.27.88.132:9200"
 es = Elasticsearch(hosts=host)
 
-print(es.ping())
 
 index_name = "arxiv"  # 替换为您希望使用的索引名称
 
@@ -58,7 +56,6 @@ es.indices.create(index=index_name,body=mapping)
 for document in documents:
     document.pop("_id")  # 移除 _id 字段
     es.index(index=index_name, doc_type='_doc',  body=document)
-print("indexed")
 
 
 
