@@ -109,7 +109,7 @@
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
                         <div class="reform_size_content" :class="{ 'col-lg-9': paper.pic_num !== 0 }">
                             <h5 class="text-black hoverable cursor_pointer"><strong><span @click="GoToPaperPage(paper._id)"
-                                        v-html="paper.title"></span></strong></h5>
+                                        v-html="htmlLatex(paper.title)"></span></strong></h5>
 
                             <p v-if="paper.doi != null && paper.doi != ''"><span
                                     class="badge badge-primary">DOI</span>&nbsp;
@@ -155,7 +155,7 @@
                                 </span>
                             </p>
 
-                            <p><span class="badge badge-primary">Abstract</span>&nbsp; <span v-html="paper.abstract"></span>
+                            <p><span class="badge badge-primary">Abstract</span>&nbsp; <span v-html="htmlLatex(paper.abstract[0])"></span>
                             </p>
 
                         </div>
@@ -216,6 +216,7 @@
 <script>
 import axios from 'axios';
 import ClipboardJS from 'clipboard';
+import katex from 'katex';
 
 export default {
     data() {
@@ -461,7 +462,45 @@ export default {
                     console.log(error);
                 });
             await this.initialize();
-        }
+        },
+
+        htmlLatex(text) {
+            if (typeof text !== 'string') {
+                console.log("null latex");
+                return '';
+            }
+
+            const regex = /(\$\$?[^$]+\$?\$)/g;
+            // const text = _t;
+            let lastIndex = 0;
+            let result = '';
+
+            text.replace(regex, (match, tex, index) => {
+                result += text.slice(lastIndex, index);
+                const latex = tex.slice(tex.startsWith('$$') ? 2 : 1, tex.endsWith('$$') ? -2 : -1);
+
+                // Create a dummy div element to parse the HTML string
+                const dummyDiv = document.createElement('div');
+                dummyDiv.innerHTML = katex.renderToString(latex, { throwOnError: false });
+
+                // Remove the <span class="katex-html"> element
+                const katexHtml = dummyDiv.querySelector('.katex-html');
+                if (katexHtml) {
+                    katexHtml.remove();
+                }
+
+                // Append the modified HTML to the result
+                result += dummyDiv.innerHTML;
+
+                lastIndex = index + tex.length;
+                return match;
+            });
+
+            result += text.slice(lastIndex);
+
+
+            return result;
+        },
     },
 
     watch: {
@@ -471,6 +510,10 @@ export default {
                 this.initialize();
             }
         },
+    },
+
+    computed: {
+
     }
 
 }

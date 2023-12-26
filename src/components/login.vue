@@ -242,7 +242,6 @@ export default {
 				.catch((error) => {
 					console.log(error);
 				});
-
 		},
 
 		setCookie() {
@@ -339,8 +338,8 @@ body {
 
 
 .inner_btn_check {
-	width: 20.781px;
-	height: 20.781px;
+	width: 35px;
+	height: 35px;
 	position: relative !important;
 }
 

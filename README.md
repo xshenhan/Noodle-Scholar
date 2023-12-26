@@ -106,8 +106,6 @@ async getAuthorPapers(_start, _end) {
 
 ## 代办
 
-1. 图片分割框
-
 ## 可视化
 
 - [x] 两个饼图，分别展示 subject 和 subsubject 的比例分配（不能点击）（arxiv）
@@ -115,7 +113,3 @@ async getAuthorPapers(_start, _end) {
 - [x] 并且鼠标悬停可以展示 其 subsubject 的柱状图（arxiv）
 - [x] 第三个饼图，展示年份-年份论文数的比例分配（arxiv）
 - [ ] 一个柱状图，展示100pdfs的年份-论文数量，并且可以切换按照年份排序还是按照论文数排序 （*）（100pdfs）
-
-## 紧急-必须完成
-
-1. 确定可以搜索的关键词有哪些（100pdfs和arxiv分别）
