@@ -47,7 +47,7 @@ async def searcher(request):
         tmp_results = {}
         tmp_results["_id"] = str(document["_id"])
         tmp_results["title"] = document["title"] if "title" not in paper else paper["title"][0]
-        tmp_results["abstract"] = document["abstract"] if "abstract" not in paper else paper["abstract"]
+        tmp_results["abstract"] = [document["abstract"]] if "abstract" not in paper else paper["abstract"]
         tmp_results["doi"] = document["doi"] if "doi" not in paper else paper["doi"]
         tmp_results["author"] = document["author"]
         tmp_results["keywords"]= document["keywords"] if source == "100pdfs" else None
