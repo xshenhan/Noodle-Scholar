@@ -1,3 +1,5 @@
 __pycache__/
 tests/
-frontend/dists/
+frontend/dist/
+dist
+node_modules
