@@ -1,18 +1,68 @@
 <template>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a href="/"><img src="/img/N.png" alt="LOGO" style="width: 25px !important;"></a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="navbar-brand" href="./"><i class="mr-2"></i><span style="font-weight: bold">Noodle</span> Scholar</a>
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
+                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="navbarColor02" style="">
+                <ul class="navbar-nav mr-auto d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./" style="font-weight: none; font-size: 15px">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./searchresult" style="font-weight: none; font-size: 15px">Search</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto d-flex align-items-center">
+                    <li class="nav-item">
+                    </li>
+                </ul>
+            </div>
+
+
+            <ul class="navbar-nav ml-auto d-flex align-items-center">
+                <li v-if="!this.isLogin" class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-secondary btn-round fade-down-left" href="/signup">Sign Up</a>&nbsp;
+                        <a class="btn btn-secondary btn-round " href="/login">Log in</a>
+                    </span>
+                </li>
+                <li v-else class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-outline-primary btn-round fade-down-left"
+                            style="color:#c3a6cb !important; border-color: #c3a6cb !important;" @click="logOut">Log out</a>
+                    </span>
+                </li>
+            </ul>
+
+
+        </div>
+    </nav>
+
+
     <div class="jumbotron jumbotron-fluid set_margin set_padding">
         <div class="container">
-            <h2 class="text-left">{{ this.paper_title }}&nbsp;<span class="badge reform_badge_outline">{{ this.paper_year
+            <h2 class="text-left"><span v-html="titleLatex"></span>&nbsp;<span class="badge reform_badge_outline">{{
+                this.paper_year
             }}</span></h2>
             <!-- <br> -->
             <p class="lead"><span class="badge badge-primary">Author</span>&nbsp;
                 <span v-for="(aut, i) in this.paper_author" :key="i">
-                    <span @click="SearchAuthor(n)" class="color_blue font-weight-bold hoverable cursor_pointer">{{ aut
-                    }}</span>
-                    <span v-if="i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
+                    <span v-if="showAllAuthors || i < 10" @click="SearchAuthor(n)"
+                        class="color_blue font-weight-bold hoverable cursor_pointer">{{ aut
+                        }}</span>
+                    <span v-if="showAllAuthors || i < 10 && i !== this.paper_author.length - 1"><strong>&nbsp;|&nbsp;</strong></span>
                 </span>
+                <div class="btn btn-outline-cyan" style="padding: .35rem 1rem; line-height: 1; border-radius: 1rem;" v-if="!showAllAuthors && this.paper_author.length > 10" @click="showAllAuthors = true">展开</div>
+                <div class="btn btn-outline-cyan" style="padding: .35rem 1rem; line-height: 1; border-radius: 1rem;" v-if="showAllAuthors && this.paper_author.length > 10" @click="showAllAuthors = false">收起</div>
             </p>
             <p class="lead"><span class="badge badge-primary">Abstract</span>&nbsp;
-                {{ this.paper_abstract }}</p>
+                <span v-html="abstractLatex"></span>
+            </p>
 
 
             <div class="col-lg-12 text-md-center text-lg-left mt-4 mb-4">
@@ -56,7 +106,7 @@
 
     <div v-show="display_summary_window" class="fullscreen_popover">
         <div class="popover_content">
-            <h3>GPT_4</h3>
+            <h3>Summary</h3>
             <button @click.prevent="modelSummary" class="close-btn">关闭</button>
             <div class="chat-container">
                 <!-- 对话内容 -->
@@ -78,7 +128,7 @@
         <div class="row">
 
             <!-- 左侧栏: 图片+表格 -->
-            <div class="col-8">
+            <div class="col-12">
                 <div class="constainer outside_border" style="margin-right: 0 !important;">
                     <div class="container add_bottom_margin" id="tabs">
                         <!-- bootstrap 导航栏 -->
@@ -107,8 +157,8 @@
                             <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">
                                 <div v-for="key in (this.paper_pictures_num)" :key="key">
                                     <div class="container my_cont">
-                                        <img class="full_screen"
-                                            :src="'http://10.80.135.205:8080' + this.paper_pictures[key - 1]">
+                                        <img class="" style="width: 45% !important;"
+                                            :src="'' + this.paper_pictures[key - 1]"><br><br>
                                     </div>
                                 </div>
                             </div>
@@ -118,11 +168,11 @@
             </div>
 
             <!-- 右侧栏: 其他元数据+可视化 -->
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <div class="constainer outside_border" style="margin-left: 0 !important;">
                     <h2>Data + Visualization</h2>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -131,11 +181,17 @@
 import axios from 'axios';
 import ClipboardJS from 'clipboard';
 // import Papa from 'papaparse';
+// import * as marked from 'marked';
+import { marked } from 'marked';
+import katex from 'katex';
 
 export default {
     data() {
         return {
+            isLogin: false,
+
             displayTable: true,
+            showAllAuthors: false,
 
             paper_id: "NULL",
             paper_source: "NULL",
@@ -164,52 +220,39 @@ export default {
             paper_tables_num: 0,
             paper_pictures: {},
             paper_pictures_num: 0,
-
-            DEVGPT: {
-                "model": "gpt-3.5-turbo",
-                "message": [
-                    {
-                        "role": "system",
-                        "content": "The user will give you a url of a paper, you should first read it and then write a summary of it in about 100 words. And then you should help the user with some questions about this paper"
-                    },
-                    {
-                        "role": "user",
-                        "content": "Here is the url of the paper: https://arxiv.org/pdf/2210.07349.pdf"
-                    },
-                    {
-                        "role": "assistant",
-                        "content": "I apologize, but I am currently unable to access external URLs or download files. However, if you provide me with relevant information or specific questions about the paper, I'll be more than happy to assist you in any way I can."
-                    },
-                ]
-            },
         }
     },
 
-    mounted() {
-        $(function () {
-            $("#tabs").tabs();
-        });
-        this.paper_id = this.$route.query.id;
-        this.paper_source = this.$route.query.source;
-        $(function () {
-            $('[data-toggle="popover"]').popover();
-        });
-        this.getPaperInfo();
-        if (this.paper_source != "arxiv") {
-            this.getTableData();    // 获取全部标签, 并分别加到元素标签上
-        };
-        this.getPicturesData();
+    async mounted() {
+        await this.initialize();
     },
 
     methods: {
+        async initialize() {
+            await this.checkLogin();
+            $(function () {
+                $("#tabs").tabs();
+            });
+            this.paper_id = this.$route.query.id;
+            this.paper_source = this.$route.query.source;
+            $(function () {
+                $('[data-toggle="popover"]').popover();
+            });
+            this.getPaperInfo();
+            if (this.paper_source != "arxiv") {
+                this.getTableData();    // 获取全部标签, 并分别加到元素标签上
+            };
+            this.getPicturesData();
+        },
+
         getDownloadLink(id) {
-            return "http://10.80.135.205:8080/api/v1/paper/download?id=" + id;
+            return "/api/v1/paper/download?id=" + id + "&source=" + this.paper_source;
         },
 
         getPaperInfo() {
             const _ID = this.$route.query.id;
             const _source = this.$route.query.source;
-            axios.get('http://10.80.135.205:8080/api/v1/paper/info', {
+            axios.get('/api/v1/paper/info', {
                 params: {
                     id: _ID,
                     source: _source,
@@ -252,7 +295,7 @@ export default {
 
         getTableData() {
             console.log("Begin getting table data of [" + this.paper_id + "]");
-            axios.get('http://10.80.135.205:8080/api/v1/paper/tables', {
+            axios.get('/api/v1/paper/tables', {
                 params: {
                     id: this.paper_id,
                 }
@@ -274,7 +317,7 @@ export default {
 
         getPicturesData() {
             console.log("Begin getting picture data of [" + this.paper_id + "]");
-            axios.get('http://10.80.135.205:8080/api/v1/paper/pics', {
+            axios.get('/api/v1/paper/pics', {
                 params: {
                     id: this.paper_id,
                 }
@@ -293,8 +336,8 @@ export default {
 
         getSingleTableData(_i, _url) {
             console.log("begin add table" + _i);
-            console.log("url: http://10.80.135.205:8080" + _url);
-            axios.get("http://10.80.135.205:8080" + _url)
+            console.log("url: " + _url);
+            axios.get("" + _url)
                 .then((response) => {
                     const csvData = response.data;
                     console.log("get single table csv data");
@@ -377,12 +420,12 @@ export default {
 
         modelSummary() {
             this.display_summary_window = !this.display_summary_window;
-            if (this.paper_source != "arxiv") {
-                this.addMessageToChat("gpt-message", "暂不支持该论文源, 请查询 Arxiv 论文");
-                return;
-            }
+            // if (this.paper_source != "arxiv") {
+            //     this.addMessageToChat("gpt-message", "暂不支持该论文源, 请查询 Arxiv 论文");
+            //     return;
+            // }
 
-            axios.get('http://10.80.135.205:8080/api/v1/model/summary', {
+            axios.get('/api/v1/model/summary', {
                 params: {
                     id: this.paper_id,
                     // id: "6569d4442c9d068894e2ac4c",
@@ -391,9 +434,8 @@ export default {
             })
                 .then((response) => {
                     this.last_chat_history = response.data;
-                    this.addMessageToChat("gpt-message", response.data.message[2].content);
-                    this.last_chat_history = this.DEVGPT;
                     console.log("set history to: " + this.last_chat_history);
+                    this.addMessageToChat("gpt-message", response.data.message[2].content);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -412,12 +454,21 @@ export default {
             input.value = ""; // 清空输入框
 
             // 将用户消息添加到聊天内容
+            console.log("user message: " + message);
             this.addMessageToChat("user-message", message);
 
             // 调用 GPT 接口获取回复（这里需要您自己实现API调用逻辑）
-            this.getGPTResponse(message).then(response => {
-                this.addMessageToChat("gpt-message", response);
+            // this.getGPTResponse(message).then(response => {
+            //     console.log("response: " + response);
+            //     this.addMessageToChat("gpt-message", "response 112");
+            // });
+            this.getGPTResponse(message).then(lastMessageContent => {
+                console.log("Last Message Content: ", lastMessageContent);
+                this.addMessageToChat("gpt-message", lastMessageContent);
+            }).catch(error => {
+                console.error("Error occurred: ", error);
             });
+
         },
 
         addMessageToChat(type, text) {
@@ -436,28 +487,60 @@ export default {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         },
         // 模拟调用 GPT 接口
-        async getGPTResponse(input_message) {
+        // async getGPTResponse(input_message) {
+        //     if (this.paper_source != "arxiv") {
+        //         return "暂不支持该论文源, 请查询 Arxiv 论文";
+        //     }
+
+        //     console.log("question: " + input_message);
+        //     console.log("history: " + JSON.stringify(this.last_chat_history));
+
+        //     axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
+        //         question: input_message,
+        //         history: this.last_chat_history,
+        //     })
+        //         .then(function (response) {
+        //             // this.last_chat_history = response.data;
+        //             // console.log("set history in gpt-response to: " + this.last_chat_history);
+        //             console.log("response: " + "here before response");
+        //             console.log("response: " + response);
+        //             return response;
+        //         })
+        //         .catch((error) => {
+        //             console.log(error);
+        //             return error;
+        //         });
+        //     // return "测试--不发送请求";
+        // },
+        getGPTResponse(input_message) {
             if (this.paper_source != "arxiv") {
-                return "暂不支持该论文源, 请查询 Arxiv 论文";
+                return Promise.resolve("暂不支持该论文源, 请查询 Arxiv 论文");
             }
 
             console.log("question: " + input_message);
             console.log("history: " + JSON.stringify(this.last_chat_history));
 
-            axios.post('http://10.80.135.205:8080/api/v1/model/qa', {
+            // Return the Promise here
+            return axios.post('/api/v1/model/qa', {
                 question: input_message,
                 history: this.last_chat_history,
             })
-                .then(function (response) {
+                .then(response => {
                     this.last_chat_history = response.data;
-                    return response.data;
+                    console.log("response: ", response);
+
+                    // Extract the content of the last message
+                    const messages = response.data.message;
+                    const lastMessageContent = messages[messages.length - 1].content;
+                    return lastMessageContent;
                 })
-                .catch((error) => {
-                    console.log(error);
-                    return error;
+                .catch(error => {
+                    console.error("Error: ", error);
+                    return error.message;
                 });
-            // return "测试--不发送请求";
         },
+
+
 
         getOriginWebsite() {
             if (this.paper_source == "arxiv") {
@@ -465,7 +548,122 @@ export default {
             } else {
                 return "https://doi.org/" + this.paper_doi;
             }
+        },
+
+        async logOut() {
+            axios.get('/api/v1/user/logout')
+                .then((response) => {
+                    console.log("log out status: " + response.data.logout);
+                    this.isLogin = false;
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            await this.initialize();
+        },
+
+        async checkLogin() {
+            return axios.get('/api/v1/user/check_login')
+                .then((response) => {
+                    this.isLogin = response.data.login_in;
+                    console.log("log in status: " + response.data.login_in);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
+
+        removeKatexHtmlElements() {
+            // 获取所有的 span.katex-html 元素
+            console.log("remove katex");
+            var elements = document.querySelectorAll('span.katex-html');
+
+            // 遍历这些元素并逐个移除
+            elements.forEach(function (element) {
+                element.parentNode.removeChild(element);
+            });
         }
+    },
+
+    watch: {
+        // abstractLatex(newValue, oldValue) {
+        //     // 每当computedData更新时，这个函数将被调用
+        //     this.removeKatexHtmlElements();
+        // }
+    },
+
+    computed: {
+        // paperAbstractHTML() {
+        //     return marked(this.paper_abstract);
+        // },
+
+        abstractLatex() {
+            const regex = /(\$\$?[^$]+\$?\$)/g;
+            const text = this.paper_abstract;
+            let lastIndex = 0;
+            let result = '';
+
+            text.replace(regex, (match, tex, index) => {
+                result += text.slice(lastIndex, index);
+                const latex = tex.slice(tex.startsWith('$$') ? 2 : 1, tex.endsWith('$$') ? -2 : -1);
+
+                // Create a dummy div element to parse the HTML string
+                const dummyDiv = document.createElement('div');
+                dummyDiv.innerHTML = katex.renderToString(latex, { throwOnError: false });
+
+                // Remove the <span class="katex-html"> element
+                const katexHtml = dummyDiv.querySelector('.katex-html');
+                if (katexHtml) {
+                    katexHtml.remove();
+                }
+
+                // Append the modified HTML to the result
+                result += dummyDiv.innerHTML;
+
+                lastIndex = index + tex.length;
+                return match;
+            });
+
+            result += text.slice(lastIndex);
+
+
+            return result;
+        },
+
+        titleLatex() {
+            const regex = /(\$\$?[^$]+\$?\$)/g;
+            const text = this.paper_title;
+            let lastIndex = 0;
+            let result = '';
+
+            text.replace(regex, (match, tex, index) => {
+                result += text.slice(lastIndex, index);
+                const latex = tex.slice(tex.startsWith('$$') ? 2 : 1, tex.endsWith('$$') ? -2 : -1);
+
+                // Create a dummy div element to parse the HTML string
+                const dummyDiv = document.createElement('div');
+                dummyDiv.innerHTML = katex.renderToString(latex, { throwOnError: false });
+
+                // Remove the <span class="katex-html"> element
+                const katexHtml = dummyDiv.querySelector('.katex-html');
+                if (katexHtml) {
+                    katexHtml.remove();
+                }
+
+                // Append the modified HTML to the result
+                result += dummyDiv.innerHTML;
+
+                lastIndex = index + tex.length;
+                return match;
+            });
+
+            result += text.slice(lastIndex);
+
+
+            return result;
+        },
+
     }
 };
 </script>
@@ -762,6 +960,7 @@ body {
     margin-top: 20px !important;
     margin-right: 20px;
     margin-left: 20px;
+    margin-bottom: 50px !important;
     padding: 20px !important;
 }
 

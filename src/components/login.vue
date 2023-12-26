@@ -1,5 +1,50 @@
 <template>
 	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="container">
+				<a href="/"><img src="/img/N.png" alt="LOGO" style="width: 25px !important;"></a>
+				&nbsp;&nbsp;&nbsp;
+				<a class="navbar-brand" href="./"><i class="mr-2"></i><span style="font-weight: bold">Noodle</span>
+					Scholar</a>
+				<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
+					aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse" id="navbarColor02" style="">
+					<ul class="navbar-nav mr-auto d-flex align-items-center">
+						<li class="nav-item">
+							<a class="nav-link" href="./" style="font-weight: none; font-size: 15px">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="./searchresult" style="font-weight: none; font-size: 15px">Search</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav ml-auto d-flex align-items-center">
+						<li class="nav-item">
+						</li>
+					</ul>
+				</div>
+
+
+				<ul class="navbar-nav ml-auto d-flex align-items-center">
+					<li v-if="!this.isLogin" class="nav-item">
+						<span class="nav-link">
+							<a class="btn btn-secondary btn-round fade-down-left" href="/signup">Sign Up</a>&nbsp;
+							<a class="btn btn-secondary btn-round " href="/login">Log in</a>
+						</span>
+					</li>
+					<li v-else class="nav-item">
+						<span class="nav-link">
+							<a class="btn btn-outline-primary btn-round fade-down-left"
+								style="color:#c3a6cb !important; border-color: #c3a6cb !important;" @click="logOut">Log
+								out</a>
+						</span>
+					</li>
+				</ul>
+
+
+			</div>
+		</nav>
 
 		<!-- <div class="login-background"> -->
 		<div><br></div>
@@ -52,7 +97,7 @@
 
 
 			</form>
-			<div id="responseMessage" class="mt-3"></div>
+			<!-- <div id="responseMessage" class="mt-3"></div> -->
 		</div>
 
 
@@ -76,7 +121,7 @@
 					您可以选择拒绝提供某些信息，同时我们也将拒绝网站对您的权限。<br>
 					■ 隐私政策的变更<br>
 					我们没准任何时候更新本协议，基于我们灵活的隐私政策。<br>
-					<p class="font-weight-bold">以上。</p>
+				<p class="font-weight-bold">以上。</p>
 				</p>
 
 				<div class="popover-buttons">
@@ -86,8 +131,6 @@
 
 			</div>
 		</div>
-
-
 
 
 		<!-- light footer -->
@@ -128,6 +171,8 @@ import axios from 'axios';
 export default {
 	data() {
 		return {
+			isLogin: false,
+
 			username: "",
 			password: "",
 			agreed: false,
@@ -136,39 +181,49 @@ export default {
 		}
 	},
 
-	mounted() {
-		document.getElementById('loginForm').addEventListener('submit', function (event) {
-			event.preventDefault();
-
-			const formData = new FormData(this);
-
-			fetch('/api/v1/login', {
-				method: 'POST',
-				body: formData
-			})
-				.then(response => response.text())
-				.then(text => {
-					document.getElementById('responseMessage').textContent = text;
-				})
-				.catch((error) => {
-					console.error('Error:', error);
-					document.getElementById('responseMessage').textContent = 'Error: ' + error;
-				});
-		});
-
-
-
-
-
-
-
-
-
+	async mounted() {
+		await this.initialize();
 	},
 
 	methods: {
+		async initialize() {
+			await this.checkLogin();
+			document.getElementById('loginForm').addEventListener('submit', function (event) {
+				event.preventDefault();
+
+				const formData = new FormData(this);
+
+				fetch('/api/v1/user/login', {
+					method: 'POST',
+					body: formData
+				})
+					.then(response => response.json()) // 修改为解析JSON
+					.then(data => {
+						// 显示状态消息
+						const statusMessage = data.status || 'No status available';
+						alert(statusMessage); // 使用弹窗显示状态信息
+
+						// 如果状态是“ok”，则在0.5秒后跳转
+						if (data.status === 'ok') {
+							setTimeout(() => {
+								// window.location.href = '/';
+								window.history.back();
+							}, 500);
+						}
+
+						// 将响应显示在页面上
+						// document.getElementById('responseMessage').textContent = statusMessage;
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+						// document.getElementById('responseMessage').textContent = 'Error: ' + error;
+						alert('Error: ' + error);
+					});
+			});
+		},
+
 		register() {
-			axios.get("/api/v1/login", {
+			axios.get("/api/v1/user/login", {
 				params: {
 					username: this.username,
 					password: this.password,
@@ -187,7 +242,6 @@ export default {
 				.catch((error) => {
 					console.log(error);
 				});
-
 		},
 
 		setCookie() {
@@ -211,7 +265,31 @@ export default {
 		toggleNotAccept() {
 			this.isPopoverVisible = !this.isPopoverVisible;
 			this.agreed = false;
-		}
+		},
+
+		async logOut() {
+			axios.get('/api/v1/user/logout')
+				.then((response) => {
+					console.log("log out status: " + response.data.logout);
+					this.isLogin = false;
+
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+			await this.initialize();
+		},
+
+		async checkLogin() {
+			return axios.get('/api/v1/user/check_login')
+				.then((response) => {
+					this.isLogin = response.data.login_in;
+					console.log("log in status: " + response.data.login_in);
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+		},
 
 	}
 }
@@ -260,8 +338,8 @@ body {
 
 
 .inner_btn_check {
-	width: 20.781px;
-	height: 20.781px;
+	width: 35px;
+	height: 35px;
 	position: relative !important;
 }
 
@@ -434,7 +512,9 @@ footer {
 }
 
 .centered-text {
-	line-height: 30px; /* 设置行高为与父元素高度相等 */
-	height: 30px; /* 设置高度为与父元素相等 */
-  }
+	line-height: 30px;
+	/* 设置行高为与父元素高度相等 */
+	height: 30px;
+	/* 设置高度为与父元素相等 */
+}
 </style>

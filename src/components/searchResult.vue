@@ -1,4 +1,92 @@
 <template>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a href="./"><img src="../assets/img/N.png" alt="LOGO" style="width: 25px !important;"></a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="navbar-brand" href="./"><i class="mr-2"></i><strong>Noodle</strong> Scholar</a>
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
+                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="navbarColor02" style="">
+                <ul class="navbar-nav mr-auto d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./">Home</a>
+                    </li>
+                </ul>
+
+
+                <!-- </div> -->
+
+
+                <!-- nav 中的搜索框 -->
+                <div class="container" style="padding-left: 20px; padding-right: 0px;">
+                    <div class="col d-flex">
+
+                        <!-- 上方 -->
+                        <div class="input-group under_border form-check-input">
+
+                            <!-- Arxiv 选择器 -->
+                            <button type="button" class=" btn btn_circle_home "
+                                :class="{ btn_circle_home_active: this.searchArxiv }"
+                                @click="changeAgreement"><strong>Arxiv</strong>
+                            </button>
+
+                            <!-- 搜索框 -->
+                            <input id="search-input" type="text" class="form-control form-control-rounded no_box_shadow"
+                                v-model="search_info" @keyup.enter="SearchAndGoToResultPage"
+                                aria-label="Text input with dropdown button"
+                                :placeholder="`Search by ${new_search_type_print}`">
+
+                            <!-- 搜索条件选择器 -->
+                            <!-- BUG: 为什么尖叫向上 && 只能下拉一次菜单 -->
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary_rewrite dropdown-toggle btn-rounded" type="button"
+                                    data-toggle="dropdown" aria-expanded="false">{{ new_search_type_print }}</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" @click="selectSearchType('All')"><strong>All</strong></a>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <a class="dropdown-item" @click="selectSearchType('Title')"><strong>Title</strong></a>
+                                    <a class="dropdown-item"
+                                        @click="selectSearchType('Subject')"><strong>Subject</strong></a>
+                                    <a class="dropdown-item" @click="selectSearchType('Author')"><strong>Author</strong></a>
+                                    <a class="dropdown-item"
+                                        @click="selectSearchType('Abstract')"><strong>Abstract</strong></a>
+                                    <a class="dropdown-item" @click="selectSearchType('DOI')"><strong>DOI</strong></a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- 下方 -->
+                        <!-- 搜索按钮 -->
+                        <div class="col">
+                            <button type="button" @click="SearchAndGoToResultPage"
+                                class="btn btn-primary btn-rounded button_white_border_search">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="navbar-nav ml-auto d-flex align-items-center">
+                <li v-if="!this.isLogin" class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-secondary btn-round fade-down-left" href="/signup">Sign Up</a>&nbsp;
+                        <a class="btn btn-secondary btn-round " href="/login">Log in</a>
+                    </span>
+                </li>
+                <li v-else class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-outline-primary btn-round fade-down-left"
+                            style="color:#c3a6cb !important; border-color: #c3a6cb !important;" @click="logOut">Log out</a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+
+    </nav>
+
     <div>
         <div class="row align-items-center justify-content-center text-center">
             <div class="col-md-10">
@@ -21,9 +109,10 @@
                     <div class="row justify-content-between align-items-center text-md-center text-lg-left">
                         <div class="reform_size_content" :class="{ 'col-lg-9': paper.pic_num !== 0 }">
                             <h5 class="text-black hoverable cursor_pointer"><strong><span @click="GoToPaperPage(paper._id)"
-                                        v-html="paper.title"></span></strong></h5>
+                                        v-html="htmlLatex(paper.title)"></span></strong></h5>
 
-                            <p v-if="paper.doi != null && paper.doi != ''"><span class="badge badge-primary">DOI</span>&nbsp;
+                            <p v-if="paper.doi != null && paper.doi != ''"><span
+                                    class="badge badge-primary">DOI</span>&nbsp;
                                 <span @click="copyLink(paper.doi, key)" :class="'copy-button copy-button-' + key"
                                     data-container="body" data-toggle="popover" data-placement="top" data-content="已复制DOI">
                                     <span class="badge badge-success cursor_pointer" v-html="paper.doi"></span>
@@ -31,15 +120,42 @@
                             </p>
 
                             <p><span class="badge badge-primary">Author</span>&nbsp;
-                                <span v-for="(n, index) in paper.author.name" :key="index">
-                                    <!-- <span class="badge badge-success">{{ n }}</span> -->
-                                    <span @click="SearchAuthor(n)" class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
+                                <span v-if="this.search_source === '100pdfs'" v-for="(n, index) in paper.author.name"
+                                    :key="index">
+                                    <span v-if="index <= 10" @click="SearchAuthor(n)"
+                                        class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
                                     <span v-if="index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
+                                    </span>
+                                </span>
+                                <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.author" :key="index">
+                                    <span v-if="index <= 10" @click="SearchAuthor(n)"
+                                        class="color_blue font-weight-bold hoverable cursor_pointer" v-html="n"></span>
+                                    <span
+                                        v-if="index <= 10 && index !== paper.author.length - 1"><strong>&nbsp;|&nbsp;</strong>
                                     </span>
                                 </span>
                             </p>
 
-                            <p><span class="badge badge-primary">Abstract</span>&nbsp; <span v-html="paper.abstract"></span>
+                            <p
+                                v-if="(this.search_source === 'arxiv' && paper.tag !== null) || (this.search_source === '100pdfs' && paper.keywords.length !== 0)">
+                                <span class="badge badge-primary">Keywords</span>&nbsp;
+                                <span v-if="this.search_source === '100pdfs'" v-for="(n, index) in paper.keywords"
+                                    :key="index">
+                                    <span @click="SearchSubject(n)" class="badge cursor_pointer badge_outline"
+                                        v-html="n"></span>
+                                    <span v-if="index !== paper.keywords.length - 1"><strong>&nbsp;&nbsp;</strong>
+                                    </span>
+                                </span>
+                                <span v-if="this.search_source === 'arxiv'" v-for="(n, index) in paper.tag.split(' ')"
+                                    :key="index">
+                                    <span @click="SearchSubject(n)" class="badge cursor_pointer badge_outline"
+                                        v-html="n"></span>
+                                    <span v-if="index !== paper.tag.split(' ').length - 1"><strong>&nbsp;&nbsp;</strong>
+                                    </span>
+                                </span>
+                            </p>
+
+                            <p><span class="badge badge-primary">Abstract</span>&nbsp; <span v-html="htmlLatex(paper.abstract[0])"></span>
                             </p>
 
                         </div>
@@ -53,7 +169,7 @@
 
                                     <!-- <div class="carousel-item active">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8080' + paper.pics['0']"
+                                            <img :src="'' + paper.pics['0']"
                                                 class="img-fluid mx-auto d-block fill-image">
                                         </div>
                                     </div> -->
@@ -61,8 +177,7 @@
                                     <div v-for="(url, index) in paper.pics" :key="index" class="carousel-item"
                                         :class="{ active: index === '0' }">
                                         <div class="card shadow-sm border-0">
-                                            <img :src="'http://10.80.135.205:8080' + url"
-                                                class="img-fluid mx-auto d-block fill-image">
+                                            <img :src="'' + url" class="img-fluid mx-auto d-block fill-image">
                                         </div>
                                     </div>
 
@@ -101,19 +216,27 @@
 <script>
 import axios from 'axios';
 import ClipboardJS from 'clipboard';
+import katex from 'katex';
 
 export default {
     data() {
         return {
-            search_type: "NULL",
-            search_type_print: "NULL",
+            isLogin: false,
 
+            new_search_type: "all",
+            new_search_type_print: "All",
+            // old_search_source: "100pdfs",
 
-            search_field: "",
+            search_field: "havnt_search",
+            search_field_print: "havnt_search",
+
             search_info: "",
             search_source: "",
 
-            paper_number: 20,
+            paper_number: 30,
+
+            agreed: false,
+            searchArxiv: false,
 
             already_searched: false,
             paper_id: "NULL",
@@ -127,35 +250,80 @@ export default {
         }
     },
 
-    mounted() {
-        this.search_field = this.$route.query.field;
-        this.search_info = this.$route.query.info;
-        this.search_source = this.$route.query.source;
-        console.log("field = " + this.search_field);
-        console.log("info = " + this.search_info);
-        console.log("source = " + this.search_source);
-        this.getAllPaperInfo();
-        // this.getLimitedPaperInfo();
-        $(function () {
-            $('[data-toggle="popover"]').popover();
-        });
+    async mounted() {
+        await this.initialize();
     },
 
     methods: {
 
-        selectSearchType(type) {
-            this.search_type = type;
-            if (type === "Subject") {
-                this.search_type_print = "tag";
+        async initialize() {
+            await this.checkLogin();
+            console.log("initializing...")
+            $(this.$el).find('[data-toggle="dropdown"]').dropdown();
+            this.search_field = this.$route.query.field;
+            this.search_field_print = this.new_search_type_print;
+            console.log("old search field: " + this.search_field);
+
+            if (this.search_field === "tag") {
+                this.new_search_type = "tag";
+                this.new_search_type_print = "Subject";
             } else {
-                this.search_type_print = type.toLowerCase();
+                // Capitalize the first letter for other cases
+                this.new_search_type = this.search_field;
+                this.new_search_type_print = this.search_field.charAt(0).toUpperCase() + this.search_field.slice(1);
+            }
+            console.log("new search type: " + this.new_search_type);
+            console.log("new search type print: " + this.new_search_type_print);
+
+            this.search_info = this.$route.query.info;
+            this.search_source = this.$route.query.source;
+            // this.old_search_source = this.search_source;
+            this.searchArxiv = this.search_source === "arxiv";
+            this.agreed = this.searchArxiv;
+
+            console.log("field = " + this.search_field);
+            console.log("info = " + this.search_info);
+            console.log("source = " + this.search_source);
+            this.getAllPaperInfo();
+            $(function () {
+                $('[data-toggle="popover"]').popover();
+            });
+        },
+
+        SearchAndGoToResultPage() {
+            var url = "/searchResult?field=" + this.new_search_type + "&info=" + encodeURIComponent(this.search_info);
+            if (this.searchArxiv) {
+                url += "&source=arxiv";
+            } else {
+                url += "&source=100pdfs";
+            }
+            this.$router.push(url);
+            this.initialize();
+        },
+
+        changeAgreement() {
+            this.agreed = !this.agreed;
+            this.searchArxiv = !this.searchArxiv;
+            // console.log("agreed changed to " + this.agreed);
+            console.log("searchArxiv changed to " + this.searchArxiv);
+        },
+
+        selectSearchType(type) {
+            this.new_search_type_print = type;
+            this.$nextTick(() => {
+                $(this.$el).find('[data-toggle="dropdown"]').dropdown('update');
+            });
+            if (type === "Subject") {
+                this.new_search_type = "tag";
+            } else {
+                this.new_search_type = type.toLowerCase();
             }
             console.log("search_type changed to " + type);
             console.log("search_type_print: " + type);
         },
 
         getAllPaperInfo() {
-            axios.get('http://10.80.135.205:8080/api/v1/search', {
+            axios.get('/api/v1/search', {
                 params: {
                     field: this.search_field,
                     query: this.search_info,
@@ -164,17 +332,27 @@ export default {
             })
                 .then((response) => {
                     this.responses = response;
-                    this.response_data = Object.fromEntries(Object.entries(this.responses.data).slice(0, this.paper_number));
-                    // 打印response_data长度
+
+                    // Sort the data and then assign it directly
+                    const sortedData = {};
+                    Object.keys(this.responses.data)
+                        .sort((a, b) => a - b)
+                        .forEach(key => {
+                            sortedData[key] = this.responses.data[key];
+                        });
+
+                    // Assign the sorted data to response_data
+                    this.response_data = sortedData;
+
                     console.log(Object.keys(this.response_data).length);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.error('Error:', error);
                     this.already_searched = true;
                     this.paper_id = "!! ERROR !!";
-                })
-
+                });
         },
+
 
         // getLimitedPaperInfo() {
         //     response_data = Object.fromEntries(Object.entries(this.responses.data).slice(0, this.paper_number));
@@ -183,7 +361,7 @@ export default {
         // },
 
         getPicUrls(_ID) {
-            axios.get('http://10.80.135.205:8080/api/v1/paper/pics', {
+            axios.get('/api/v1/paper/pics', {
                 params: {
                     id: _ID,
                 }
@@ -204,7 +382,7 @@ export default {
             console.log("enter");
             try {
                 console.log("before axios");
-                const response = await axios.get(`http://10.80.135.205:8080/api/v1/paper/pics?id=${paper.id}`);
+                const response = await axios.get(`/api/v1/paper/pics?id=${paper.id}`);
                 console.log("after axios");
 
                 if (response.data) {
@@ -217,12 +395,17 @@ export default {
         },
 
         getDownloadLink(ID) {
-            const downloadURL = "http://10.80.135.205:8080/api/v1/paper/download?id=" + ID;
+            const downloadURL = "/api/v1/paper/download?id=" + ID;
             return downloadURL;
         },
 
         SearchAuthor(_name) {
             var _url = "/searchResult?field=author" + "&info=" + encodeURIComponent(_name) + "&source=" + this.search_source;
+            window.open(_url, "_blank");
+        },
+
+        SearchSubject(_subject) {
+            var _url = "/searchResult?field=tag" + "&info=" + encodeURIComponent(_subject) + "&source=" + this.search_source;
             window.open(_url, "_blank");
         },
 
@@ -256,7 +439,83 @@ export default {
                 target: document.querySelector(selector)
             });
         },
+
+        async checkLogin() {
+            return axios.get('/api/v1/user/check_login')
+                .then((response) => {
+                    this.isLogin = response.data.login_in;
+                    console.log("log in status: " + response.data.login_in);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
+
+        async logOut() {
+            axios.get('/api/v1/user/logout')
+                .then((response) => {
+                    console.log("log out status: " + response.data.logout);
+                    this.isLogin = false;
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            await this.initialize();
+        },
+
+        htmlLatex(text) {
+            if (typeof text !== 'string') {
+                console.log("null latex");
+                return '';
+            }
+
+            const regex = /(\$\$?[^$]+\$?\$)/g;
+            // const text = _t;
+            let lastIndex = 0;
+            let result = '';
+
+            text.replace(regex, (match, tex, index) => {
+                result += text.slice(lastIndex, index);
+                const latex = tex.slice(tex.startsWith('$$') ? 2 : 1, tex.endsWith('$$') ? -2 : -1);
+
+                // Create a dummy div element to parse the HTML string
+                const dummyDiv = document.createElement('div');
+                dummyDiv.innerHTML = katex.renderToString(latex, { throwOnError: false });
+
+                // Remove the <span class="katex-html"> element
+                const katexHtml = dummyDiv.querySelector('.katex-html');
+                if (katexHtml) {
+                    katexHtml.remove();
+                }
+
+                // Append the modified HTML to the result
+                result += dummyDiv.innerHTML;
+
+                lastIndex = index + tex.length;
+                return match;
+            });
+
+            result += text.slice(lastIndex);
+
+
+            return result;
+        },
+    },
+
+    watch: {
+        '$route': {
+            immediate: true,
+            handler() {
+                this.initialize();
+            }
+        },
+    },
+
+    computed: {
+
     }
+
 }
 
 
@@ -338,7 +597,7 @@ export default {
     margin-left: 70.852px;
     margin-right: 70.852px;
     margin-top: 10px;
-    margin-bottom: 100px;
+    margin-bottom: 200px;
     background-color: #2578b5;
     color: #ffffff;
     border: none;
@@ -346,6 +605,39 @@ export default {
 
 .cursor_pointer {
     cursor: pointer;
+}
+
+.button_white_border_search {
+    border-color: #ffffff;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    right: -50%;
+}
+
+.badge_outline {
+    border: 1px solid #2578b5 !important;
+    color: black !important;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    /* Position below the button */
+    left: 0;
+    z-index: 1000;
+    /* Ensure it's above other content */
+    display: none;
+    /* Initially hidden */
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    /* Show on hover */
 }
 </style>
 

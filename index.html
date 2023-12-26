@@ -32,11 +32,13 @@
 
   <!-- Jquery -->
   <script src="src/assets/js/jquery-ui.min.js"></script>
-	<link href="src/assets/js/jquery-ui.min.css" rel="stylesheet">
+  <link href="src/assets/js/jquery-ui.min.css" rel="stylesheet">
   <!-- <script src="js/jquery.js"></script> -->
 
   <!-- Echats -->
   <!-- <script src="js/echarts.min.js"></script> -->
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <title>Noodle Scholar</title>
 
@@ -49,54 +51,9 @@
   <script src="./src/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
   <script src="./src/assets/js/functions.js" type="text/javascript"></script>
   <!-- header with nav -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-      <a href="./"><img src="./src/assets/img/N.png" alt="LOGO" width="25px"></a>
-      &nbsp;&nbsp;&nbsp;
-      <a class="navbar-brand" href="./"><i class="mr-2"></i><strong>Noodle</strong> Scholar</a>
-      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
-        aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="navbar-collapse collapse" id="navbarColor02" style="">
-        <ul class="navbar-nav mr-auto d-flex align-items-center">
-          <li class="nav-item">
-            <a class="nav-link" href="./">Home</a>
-          </li>
-          <li class="nav-item dropdown">
-            <!-- <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              Examples </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="./searchResult">Home Landing</a>
-              <a class="dropdown-item" href="./login.html">User Login</a>
-              <a class="dropdown-item" href="./blog.html">Blog Index</a>
-              <a class="dropdown-item" href="./page.html">Sample Page</a>
-            </div> -->
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./searchresult">Search</a>
-          </li>
-        </ul>
-        <ul class="navbar-nav ml-auto d-flex align-items-center">
-          <li class="nav-item">
-          </li>
-        </ul>
-      </div>
 
+  <!-- 原来 nav 的位置 -->
 
-      <ul class="navbar-nav ml-auto d-flex align-items-center">
-        <li class="nav-item">
-          <span class="nav-link">
-            <a class="btn btn-secondary btn-round fade-down-left" href="/signup">Sign Up</a>
-            <a class="btn btn-secondary btn-round " href="/login">Log in</a>
-          </span>
-        </li>
-      </ul>
-
-
-    </div>
-  </nav>
   <div id="app"></div>
   <script type="module" src="./src/main.js"></script>
 </body>
