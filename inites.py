@@ -11,7 +11,7 @@ es = Elasticsearch(hosts=host)
 
 print(es.ping())
 
-index_name = "arxiv_new"  # 替换为您希望使用的索引名称
+index_name = "arxiv_new" #对于100pdfs：papers，for arxiv: arxiv_new
 
 if  es.indices.exists(index=index_name):
     es.indices.delete(index=index_name)
@@ -30,12 +30,6 @@ mapping = {
             "keywords": {"type": "text"},
             "categories": {"type": "text"},
             "year": {"type": "integer"},
-            # "author": {
-            #     "properties": {
-            #         "affiliation": {"type": "text"},
-            #         "name": {"type": "text"}
-            #     }
-            # },
             "last_page": {"type": "integer"},
             "link": {"type": "keyword"},
             "abstract": {"type": "text"},
@@ -56,14 +50,11 @@ mapping = {
 }
 
 es.indices.create(index=index_name,body=mapping)
-# es.indices.put_mapping(index=index_name, body=mapping, doc_type=)
 
 for document in documents:
-    hash_id = str(document["_id"])  # Convert ObjectId to string
-    document["hash_id"] = hash_id  # Add 'hash_id' field to the document
-    document.pop("_id")  # Remove the original '_id' field
-
-    # Index the document in Elasticsearch
+    hash_id = str(document["_id"]) 
+    document["hash_id"] = hash_id 
+    document.pop("_id") 
     es.index(index=index_name, doc_type='_doc', body=document)
 print("indexed")
 
