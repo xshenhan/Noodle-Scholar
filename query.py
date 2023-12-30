@@ -12,7 +12,6 @@ class PaperSearch:
         self.index_name = index_name
 
     def _search(self, query, field=None, size=20, query_type='match', start_year=None, end_year=None):
-        # 基于查询类型构建查询
         if query_type == 'prefix':
             match_part = {"prefix": {field: query}}
         elif query_type == 'wildcard':
@@ -25,12 +24,12 @@ class PaperSearch:
             else:
                 match_part = {"multi_match": {"query": query, "fields": ["*"], "fuzziness": "AUTO"}}
         
-        # 构建布尔查询
+       
         must_clauses = [match_part]
         if start_year and end_year:
             range_clause = {
                 "range": {
-                    "date": {  # 假设年份字段名为 'year'
+                    "date": {
                         "gte": f"{start_year}-01-01",
                         "lte": f"{end_year}-12-31",
                         "format": "yyyy-MM-dd"
@@ -70,8 +69,7 @@ class PaperSearch:
         body = {
             "query": {
                 "range": {
-                    "date": {  
-                        # 假设年份字段名为 'year'
+                    "date": {
                         "gte": f"{start_year}-01-01",
                         "lte": f"{end_year}-12-31",
                         "format": "yyyy-MM-dd"
