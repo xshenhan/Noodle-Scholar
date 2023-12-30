@@ -30,7 +30,7 @@ class PaperSearch:
         if start_year and end_year:
             range_clause = {
                 "range": {
-                    "date": {  # 假设年份字段名为 'year'
+                    "date": {
                         "gte": f"{start_year}-01-01",
                         "lte": f"{end_year}-12-31",
                         "format": "yyyy-MM-dd"
