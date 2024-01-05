@@ -97,31 +97,29 @@ class PaperSearch:
 
 # 使用示例
 if __name__ == "__main__":
-
     paper_search = PaperSearch("papers")
-    # year_range_results = paper_search.search_by_year_range('2020', '2022', 10)
-    # print(year_range_results)
-    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # search_all_fields_results = paper_search.search_all_fields('a mildly ', 'all', 10, query_type='match')
-    # print(search_all_fields_results)
+    # 在所有字段上进行模糊搜索
+    fuzzy_search_results = paper_search.search_all_fields('rock', None, 10, query_type='match')
+    print("Fuzzy Search Results in All Fields:", fuzzy_search_results)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # match_results_with_year = paper_search._search('cnn', '', 10, 'match', '2002', '2015')
-    # print(match_results_with_year)
-    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    # 在标题字段上进行模糊搜索
+    fuzzy_title_search_results = paper_search.search_specific_field('rock', 'title', 10, query_type='match')
+    print("Fuzzy Search Results in Title Field:", fuzzy_title_search_results)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # # 使用前缀查询
-    # prefix_results = paper_search.search_specific_field('roc', 'title', 10, query_type='prefix')
-    # print(prefix_results)
-    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    # 在标题字段上进行前缀搜索
+    prefix_search_results = paper_search.search_specific_field('rock', 'title', 10, query_type='prefix')
+    print("Prefix Search Results in Title Field:", prefix_search_results)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # # 使用通配符查询
-    wildcard_results = paper_search.search_specific_field('rocks in the Mojave Desert, California', 'title', 10)
-    print(wildcard_results)
-    for key, value in wildcard_results.items():
-        print(key, value)
-    # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    # 在标题字段上进行通配符搜索
+    wildcard_search_results = paper_search.search_specific_field('rock*', 'title', 10, query_type='wildcard')
+    print("Wildcard Search Results in Title Field:", wildcard_search_results)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # # 使用正则表达式查询
-    # regexp_results = paper_search.search_specific_field('roc.*', 'title', 10, query_type='regexp')
-    # print(regexp_results)
+    # 在标题字段上进行正则表达式搜索
+    regexp_search_results = paper_search.search_specific_field('rock.*', 'title', 10, query_type='regexp')
+    print("Regular Expression Search Results in Title Field:", regexp_search_results)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
