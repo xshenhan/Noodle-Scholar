@@ -109,17 +109,17 @@ if __name__ == "__main__":
     print("Fuzzy Search Results in Title Field:", fuzzy_title_search_results)
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # 在标题字段上进行前缀搜索
+    # 前缀搜索
     prefix_search_results = paper_search.search_specific_field('rock', 'title', 10, query_type='prefix')
     print("Prefix Search Results in Title Field:", prefix_search_results)
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # 在标题字段上进行通配符搜索
+    # 通配符搜索
     wildcard_search_results = paper_search.search_specific_field('rock*', 'title', 10, query_type='wildcard')
     print("Wildcard Search Results in Title Field:", wildcard_search_results)
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    # 在标题字段上进行正则表达式搜索
+    # 正则表达式搜索
     regexp_search_results = paper_search.search_specific_field('rock.*', 'title', 10, query_type='regexp')
     print("Regular Expression Search Results in Title Field:", regexp_search_results)
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
