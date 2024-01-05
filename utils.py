@@ -1,8 +1,8 @@
 import motor
-
+from config import MONGODB_CONNECTION_STRING
 
 def get_collection(source):
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     if source == "100pdfs":
         return client.papers["100pdfs"]
     elif source == "arxiv":

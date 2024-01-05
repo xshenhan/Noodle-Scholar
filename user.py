@@ -5,6 +5,7 @@ from sanic.response import json
 from auth import add_user_info_cookie, check_login, is_vip
 import requests
 from datetime import datetime, timedelta
+from config import MONGODB_CONNECTION_STRING
 user = Blueprint("user", url_prefix="/api/v1/user")
 
 
@@ -25,7 +26,7 @@ async def signup(request):
         username = request.form.get('username')
         password = request.form.get('password')
         response = json({"status": "ok"}, headers={"Access-Control-Allow-Origin": "*"})
-        client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+        client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
         users = client['users']
         users_collection = users['users']
         
@@ -57,7 +58,7 @@ async def login(request):
     json_data = response.json()
     if not json_data.get('success'):
         return json({"status": "error"}, headers={"Access-Control-Allow-Origin": "*"})    
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     users = client['users']
     users_collection = users['users']
     user_document = await users_collection.find_one({'username': username})

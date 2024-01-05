@@ -2,6 +2,7 @@ from functools import wraps
 from mycrypt import decrypt, encrypt, DATABASE_KEY
 from sanic import text, html
 import motor
+from config import *
 
 async def check_login(request):
     if not request.cookies.get('username', None):

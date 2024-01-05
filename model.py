@@ -11,7 +11,7 @@ import os
 from utils import get_collection
 
 
-client = OpenAI(api_key="sk-iBCGi2tjCGTrAkFO1402466cBa2944E985818f521301Ee95", base_url="https://oneapi.leoh.top/v1")
+client = OpenAI(api_key="xxx", base_url="xxxx")
 model = Blueprint("model", url_prefix="/api/v1/model")
 
 def read_json_part(file_path, size):

@@ -14,13 +14,14 @@ from mycrypt import encrypt, decrypt, DATABASE_KEY
 from os.path import isfile, join
 import requests
 from utils import get_collection
+from config import *
 
 paper = Blueprint('paper', url_prefix='/api/v1/paper')
 
 
 @paper.get("/test")
 async def paper_test(request):
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     source = request.args.get("source", "arxiv")
     # id = ObjectId("6532290bd507ea15ca185e83")
     id = ObjectId("6569d43b2c9d068894c84b8f")
