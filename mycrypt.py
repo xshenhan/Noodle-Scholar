@@ -1,8 +1,7 @@
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 import base64
-key = b'4RtA78RMMxv{?<YV'
-DATABASE_KEY = b'wafejwafjwefjwef'
+from config import *
 
 def encrypt(plaintext, key=key):
     # 生成一个随机的初始向量

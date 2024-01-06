@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 __pycache__/
 tests/
 frontend/dist/
 dist
 node_modules
+=======
+node_modules/
+>>>>>>> gh

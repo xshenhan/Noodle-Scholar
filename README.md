@@ -3,6 +3,35 @@
 A simple, elegant, delicate search engine for scholar.
 
 ## 运行
+- 推荐环境
+  * npm: 9.8.1
+  * node: v18.18.2
+  * python: 3.12.0
+
+- 准备工作
+  * 修改config.py， 将其中的配置修改成可用配置
+
+- 前端构建
+   ```terminal
+    cd frontend
+    npm install
+    npm run build
+    cd ..
+   ```
+   此时会在`frontend/`中出现一个`dist`文件夹，根目录中也有有一个`dist`文件夹被link到`frontend/dist`
+
+- 后端环境配置与运行
+  ``` terminal
+    pip install -r requirements.txt
+    pip uninstall urllib3
+    pip uninstall six
+    pip install urllib3
+    pip install six
+    # 运行
+    python server.py
+    sanic server.app --port 8088 --host 0.0.0.0 --fast # port：端口 host：监听地址。其他参数含义详见sanic文档
+  ```
+
 - 网址
   * 在交大内网中的端口：`10.80.135.205:80`
 - 如果你想做出修改：

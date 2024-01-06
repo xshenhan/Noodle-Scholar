@@ -2,6 +2,7 @@ from functools import wraps
 from mycrypt import decrypt, encrypt, DATABASE_KEY
 from sanic import text, html
 import motor
+from config import *
 
 async def check_login(request):
     if not request.cookies.get('username', None):
@@ -9,7 +10,7 @@ async def check_login(request):
     if not request.cookies.get('password', None):
         return False, "no password"
 
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     users = client['users']
     users_collection = users['users']
     users_doc = await users_collection.find_one({'username': decrypt(request.cookies.get('username'))})
@@ -52,7 +53,7 @@ def protected(wrapped):
     return decorator(wrapped)
 
 async def is_vip(username):
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     users = client['users']
     users_collection = users['users']
     users_doc = await users_collection.find_one({'username': decrypt(username)})

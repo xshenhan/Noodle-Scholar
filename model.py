@@ -9,9 +9,9 @@ from openai import OpenAI
 from json import dumps
 import os
 from utils import get_collection
+from config import *
 
-
-client = OpenAI(api_key="sk-iBCGi2tjCGTrAkFO1402466cBa2944E985818f521301Ee95", base_url="https://oneapi.leoh.top/v1")
+client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE_URL)
 model = Blueprint("model", url_prefix="/api/v1/model")
 
 def read_json_part(file_path, size):

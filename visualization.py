@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorCollection
 from bson.objectid import ObjectId
 from utils import get_collection
-
+from config import MONGODB_CONNECTION_STRING
 async def get_documents_in_range(collection: AsyncIOMotorCollection, name: str, start: int, end: int):
     """
     Retrieves documents ranked from 'x' to 'y' (inclusive) based on the specified field 'name'.
@@ -37,7 +37,7 @@ visualization = Blueprint("visualization", url_prefix="/api/v1/vis")
 
 @visualization.get("/test")
 async def vis_test(request):
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     collection = client.papers["arxiv"]
     start_time = time.time()
     count = await collection.count_documents({"categories": "math.NT"})
@@ -46,7 +46,7 @@ async def vis_test(request):
 
 @visualization.get("/author/papers")
 async def vis_author_papers(request):
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     collection = client.arxiv["num_papers_authors"]
     name = "num_papers"
     start = int(request.args.get("start", 0))
@@ -62,7 +62,7 @@ async def vis_author_papers(request):
 
 @visualization.get("/subject/papers")
 async def vis_subjects_papers(request):
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     collection = client.arxiv["num_papers_main_subject"]
     name = "num_papers"
     start = int(request.args.get("start", 0))
@@ -79,7 +79,7 @@ async def vis_subjects_papers(request):
 
 @visualization.get("/subsubject/papers")
 async def vis_subsubjects_papers(request):
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://172.27.88.132:27017/?replicaSet=rs_noodle')
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
     collection = client.arxiv["num_papers_sub_subject"]
     name = "num_papers"
     start = int(request.args.get("start", 0))
