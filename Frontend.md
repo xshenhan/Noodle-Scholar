@@ -52,13 +52,38 @@ async getAuthorPapers(_start, _end) {
 
 我们对搜索结果页面和论文页面做了屏幕尺寸适应性调整，所有的元素都被包裹在多层 `div` 构成的容器中，其中一部分容器使用 `fixed` 和 `relative` 进行位置固定，这使得外围的元素可以灵活适应页面布局；另一部分容器使用 `absolute` 位置固定，这使得内围元素脱离文档流，在样式修改时，只有该元素本身及其子元素会触发重绘，减小了重绘的范围。
 
+## Basic Features
+
+Generally speaking，我们的设计理念是接近搜索引擎的实际使用需求。因此我们重点设计了多次搜索，namely在任何位置的任意潜在搜索词都可以链接到新的页面展示搜索结果。
+
+1. 支持 6 种方式搜索 `All` `Title` `Abstract` `DOI` `Keyword` `Author`
+2. 支持搜索页面二次搜索
+3. 作者、领域等信息都可以点击以继续搜索
+4. Preview of image-parsing in sliding window
+5. Click to copy DOI and website's URL
+6. Download PDF with account
+7. Accurate, completed, powerful table-parsing
 
 ## Special Features
 
-1. 支持 6 种方式搜索 `All` `Title` `Abstract` `DOI` `Keyword` `Author`
-2. 支持特殊字符的搜索：搜索内容进行了 URI 编码，并在后端解码
-3. 支持论文标题和摘要中渲染 Latex
-4. 
+1. 支持特殊字符的搜索：搜索内容进行了 URI 编码，并在后端解码
+2. Support Latex render <img src="https://s11.ax1x.com/2023/12/26/pib9DBT.png" width=60%>
+3. Sufficient database with more than 2,000,000 arxiv parpers, covers numerous fields, such as CS, PHY, STAT, MATH, etc.
+4. Support summary of the paper by GPT model. It's as well limited to authorized users currently.
+
+## Art
+
+1. 我们统一了网站前端的设计风格，使用紫色 as theme color，并全部元素采用扁平化设计，风格简约、大气
+2. 除了首页的可视化图表外，所有的页面支持移动端访问，即适配任意尺寸大小的屏幕
+3. 我们拟写了全新的用户登录隐私协议，以表达我们对用户隐私的重视
+4. 我们仿照 Apple Inc. 拟写了 6 条令人印象深刻的宣传标语
+
+
+## Visualization
+
+我们着重对2,000,000篇 Arxiv 文章的作者和领域做了可视化图表。我们对每年的文章数量做了排序；对前50名作者的论文数量做了排序；对收录的所有论文的领域和子领域的比例做了分析 by pie charts；对每个领域所包含的子领域文章比例做了分析 by pie charts.
+
+These charts在展示数据的同时，均可以点击并跳转到新的search-result page，展示对该作者或该领域的搜索结果。
 
 
 ## 功能与展示
