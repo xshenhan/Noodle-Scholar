@@ -1,27 +1,32 @@
-# <img src="https://s11.ax1x.com/2023/12/26/pib9yEF.png" width=7%>  Noodle Scholar
+# <img src="https://s11.ax1x.com/2023/12/26/pib9yEF.png" width=2.6%>oodle Scholar &ensp;
+![Static Badge](https://img.shields.io/badge/simple-green?style=for-the-badge&logo=noodle&color=2e4e7e)
+![Static Badge](https://img.shields.io/badge/elegant-green?style=for-the-badge&logo=noodle&color=177cb0)
+![Static Badge](https://img.shields.io/badge/delicate-green?style=for-the-badge&logo=noodle&color=44cef6)
+![Static Badge](https://img.shields.io/badge/search_engine_for_scholar-green?style=for-the-badge&logo=noodle&color=e3f9fd)
 
-A simple, elegant, delicate search engine for scholar.
 
-## 运行
-- 推荐环境
-  * npm: 9.8.1
-  * node: v18.18.2
-  * python: 3.12.0
+## Start
+- **Recommended** Environment
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+![Static Badge](https://img.shields.io/badge/npm-9.8.1-green?)
+![Static Badge](https://img.shields.io/badge/node-v18.18.2-green?)
+![Static Badge](https://img.shields.io/badge/Python-3.9.0-green?)
 
 - 准备工作
-  * 修改config.py， 将其中的配置修改成可用配置
+  * 修改 `config.py`，将其中的配置修改成可用配置
 
 - 前端构建
-   ```terminal
+   ```bash
     cd frontend
     npm install
     npm run build
     cd ..
    ```
-   此时会在`frontend/`中出现一个`dist`文件夹，根目录中也有有一个`dist`文件夹被link到`frontend/dist`
+   会在 `frontend/` 中构建 `dist` 文件夹；根目录中的 `./dist` 将被链接到 `frontend/dist`
 
 - 后端环境配置与运行
-  ``` terminal
+  ```bash
     pip install -r requirements.txt
     pip uninstall urllib3
     pip uninstall six
@@ -35,25 +40,46 @@ A simple, elegant, delicate search engine for scholar.
 - 网址
   * 在交大内网中的端口：`10.80.135.205:80`
 - 如果你想做出修改：
-  * clone 整个文件夹
-  * 在`./frontend`目录运行 `npm install --no-fund`
-  * 在`./frontend`运行 `npm run dev`
+  * clone 整个文件夹并进入 `git clone https://github.com/xshenhan/Noodle-Scholar.git && cd Noodle-Scholar`
+  * 安装依赖 `npm install --no-fund`
+  * 在测试端口的预览 `npm run dev`
   * 打开浏览器窗口预览结果
-- 如果你想提交修改
-  * 在根目录运行 `npm run build`
+
+- 如果你想将修改提交
+  * 在根目录运行 `npm run build` 将重新构建 `frontend/dist`
 
 ## Feature
 
 ### Display Build-in Tables in Detail
 
-We display on our website all the tables within paper in a detailed and informative way, from which you can copy the raw text.
+Provide accurate, completed, powerful table parsing and image parsing. We display on our website all the tables within paper in a detailed and informative way, from which you can copy the raw text.
+
+<img src="https://s11.ax1x.com/2024/01/07/pizTCm8.png" width=60%>
+
+### Everything to be clicked
+
+Every displayed information on pages can be clicked, leading to new result page in which the info will be searched.
 
 ### Support Latex Render
 
 <img src="https://s11.ax1x.com/2023/12/26/pib9DBT.png" width=60%>
 
 ### Sufficient Database
-2,000,000+ papers search-available
+
+<img src="https://s11.ax1x.com/2024/01/07/pizohWR.jpg" width=60%>
+
+2,000,000+ Arxiv parpers are search-available, covers numerous fields, such as CS, PHY, STAT, MATH, etc.
+
+### Paper Summary
+
+Support summary of the paper by GPT model, and further Q&A with any questions related to this paper. It’s limited to authorized users currently.
+
+### Adapt Any Screen Size
+
+Except for the visualization charts on the homepage, all pages support mobile access, which means they adapt to screens of any size
 
 ## Policy
 <img src="https://s11.ax1x.com/2023/12/26/pib92C9.png" width=60%>
+
+<br><br><br><br>
+<div align=center><img src="https://s11.ax1x.com/2024/01/07/pizoBzq.png" width=20%></div>
