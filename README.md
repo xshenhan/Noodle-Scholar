@@ -1,4 +1,5 @@
-# <img src="https://s11.ax1x.com/2023/12/26/pib9yEF.png" width=2.6%>oodle Scholar &ensp;
+<!-- # <img src="https://s11.ax1x.com/2023/12/26/pib9yEF.png" width=2.6%>oodle Scholar &ensp; -->
+# <img src="/imgs/N.png" width=3.6%>oodle Scholar &ensp;
 ![Static Badge](https://img.shields.io/badge/simple-green?style=for-the-badge&logo=noodle&color=2e4e7e)
 ![Static Badge](https://img.shields.io/badge/elegant-green?style=for-the-badge&logo=noodle&color=177cb0)
 ![Static Badge](https://img.shields.io/badge/delicate-green?style=for-the-badge&logo=noodle&color=44cef6)
@@ -54,7 +55,8 @@
 
 Provide accurate, completed, powerful table parsing and image parsing. We display on our website all the tables within paper in a detailed and informative way, from which you can copy the raw text.
 
-<img src="https://s11.ax1x.com/2024/01/07/pizTCm8.png" width=60%>
+<!-- <img src="https://s11.ax1x.com/2024/01/07/pizTCm8.png" width=60%> -->
+<img src="/imgs/TableParser.png" width=60%>
 
 ### Everything to be clicked
 
@@ -62,11 +64,13 @@ Every displayed information on pages can be clicked, leading to new result page 
 
 ### Support Latex Render
 
-<img src="https://s11.ax1x.com/2023/12/26/pib9DBT.png" width=60%>
+<!-- <img src="https://s11.ax1x.com/2023/12/26/pib9DBT.png" width=60%> -->
+<img src="/imgs/LatexRender.png" width=60%>
 
 ### Sufficient Database
 
-<img src="https://s11.ax1x.com/2024/01/07/pizohWR.jpg" width=60%>
+<!-- <img src="https://s11.ax1x.com/2024/01/07/pizohWR.jpg" width=60%> -->
+<img src="/imgs/visualization.png" width=60%>
 
 2,000,000+ Arxiv parpers are search-available, covers numerous fields, such as CS, PHY, STAT, MATH, etc.
 
@@ -79,7 +83,9 @@ Support summary of the paper by GPT model, and further Q&A with any questions re
 Except for the visualization charts on the homepage, all pages support mobile access, which means they adapt to screens of any size
 
 ## Policy
-<img src="https://s11.ax1x.com/2023/12/26/pib92C9.png" width=60%>
+<!-- <img src="https://s11.ax1x.com/2023/12/26/pib92C9.png" width=60%> -->
+<img src="/imgs/privacy.png" width=60%>
 
-<br><br><br><br>
-<div align=center><img src="https://s11.ax1x.com/2024/01/07/pizoBzq.png" width=20%></div>
+<br><br>
+<!-- <div align=center><img src="https://s11.ax1x.com/2024/01/07/pizoBzq.png" width=20%></div> -->
+<div align=center><img src="/imgs/logo.png" width=20%></div>
